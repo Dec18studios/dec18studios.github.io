@@ -1,0 +1,95 @@
+[
+  {
+    "name": "Photo Chemist",
+    "slug": "photochemist",
+    "tier": "pro",
+    "color": "red",
+    "desc": "Spectral film-stock emulation — design and develop your own stocks.",
+    "url": "https://dec18studios.com/photochemist"
+  },
+  {
+    "name": "Technically Technicolor DRT",
+    "slug": "technicolordrt",
+    "tier": "pro",
+    "color": "magenta",
+    "desc": "A three-strip Technicolor look as a display rendering transform."
+  },
+  {
+    "name": "Hue Contrast Compressor",
+    "slug": "hue-contrast-compressor",
+    "tier": "pro",
+    "color": "yellow",
+    "desc": "Tame hue-driven contrast for smoother, more controlled color."
+  },
+  {
+    "name": "Volume Curve",
+    "slug": "volume-curve",
+    "tier": "free",
+    "color": "cyan",
+    "desc": "Shape tonal volume and contrast with a custom response curve."
+  },
+  {
+    "name": "Grain By Greg",
+    "slug": "grain",
+    "tier": "pro",
+    "color": "green",
+    "desc": "Natural, filmic grain that lives in the texture of the image."
+  },
+  {
+    "name": "Color Slice O'matic",
+    "slug": "colorslice",
+    "tier": "free",
+    "color": "blue",
+    "desc": "Slice the image into color regions for precise, targeted grading."
+  },
+  {
+    "name": "Perfect Exposure Every Time",
+    "slug": "perfect-exposure",
+    "tier": "free",
+    "color": "green",
+    "desc": "Nail consistent exposure on every shot."
+  },
+  {
+    "name": "Film Negative Space CST",
+    "slug": "film-negative-space-cst",
+    "tier": "free",
+    "color": "cyan",
+    "desc": "A color-space transform into a film-negative working space."
+  },
+  {
+    "name": "Saturation Separator",
+    "slug": "saturation-seperator",
+    "tier": "pro",
+    "color": "yellow",
+    "desc": "Split saturation from luma for cleaner, more controlled grades."
+  },
+  {
+    "name": "Linear Ramp Diagnostic",
+    "slug": "linear-ramp",
+    "tier": "free",
+    "color": "blue",
+    "desc": "A diagnostic ramp for checking transforms and response."
+  },
+  {
+    "name": "Dolby Vision Spoofer",
+    "slug": "dolby-vision",
+    "tier": "pro",
+    "color": "magenta",
+    "desc": "Preview a Dolby Vision-style trim without the full pipeline."
+  },
+  {
+    "name": "IBKeymaster",
+    "slug": "ibkeymaster",
+    "tier": "pro",
+    "color": "red",
+    "desc": "A focused keying utility for cleaner selections.",
+    "url": "https://dec18studios.com/ibkeymaster"
+  },
+  {
+    "name": "Resolve Node Toggler",
+    "slug": "node-toggle",
+    "tier": "free",
+    "color": "green",
+    "desc": "Toggle nodes on and off fast while you work."
+  }
+]
