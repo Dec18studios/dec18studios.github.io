@@ -5,35 +5,39 @@
     "tier": "pro",
     "color": "red",
     "desc": "Spectral film-stock emulation — design and develop your own stocks.",
-    "url": "https://dec18studios.com/photochemist"
+    "url": "https://dec18studios.com/color-grading-tools/photochemist"
   },
   {
     "name": "Technically Technicolor DRT",
     "slug": "technicolordrt",
     "tier": "pro",
     "color": "magenta",
-    "desc": "A three-strip Technicolor look as a display rendering transform."
+    "desc": "A three-strip Technicolor look as a display rendering transform.",
+    "url": "https://dec18studios.com/color-grading-tools/technicolordrt"
   },
   {
     "name": "Hue Contrast Compressor",
     "slug": "hue-contrast-compressor",
     "tier": "pro",
     "color": "yellow",
-    "desc": "Tame hue-driven contrast for smoother, more controlled color."
+    "desc": "Tame hue-driven contrast for smoother, more controlled color.",
+    "url": "https://dec18studios.com/color-grading-tools/hue-contrast-compressor"
   },
   {
     "name": "Volume Curve",
     "slug": "volume-curve",
     "tier": "free",
     "color": "cyan",
-    "desc": "Shape tonal volume and contrast with a custom response curve."
+    "desc": "Shape tonal volume and contrast with a custom response curve.",
+    "url": "https://dec18studios.com/color-grading-tools/volume-curve"
   },
   {
     "name": "Grain By Greg",
     "slug": "grain",
     "tier": "pro",
     "color": "green",
-    "desc": "Natural, filmic grain that lives in the texture of the image."
+    "desc": "Natural, filmic grain that lives in the texture of the image.",
+    "url": "https://dec18studios.com/color-grading-tools/grain"
   },
   {
     "name": "Color Slicer",
@@ -47,7 +51,8 @@
     "slug": "contrast-sat-volume",
     "tier": "pro",
     "color": "red",
-    "desc": "GPU-accelerated OFX — compress hue shifts caused by contrast and saturation moves."
+    "desc": "GPU-accelerated OFX — compress hue shifts caused by contrast and saturation moves.",
+    "url": "https://dec18studios.com/color-grading-tools/hue-contrast-compressor"
   },
   {
     "name": "GradeMatch",
@@ -75,28 +80,32 @@
     "slug": "perfect-exposure",
     "tier": "free",
     "color": "green",
-    "desc": "Nail consistent exposure on every shot."
+    "desc": "Nail consistent exposure on every shot.",
+    "url": "https://dec18studios.com/color-grading-tools/perfect-exposure"
   },
   {
     "name": "Film Negative Space CST",
     "slug": "film-negative-space-cst",
     "tier": "free",
     "color": "cyan",
-    "desc": "A color-space transform into a film-negative working space."
+    "desc": "A color-space transform into a film-negative working space.",
+    "url": "https://dec18studios.com/color-grading-tools/film-negative-space-cst"
   },
   {
     "name": "Saturation Separator",
     "slug": "saturation-seperator",
     "tier": "pro",
     "color": "yellow",
-    "desc": "Split saturation from luma for cleaner, more controlled grades."
+    "desc": "Split saturation from luma for cleaner, more controlled grades.",
+    "url": "https://dec18studios.com/color-grading-tools/saturation-seperator"
   },
   {
     "name": "Linear Ramp Diagnostic",
     "slug": "linear-ramp",
     "tier": "free",
     "color": "blue",
-    "desc": "A diagnostic ramp for checking transforms and response."
+    "desc": "A diagnostic ramp for checking transforms and response.",
+    "url": "https://dec18studios.com/color-grading-tools/linear-ramp"
   },
   {
     "name": "Hue Inspector",
@@ -118,7 +127,8 @@
     "slug": "dolby-vision",
     "tier": "pro",
     "color": "magenta",
-    "desc": "Preview a Dolby Vision-style trim without the full pipeline."
+    "desc": "Preview a Dolby Vision-style trim without the full pipeline.",
+    "url": "https://dec18studios.com/color-grading-tools/dolby-vision"
   },
   {
     "name": "IBKeymaster",
@@ -126,13 +136,14 @@
     "tier": "pro",
     "color": "red",
     "desc": "A focused keying utility for cleaner selections.",
-    "url": "https://dec18studios.com/ibkeymaster"
+    "url": "https://dec18studios.com/color-grading-tools/ibkeymaster"
   },
   {
     "name": "Resolve Node Toggler",
     "slug": "node-toggle",
     "tier": "free",
     "color": "green",
-    "desc": "Toggle nodes on and off fast while you work."
+    "desc": "Toggle nodes on and off fast while you work.",
+    "url": "https://dec18studios.com/color-grading-tools/node-toggle"
   }
 ]
