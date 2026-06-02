@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Color Grading Tools — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.80 0.110 200 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 14px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .mark {
+    width: 30px; height: 30px; border-radius: 7px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    position: relative;
+  }
+  .brand .mark::after { content: ""; position: absolute; inset: 8px; border-radius: 3px; background: var(--bg); }
+  .brand b { font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.16em; }
+  .brand span { color: var(--ink-faint); font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; }
+
+  nav.toplinks { display: flex; gap: 24px; align-items: center; }
+  nav.toplinks a { font-size: 14px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(52px, 8vw, 104px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -16%; right: -12%; width: 760px; height: 760px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(135px); opacity: 0.14; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 0.88fr 1.12fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(42px, 6.6vw, 80px); line-height: 0.97; letter-spacing: -0.02em; margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 55%, var(--cyan) 78%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 50ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 40px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  .hero-shot {
+    position: relative; border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--line); background: var(--bg-1);
+    box-shadow: 0 40px 90px -50px oklch(0 0 0 / 0.9);
+  }
+  .hero-shot img { width: 100%; height: auto; display: block; }
+  .hero-shot .tag {
+    position: absolute; left: 14px; bottom: 14px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+  }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(52px, 7vw, 100px); position: relative; }
+  .sec-head { max-width: 62ch; margin-bottom: clamp(34px, 5vw, 54px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+
+  /* ============ SUBSCRIPTION ============ */
+  .sub { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .sub-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .sub-grid { grid-template-columns: 1fr; } }
+  .price-card {
+    position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden;
+  }
+  .price-card::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+    background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta));
+  }
+  .price-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); }
+  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 72px); line-height: 1; letter-spacing: -0.03em; }
+  .price-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
+  .price-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .price-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .price-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+  .price-list li::before {
+    content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px;
+  }
+  .price-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
+  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  .sub-copy h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sub-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
+  .sub-copy .free-note {
+    margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--cyan-d);
+    border: 1px solid transparent; position: relative; overflow: hidden;
+  }
+  .sub-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan); }
+  .sub-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .sub-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); }
+
+  /* ============ KEYNOTE (Photo Chemist) ============ */
+  .keynote { --accent: var(--red); --accent-d: var(--red-d); border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .kn-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 60px); align-items: start; }
+  @media (max-width: 940px) { .kn-grid { grid-template-columns: 1fr; } }
+  .tool-num {
+    font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.2em; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .tool-num::before { content: ""; width: 28px; height: 2px; background: var(--accent); display: inline-block; }
+  .keynote h3 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(34px, 4.8vw, 58px);
+    letter-spacing: -0.02em; line-height: 0.98; margin: 16px 0 6px;
+  }
+  .keynote .resolve-tag { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.04em; }
+  .keynote .lede { margin-top: 22px; color: var(--ink-dim); font-size: 17px; text-wrap: pretty; }
+  .keynote .lede strong { color: var(--ink); font-weight: 600; }
+  .kn-cta { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .kn-shot { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-soft);
+    aspect-ratio: 16 / 9; background: var(--bg-1); box-shadow: 0 30px 80px -46px oklch(0 0 0 / 0.85); }
+  .kn-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .kn-shot .tag {
+    position: absolute; left: 14px; top: 14px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+  }
+  /* before / after compare slider */
+  .ba {
+    position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-soft);
+    aspect-ratio: 16 / 9; background: var(--bg-1); box-shadow: 0 30px 80px -46px oklch(0 0 0 / 0.85);
+    --pos: 50%; touch-action: none; cursor: ew-resize; user-select: none;
+  }
+  .ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ba-before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+  .ba-before img { filter: saturate(0.36) contrast(0.8) brightness(1.09); }
+  .ba-tag {
+    position: absolute; top: 14px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55);
+    color: #fff; backdrop-filter: blur(4px); z-index: 3; pointer-events: none;
+  }
+  .ba-tag.l { left: 14px; } .ba-tag.r { right: 14px; }
+  .ba-handle {
+    position: absolute; top: 0; bottom: 0; left: var(--pos); width: 44px; transform: translateX(-50%);
+    display: flex; align-items: center; justify-content: center; z-index: 4; pointer-events: none;
+  }
+  .ba-line { position: absolute; top: 0; bottom: 0; width: 2px; background: oklch(1 0 0 / 0.9); }
+  .ba-grip {
+    width: 38px; height: 38px; border-radius: 50%; background: oklch(0.98 0 0 / 0.95); color: var(--bg);
+    display: grid; place-items: center; font-size: 15px; font-weight: 700; box-shadow: 0 4px 16px oklch(0 0 0 / 0.55);
+  }
+  @media (pointer: coarse) { .ba-handle { width: 60px; } .ba-grip { width: 46px; height: 46px; font-size: 18px; } }
+
+  .pipe { margin-top: 22px; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden; }
+  .pipe .phead { padding: 13px 20px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); border-bottom: 1px solid var(--line-soft); background: var(--bg); }
+  .pstep { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--line-soft); align-items: baseline; }
+  .pstep:last-child { border-bottom: none; }
+  .pstep .n { font-family: var(--mono); font-size: 11.5px; color: var(--accent); font-weight: 600; letter-spacing: 0.06em; white-space: nowrap; }
+  .pstep .t b { font-weight: 600; font-size: 15px; }
+  .pstep .t p { font-size: 13.5px; color: var(--ink-dim); margin-top: 2px; text-wrap: pretty; }
+
+  /* ============ TOOLS INDEX ============ */
+  .tools { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .group-label {
+    display: flex; align-items: center; gap: 14px; margin: clamp(30px,4vw,46px) 0 22px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim);
+  }
+  .group-label::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+  .group-label .count { color: var(--ink-faint); }
+  .tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 880px) { .tool-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tool-grid { grid-template-columns: 1fr; } }
+  .tcard {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; gap: 10px; transition: all 0.16s; min-height: 132px;
+  }
+  .tcard:hover { background: var(--bg-2); border-color: var(--line); transform: translateY(-2px); }
+  .tcard .top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .tcard .sw { width: 11px; height: 11px; border-radius: 3px; flex: none; box-shadow: 0 0 0 1px oklch(1 0 0 / 0.12); }
+  .tcard .pill {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-faint);
+  }
+  .tcard .pill.free { color: var(--green); border-color: oklch(0.74 0.165 148 / 0.45); }
+  .tcard .pill.pro { color: var(--yellow); border-color: oklch(0.84 0.150 92 / 0.45); }
+  .tcard h4 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; line-height: 1.1; }
+  .tcard p { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; flex: 1; }
+  .tcard .go { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); transition: color 0.16s; }
+  .tcard:hover .go { color: var(--ink); }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    .btn, nav.toplinks a.cta, .tcard { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/">
+      <span class="mark"></span>
+      <b>DEC18</b><span>/ Studios</span>
+    </a>
+    <!-- Nav points at the real Dec. 18 Studios pages -->
+    <nav class="toplinks">
+      <a href="https://dec18studios.com/projects">Portfolio</a>
+      <a href="https://dec18studios.com/color-grading-tools" class="current">Tools</a>
+      <a href="#tools">All tools</a>
+      <a href="https://dec18studios.com/hire-us">Book Now</a>
+      <a href="#subscribe" class="cta">Subscribe · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Dec. 18 Studios · DaVinci Resolve tools</p>
+        <h1 class="hero-title">A color grading<br /><em>tool box.</em></h1>
+        <p class="hero-sub">A growing kit of DCTLs and OFX plugins for DaVinci Resolve — film emulation, grain, hue tools and diagnostics. A bunch are free. The rest come with one low annual membership.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#subscribe">Get all the tools</a>
+          <a class="btn" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box Manager</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>15+</b><span>tools &amp; plugins</span></div>
+          <div class="m"><b>7</b><span>free, always</span></div>
+          <div class="m"><b>$47.34</b><span>/yr · everything else</span></div>
+        </div>
+      </div>
+
+      <div class="hero-shot reveal">
+        <!-- A/B alt: graded still — https://images.squarespace-cdn.com/content/v1/64b5b9cabb610c6dc5d964df/ef5513e0-03fb-47dc-b129-7cde1570d5a7/The+Maeve.jpg?format=1500w -->
+        <img src="assets/plugin-manager.jpg" alt="Dec 18 Studios Plugin Manager — the Tool Box Manager app" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUBSCRIPTION ============ -->
+<section class="sub" id="subscribe">
+  <div class="wrap">
+    <div class="sub-grid">
+      <div class="sub-copy reveal">
+        <p class="eyebrow">The membership</p>
+        <h2>One price. Every tool. Forever.</h2>
+        <p>Become a <strong style="color:var(--ink);">Happy Little Noder</strong> and unlock every premium tool you see on the channel — plus every update and every new release. One low annual fee that will <em>never</em> be raised.</p>
+        <div class="free-note">
+          <div class="k">No commitment needed</div>
+          <p>Plenty of tools are completely free. Grab the Tool Box Manager and start playing today — subscribe whenever you want the rest.</p>
+        </div>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="plan">Happy Little Noders</div>
+        <div class="amt"><b>$47.34</b><span>/ year</span></div>
+        <p class="note">Get access to all the tools you see on YouTube and any updates that happen.</p>
+        <ul class="price-list">
+          <li>Every premium DCTL &amp; OFX plugin</li>
+          <li>All future tools &amp; updates included</li>
+          <li>Photo Chemist, Technicolor DRT, Grain by Greg &amp; more</li>
+          <li>Price locked — never raised</li>
+        </ul>
+        <!-- Point this at your Squarespace membership signup / commerce block -->
+        <a class="btn primary" href="https://dec18studios.com/all-tools">Become a member →</a>
+        <div class="price-foot">Billed annually · cancel anytime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KEYNOTE : PHOTO CHEMIST ============ -->
+<section class="keynote" id="photochemist">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Film stock emulation · OFX</p>
+      <h2>Photo Chemist DRT</h2>
+      <p>Design your own film stocks — be the chemist. A full photochemical pipeline that develops your digital footage the way a darkroom would, from photons to final print.</p>
+    </div>
+    <div class="kn-grid">
+      <div class="reveal">
+        <span class="tool-num">FLAGSHIP · OFX</span>
+        <h3>Be the<br />chemist.</h3>
+        <div class="resolve-tag">DaVinci Resolve · OFX · macOS</div>
+        <p class="lede">Film isn't just “old-school digital” — it's a chemical system. <strong>Photo Chemist</strong> runs your footage through a 17+ stage process, reverse-engineering RGB into a 43-band spectrum, then simulating exposure, grain, halation, dye formation, development and projection — so images look made in a darkroom, not filtered.</p>
+        <div class="kn-cta">
+          <a class="btn primary" href="https://dec18studios.com/color-grading-tools/photochemist">Explore Photo Chemist →</a>
+          <a class="btn" href="#subscribe">Get it with everything — $47.34/yr →</a>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="ba" id="ba">
+          <div class="ba-after"><img src="assets/frame-web.jpg" alt="Photo Chemist film look" loading="lazy" /></div>
+          <div class="ba-before"><img src="assets/frame-web.jpg" alt="Original digital footage" loading="lazy" /></div>
+          <span class="ba-tag l">Digital</span>
+          <span class="ba-tag r">Photo Chemist</span>
+          <div class="ba-handle"><div class="ba-line"></div><div class="ba-grip">⇆</div></div>
+        </div>
+        <div class="pipe">
+          <div class="phead">The pipeline · photons → print</div>
+          <div class="pstep"><span class="n">01·02</span><span class="t"><b>Reconstruct the light</b><p>Reverse-engineer RGB into a 43-band spectrum via dye-sensitivity controls.</p></span></div>
+          <div class="pstep"><span class="n">03·05</span><span class="t"><b>Exposure, grain &amp; halation</b><p>Shape the HD density curves; grain and red halation emerge from the silver itself.</p></span></div>
+          <div class="pstep"><span class="n">06</span><span class="t"><b>Dye design</b><p>Cyan / magenta / yellow as asymmetric Gaussian absorption curves.</p></span></div>
+          <div class="pstep"><span class="n">07</span><span class="t"><b>Development &amp; bleach bypass</b><p>Push/pull, silver retention and inter-image effects.</p></span></div>
+          <div class="pstep"><span class="n">08</span><span class="t"><b>Printer &amp; projector sim</b><p>Beer–Lambert transmission — design the light that reaches the screen.</p></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOLS INDEX ============ -->
+<section class="tools" id="tools">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The full kit</p>
+      <h2>Every tool in the box.</h2>
+      <p>Free utilities and premium plugins for DaVinci Resolve. Click any tool for details, install notes and tutorials.</p>
+    </div>
+
+    <div class="group-label reveal">Premium · included with membership <span class="count" id="proCount"></span></div>
+    <div class="tool-grid" id="proGrid"></div>
+
+    <div class="group-label reveal">Free · always <span class="count" id="freeCount"></span></div>
+    <div class="tool-grid" id="freeGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="https://dec18studios.com/projects">Portfolio</a>
+        <a href="https://dec18studios.com/color-grading-tools">Color Grading Tools</a>
+        <a href="https://dec18studios.com/joy-of-colourgrading">Happy Little Node Trees</a>
+        <a href="https://dec18studios.com/open-drt-ofx">Open DRT OFX</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<!--
+  TOOL LISTINGS — data-driven so they can sync with the Dec18 Plugin Manager.
+  • Source of truth below is the TOOLS array (edit it directly any time).
+  • To AUTO-SYNC from the Plugin Manager: have it publish a tools.json to GitHub
+    (same shape as TOOLS), then set MANIFEST_URL to its raw URL, e.g.
+    https://raw.githubusercontent.com/Dec18studios/Dec18-Plugin-Manager/main/tools.json
+    The page fetches it on load and rebuilds the listings. Works fine inside the
+    Squarespace header-injection iframe (raw.githubusercontent.com allows CORS).
+-->
+<script>
+  (function () {
+    var MANIFEST_URL = ""; // <- set to your GitHub raw tools.json to auto-sync
+
+    var TOOLS = [
+      { name: "Photo Chemist", slug: "photochemist", tier: "pro", color: "red", desc: "Spectral film-stock emulation — design and develop your own stocks." },
+      { name: "Technically Technicolor DRT", slug: "technicolordrt", tier: "pro", color: "magenta", desc: "A three-strip Technicolor look as a display rendering transform." },
+      { name: "Hue Contrast Compressor", slug: "hue-contrast-compressor", tier: "pro", color: "yellow", desc: "Tame hue-driven contrast for smoother, more controlled color." },
+      { name: "Volume Curve", slug: "volume-curve", tier: "pro", color: "cyan", desc: "Shape tonal volume and contrast with a custom response curve." },
+      { name: "Grain By Greg", slug: "grain", tier: "pro", color: "green", desc: "Natural, filmic grain that lives in the texture of the image." },
+      { name: "Color Slice O'matic", slug: "colorslice", tier: "pro", color: "blue", desc: "Slice the image into color regions for precise, targeted grading." },
+      { name: "X-Grade", slug: "x-grade", tier: "pro", color: "red", desc: "A creative base-grade toolkit for building looks fast." },
+      { name: "DCTL Manager", slug: "dctl-manager", tier: "pro", color: "magenta", desc: "Install, organize and update your DCTLs right inside Resolve." },
+      { name: "Perfect Exposure Every Time", slug: "perfect-exposure", tier: "free", color: "green", desc: "Nail consistent exposure on every shot." },
+      { name: "Film Negative Space CST", slug: "film-negative-space-cst", tier: "free", color: "cyan", desc: "A color-space transform into a film-negative working space." },
+      { name: "Saturation Separator", slug: "saturation-seperator", tier: "free", color: "yellow", desc: "Split saturation from luma for cleaner, more controlled grades." },
+      { name: "Linear Ramp Diagnostic", slug: "linear-ramp", tier: "free", color: "blue", desc: "A diagnostic ramp for checking transforms and response." },
+      { name: "Dolby Vision Spoofer", slug: "dolby-vision", tier: "free", color: "magenta", desc: "Preview a Dolby Vision-style trim without the full pipeline." },
+      { name: "IBKeymaster", slug: "ibkeymaster", tier: "free", color: "red", desc: "A focused keying utility for cleaner selections." },
+      { name: "Resolve Node Toggler", slug: "node-toggle", tier: "free", color: "green", desc: "Toggle nodes on and off fast while you work." }
+    ];
+
+    var BASE = "https://dec18studios.com/color-grading-tools/";
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+    function card(t) {
+      var a = document.createElement("a");
+      a.className = "tcard reveal";
+      a.href = t.url || (BASE + t.slug);
+      var free = t.tier === "free";
+      a.innerHTML =
+        '<div class="top"><span class="sw" style="background:var(--' + esc(t.color || "cyan") + ');"></span>' +
+        '<span class="pill ' + (free ? "free" : "pro") + '">' + (free ? "Free" : "Premium") + '</span></div>' +
+        '<h4>' + esc(t.name) + '</h4>' +
+        '<p>' + esc(t.desc) + '</p>' +
+        '<span class="go">View →</span>';
+      return a;
+    }
+
+    function render(list) {
+      var pro = document.getElementById("proGrid");
+      var free = document.getElementById("freeGrid");
+      if (!pro || !free) return;
+      pro.innerHTML = ""; free.innerHTML = "";
+      var np = 0, nf = 0;
+      list.forEach(function (t) {
+        if (t.tier === "free") { free.appendChild(card(t)); nf++; }
+        else { pro.appendChild(card(t)); np++; }
+      });
+      var pc = document.getElementById("proCount"); if (pc) pc.textContent = np + " tool" + (np === 1 ? "" : "s");
+      var fc = document.getElementById("freeCount"); if (fc) fc.textContent = nf + " tool" + (nf === 1 ? "" : "s");
+    }
+
+    render(TOOLS); // synchronous default render (before reveal observer runs)
+
+    if (MANIFEST_URL) {
+      fetch(MANIFEST_URL, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          var list = Array.isArray(data) ? data : (data && data.tools);
+          if (Array.isArray(list) && list.length) {
+            render(list);
+            document.querySelectorAll("#proGrid .tcard, #freeGrid .tcard").forEach(function (e) { e.classList.add("in"); });
+          }
+        })
+        .catch(function () { /* keep embedded defaults */ });
+    }
+  })();
+
+  // before / after compare slider (keynote)
+  (function () {
+    var ba = document.getElementById("ba");
+    if (!ba) return;
+    function setPos(clientX) {
+      var r = ba.getBoundingClientRect();
+      var p = (clientX - r.left) / r.width;
+      p = Math.max(0, Math.min(1, p));
+      ba.style.setProperty("--pos", (p * 100) + "%");
+    }
+    var dragging = false;
+    ba.addEventListener("pointerdown", function (e) { dragging = true; ba.setPointerCapture(e.pointerId); setPos(e.clientX); });
+    ba.addEventListener("pointermove", function (e) { if (dragging) setPos(e.clientX); });
+    ba.addEventListener("pointerup", function () { dragging = false; });
+    ba.addEventListener("pointercancel", function () { dragging = false; });
+  })();
+</script>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d8455f" />
+        <stop offset="0.5" stop-color="#b154c9" />
+        <stop offset="1" stop-color="#5b78d6" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">D18</text>
+  </svg>
+</template>
+
+</body>
+</html>
