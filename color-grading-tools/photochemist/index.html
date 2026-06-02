@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Photo Chemist — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.64 0.205 25 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
+            mask: url("assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(48px, 7vw, 92px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -18%; right: -14%; width: 780px; height: 780px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(140px); opacity: 0.13; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: clamp(32px, 5vw, 60px); align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 6.2vw, 76px); line-height: 0.98; letter-spacing: -0.02em; margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 32%, var(--blue) 58%, var(--cyan) 80%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 48ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ STOCK VIEWER (hero right) ============ */
+  .viewer {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line-soft); border-radius: 18px; padding: 16px; overflow: hidden;
+    box-shadow: 0 40px 90px -52px oklch(0 0 0 / 0.9);
+  }
+  .viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 6px 14px; }
+  .viewer-head .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .viewer-head .live { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--red);
+    border: 1px solid oklch(0.64 0.205 25 / 0.45); border-radius: 5px; padding: 3px 8px; }
+  .stage {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
+    background: var(--bg); border: 1px solid var(--line-soft);
+  }
+  .stage img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: filter 0.5s ease, opacity 0.35s ease; -webkit-user-drag: none; user-select: none;
+  }
+  .stage .badge {
+    position: absolute; left: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .stage .badge .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--red); }
+  .stage .compare {
+    position: absolute; right: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 12px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff;
+    border: 1px solid oklch(1 0 0 / 0.25); cursor: pointer; backdrop-filter: blur(4px); user-select: none;
+    transition: background 0.16s;
+  }
+  .stage .compare:hover { background: oklch(0 0 0 / 0.72); }
+  .stage .compare:active, .stage .compare.holding { background: var(--ink); color: var(--bg); }
+
+  .stock-picker { margin-top: 14px; display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .stock-picker label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .stock-picker .selrow { display: flex; gap: 10px; align-items: stretch; }
+  .stock-select {
+    flex: 1; font-family: var(--mono); font-size: 13.5px; color: var(--ink); background: var(--bg-2);
+    border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-dim) 50%), linear-gradient(135deg, var(--ink-dim) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+  }
+  .stock-select:hover { border-color: oklch(0.42 0.013 264); }
+  .swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+  .swatches button {
+    width: 30px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; padding: 0;
+    background-size: cover; background-position: center; transition: transform 0.14s, border-color 0.14s; position: relative;
+  }
+  .swatches button:hover { transform: translateY(-2px); }
+  .swatches button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ink); }
+  .stock-note { margin-top: 11px; font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--ink-faint); text-wrap: pretty; }
+  .stock-desc { margin: 2px 6px 0; font-size: 14px; color: var(--ink-dim); min-height: 2.6em; text-wrap: pretty; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(52px, 7vw, 100px); position: relative; }
+  .sec-head { max-width: 64ch; margin-bottom: clamp(34px, 5vw, 54px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+  .divider { height: 1px; background: var(--line-soft); }
+
+  /* ============ STORY : it's chemistry ============ */
+  .story { border-top: 1px solid var(--line-soft); }
+  .story-grid { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
+  @media (max-width: 880px) { .story-grid { grid-template-columns: 1fr; } }
+  .story-copy h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 46px);
+    letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px;
+  }
+  .story-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.7vw, 18px); text-wrap: pretty; }
+  .story-copy p strong { color: var(--ink); font-weight: 600; }
+  .chem-card {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: clamp(24px, 3vw, 32px);
+  }
+  .chem-flow { display: flex; flex-direction: column; gap: 0; }
+  .chem-step { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start; padding: 4px 0; }
+  .chem-step .ico {
+    width: 34px; height: 34px; border-radius: 9px; flex: none; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--bg);
+  }
+  .chem-step .ct b { font-weight: 600; font-size: 15.5px; display: block; }
+  .chem-step .ct p { margin-top: 2px; font-size: 13.5px; color: var(--ink-dim); line-height: 1.5; }
+  .chem-rail { width: 2px; height: 16px; margin-left: 16px; background: linear-gradient(var(--line), transparent); }
+
+  /* ============ PIPELINE ============ */
+  .pipeline { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .stages { display: grid; gap: 16px; }
+  .stage-card {
+    --accent: var(--red); --accent-d: var(--red-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+    display: grid; grid-template-columns: 0.34fr 0.66fr; transition: border-color 0.18s, transform 0.18s;
+  }
+  .stage-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  @media (max-width: 760px) { .stage-card { grid-template-columns: 1fr; } }
+  .stage-side {
+    padding: clamp(22px, 3vw, 30px); border-right: 1px solid var(--line-soft); position: relative;
+    background: linear-gradient(180deg, var(--accent-d), transparent 70%);
+  }
+  @media (max-width: 760px) { .stage-side { border-right: none; border-bottom: 1px solid var(--line-soft); } }
+  .stage-side .num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--accent); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px; }
+  .stage-side .num::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+  .stage-side h3 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -0.015em; line-height: 1.05; margin-top: 14px; }
+  .stage-side .tag { margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); text-wrap: pretty; }
+  .stage-body { padding: clamp(22px, 3vw, 30px); }
+  .stage-body > p { color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .stage-body > p strong { color: var(--ink); font-weight: 600; }
+  .stage-body .why {
+    margin-top: 18px; border-radius: 12px; padding: 14px 16px; background: var(--accent-d);
+    position: relative; overflow: hidden;
+  }
+  .stage-body .why::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .stage-body .why .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .stage-body .why p { margin-top: 6px; font-size: 14px; color: var(--ink); line-height: 1.5; text-wrap: pretty; }
+
+  /* ============ STOCK LAB (FSE editor + curves) ============ */
+  .lab { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .lab-feature { display: grid; grid-template-columns: 0.96fr 1.04fr; gap: clamp(30px, 5vw, 56px); align-items: center; }
+  @media (max-width: 940px) { .lab-feature { grid-template-columns: 1fr; } }
+  .lab-copy .kick { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta);
+    display: inline-flex; align-items: center; gap: 12px; }
+  .lab-copy .kick::before { content: ""; width: 26px; height: 2px; background: var(--magenta); }
+  .lab-copy h3 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 3.8vw, 44px); letter-spacing: -0.02em; line-height: 1.02; margin: 16px 0 0; }
+  .lab-copy p { margin-top: 18px; color: var(--ink-dim); font-size: 16.5px; text-wrap: pretty; }
+  .lab-copy p strong { color: var(--ink); font-weight: 600; }
+  .lab-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .lab-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; color: var(--ink); text-wrap: pretty; }
+  .lab-list li .b { width: 8px; height: 8px; border-radius: 2px; flex: none; margin-top: 8px; background: var(--magenta); }
+
+  .fse-shot {
+    position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-soft);
+    box-shadow: 0 30px 80px -46px oklch(0 0 0 / 0.85);
+  }
+  .fse-img, .fse-video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block;
+    background: var(--bg); -webkit-user-drag: none; user-select: none;
+  }
+  .fse-video { display: none; }
+  .fse-shot .fse-cap {
+    position: absolute; left: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+  }
+
+  /* ---- Film Stock Editor recreation (animated) ---- */
+  .fx-win { background: #0b0c0f; font-family: var(--mono); color: #cfd2d8; }
+  .fx-titlebar { position: relative; display: flex; align-items: center; justify-content: center;
+    padding: 9px; background: #16181d; border-bottom: 1px solid #000; font-size: 12px; color: var(--ink-dim); letter-spacing: 0.02em; }
+  .fx-lights { position: absolute; left: 12px; display: flex; gap: 7px; }
+  .fx-lights i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .fx-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .fx-h { font-weight: 600; color: var(--ink); font-size: 12.5px; }
+  .fx-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .fx-sel { background: #2b2e36; border: 1px solid #3a3e48; border-radius: 6px; padding: 6px 10px; color: #dfe2e8;
+    font-size: 12px; display: inline-flex; align-items: center; gap: 16px; }
+  .fx-sel::after { content: "⌄"; color: var(--blue); font-size: 13px; margin-top: -3px; }
+  .fx-sel.grow { flex: 1; justify-content: space-between; }
+  .fx-check { display: flex; align-items: center; gap: 7px; color: #dfe2e8; font-size: 12.5px; }
+  .fx-check .bx { width: 16px; height: 16px; border-radius: 4px; background: var(--blue); display: grid; place-items: center; color: #fff; font-size: 11px; }
+  .fx-seg { display: flex; border: 1px solid #3a3e48; border-radius: 7px; overflow: hidden; }
+  .fx-seg span { padding: 6px 13px; font-size: 12px; color: #cfd2d8; }
+  .fx-seg span.on { background: #4a4e58; color: #fff; }
+  .fx-cap2 { font-size: 12px; color: var(--ink-faint); }
+  .fx-plot { background: #000; border-radius: 6px; overflow: hidden; }
+  .fx-plot svg { display: block; width: 100%; height: auto; }
+  .fx-chan { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; color: var(--ink-dim); }
+  .fx-chan b { font-weight: 600; }
+  .fx-amps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .fx-amp .lab { font-size: 11px; color: var(--ink-dim); margin-bottom: 7px; }
+  .fx-track { height: 5px; border-radius: 99px; background: #3a3e48; position: relative; }
+  .fx-track .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: var(--blue); }
+  .fx-track .knob { position: absolute; top: 50%; width: 15px; height: 15px; border-radius: 50%; background: #cfd2d8; transform: translate(-50%, -50%); box-shadow: 0 1px 4px oklch(0 0 0 / 0.6); }
+  .fx-hints { display: flex; flex-wrap: wrap; gap: 16px; font-size: 10.5px; color: var(--ink-faint); }
+  .fx-curve { transform-box: fill-box; transform-origin: 50% 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .fx-a { animation: fxA 6.5s ease-in-out infinite; }
+    .fx-b { animation: fxB 7.8s ease-in-out infinite; }
+    .fx-c { animation: fxC 5.6s ease-in-out infinite; }
+  }
+  @keyframes fxA { 0%, 100% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(-7px) scaleY(1.05); } }
+  @keyframes fxB { 0%, 100% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(8px) scaleY(0.96); } }
+  @keyframes fxC { 0%, 100% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(-5px) scaleY(1.06); } }
+  .ph {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    background-image: repeating-linear-gradient(45deg, oklch(0.22 0.014 264) 0 12px, oklch(0.2 0.013 264) 12px 24px);
+  }
+  .ph .pc { display: flex; flex-direction: column; gap: 8px; align-items: center; padding: 24px; }
+  .ph .pc .mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--ink-dim); text-transform: uppercase; }
+  .ph .pc .sub { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); max-width: 30ch; line-height: 1.5; }
+  .ph .pc .icon { width: 46px; height: 46px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-2); display: grid; place-items: center; }
+  .ph .pc .icon span { width: 18px; height: 18px; border-radius: 4px; background: linear-gradient(135deg, var(--magenta), var(--blue)); }
+
+  .curves-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: clamp(34px, 4vw, 50px); }
+  @media (max-width: 820px) { .curves-grid { grid-template-columns: 1fr; } }
+  .curve-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+  .curve-card .ct { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .curve-card h4 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+  .curve-card p { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .curve-fig { height: 120px; border-radius: 11px; background: var(--bg); border: 1px solid var(--line-soft); overflow: hidden; }
+  .curve-fig svg { width: 100%; height: 100%; display: block; }
+  .curve-fig path { transition: transform 0.55s cubic-bezier(.2,.7,.2,1); transform-box: fill-box; transform-origin: center; }
+  .curve-card:hover .curve-fig path:nth-of-type(1) { transform: translate(-9px, -3px); }
+  .curve-card:hover .curve-fig path:nth-of-type(2) { transform: translate(7px, 2px); }
+  .curve-card:hover .curve-fig path:nth-of-type(3) { transform: translate(-5px, -6px); }
+  @media (prefers-reduced-motion: reduce) {
+    .curve-fig path { transition: none; }
+    .curve-card:hover .curve-fig path { transform: none; }
+  }
+
+  /* ============ MEMBERSHIP ============ */
+  .sub { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .sub-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .sub-grid { grid-template-columns: 1fr; } }
+  .sub-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
+  .sub-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
+  .sub-copy p strong { color: var(--ink); font-weight: 600; }
+  .sub-copy .free-note { margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--cyan-d); position: relative; overflow: hidden; }
+  .sub-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan); }
+  .sub-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .sub-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); }
+  .price-card { position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden; }
+  .price-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta)); }
+  .price-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); }
+  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 72px); line-height: 1; letter-spacing: -0.03em; }
+  .price-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
+  .price-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .price-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .price-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+  .price-list li::before { content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px; }
+  .price-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
+  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  /* ============ INSTALL ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start;
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px;
+  }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--green);
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.74 0.165 148 / 0.4); background: var(--green-d);
+    display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--cyan); }
+  .step .st a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
+  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
+  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
+  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
+  .note-card { background: var(--yellow-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--yellow); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  details.manual { margin-top: 8px; border: 1px solid var(--line-soft); border-radius: 14px; background: var(--bg-1); overflow: hidden; }
+  details.manual summary { cursor: pointer; padding: 16px 20px; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--ink-dim); list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details.manual summary::-webkit-details-marker { display: none; }
+  details.manual summary::after { content: "+"; font-size: 16px; color: var(--ink-faint); }
+  details.manual[open] summary::after { content: "–"; }
+  details.manual .mbody { padding: 0 20px 18px; }
+  details.manual ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+  details.manual li { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  details.manual code { font-family: var(--mono); font-size: 12px; background: var(--bg-2); border-radius: 5px; padding: 1px 6px; color: var(--cyan); }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    .btn, nav.toplinks a.cta, .stock-select, .compare { min-height: 44px; }
+    .swatches button { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="https://dec18studios.com/color-grading-tools">All tools</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#lab">Stock Lab</a>
+      <a href="#install">Install</a>
+      <a href="#subscribe" class="cta">Get it · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Film stock emulation · OFX · DaVinci Resolve</p>
+        <h1 class="hero-title">Design your<br />own stocks.<br /><em>Be the chemist.</em></h1>
+        <p class="hero-sub">Photo Chemist is a full photochemical pipeline that develops your digital footage the way a darkroom would — from photons to final print. Not a filter. A film lab in a node.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#subscribe">Get Photo Chemist →</a>
+          <a class="btn" href="#pipeline">See how it works</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>17+</b><span>stage pipeline</span></div>
+          <div class="m"><b>43</b><span>band spectrum</span></div>
+          <div class="m"><b>∞</b><span>stocks you design</span></div>
+        </div>
+      </div>
+
+      <!-- Stock viewer: dropdown swaps the output look. Swap in real exports via the STOCKS array. -->
+      <div class="viewer reveal">
+        <div class="viewer-head">
+          <span class="lbl">Stock preview</span>
+          <span class="live" id="liveTag">Live look sim</span>
+        </div>
+        <div class="stage" id="stage">
+          <img id="stockImg" src="assets/frame-web.jpg" alt="Photo Chemist film stock preview" />
+          <div class="badge"><span class="dot" id="stockDot"></span><span id="stockBadge">Golden Daylight</span></div>
+          <button class="compare" id="compareBtn" type="button" aria-label="Hold to see the Rec.709 frame">Hold: Rec.709</button>
+        </div>
+        <p class="stock-desc" id="stockDesc"></p>
+        <div class="stock-picker">
+          <label for="stockSelect">The creator's sample looks</label>
+          <div class="selrow">
+            <select class="stock-select" id="stockSelect"></select>
+            <div class="swatches" id="swatches"></div>
+          </div>
+          <p class="stock-note" id="stockNote">Sample stocks I designed as starting points — your footage and your own stock design will land differently. Previews use a live color sim for now.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORY : it's chemistry ============ -->
+<section class="story" data-screen-label="What is film">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-copy reveal">
+        <p class="eyebrow">What is film, really?</p>
+        <h2>It's chemistry — not an old-school filter.</h2>
+        <p>Film isn't just “digital with grain.” It's a <strong>chemical system</strong>. Light strikes silver halide crystals in the emulsion, tiny dye molecules react, and an invisible <strong>latent image</strong> is revealed during development. That whole chain of physics and chemistry is <em>why</em> film looks richer, softer and more natural than a sensor.</p>
+        <p>Photo Chemist simulates that entire process in software — step by step, photons to print — so your footage looks like it was made in a darkroom, not dropped through a LUT. The best part? <strong>You</strong> are the chemist. You design the stock.</p>
+      </div>
+
+      <div class="chem-card reveal">
+        <div class="chem-flow">
+          <div class="chem-step">
+            <div class="ico" style="background:var(--yellow)">hν</div>
+            <div class="ct"><b>Light hits the emulsion</b><p>Photons strike silver halide crystals across the full visible spectrum — not just three channels.</p></div>
+          </div>
+          <div class="chem-rail"></div>
+          <div class="chem-step">
+            <div class="ico" style="background:var(--red)">Ag</div>
+            <div class="ct"><b>A latent image forms</b><p>Exposed crystals hold an invisible record of the scene, waiting in the silver.</p></div>
+          </div>
+          <div class="chem-rail"></div>
+          <div class="chem-step">
+            <div class="ico" style="background:var(--magenta)">CMY</div>
+            <div class="ct"><b>Development reveals dye</b><p>Chemistry converts silver into cyan, magenta and yellow dye clouds — the image you see.</p></div>
+          </div>
+          <div class="chem-rail"></div>
+          <div class="chem-step">
+            <div class="ico" style="background:var(--cyan)">⌬</div>
+            <div class="ct"><b>Light passes through to screen</b><p>Projector light transmits through the composite dyes. What survives is your final frame.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PIPELINE ============ -->
+<section class="pipeline" id="pipeline" data-screen-label="Pipeline">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The pipeline · photons → print</p>
+      <h2>Meet the Photo Chemist. (It's you.)</h2>
+      <p>Your footage runs through a 17+ stage system — from defining the stock and how it sees light, all the way to developing and projecting it. Here's the whole journey, stage by stage. It looks like a lot, but play with it and it clicks fast.</p>
+    </div>
+
+    <div class="stages">
+      <!-- 01·02 -->
+      <article class="stage-card reveal" style="--accent: var(--red); --accent-d: var(--red-d);">
+        <div class="stage-side">
+          <span class="num">Stage 01 · 02</span>
+          <h3>Reconstruct the light</h3>
+          <p class="tag">Reality: film reacts to the full 360–780nm spectrum — not “RGB.”</p>
+        </div>
+        <div class="stage-body">
+          <p>We reverse-engineer your digital RGB into a <strong>43-band spectrum</strong> using the dye-sensitivity controls. That estimates where silver halide is likely to become metallic silver, and which emulsion dyes form where — giving physically plausible light distributions to work from.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Different film stocks “see” different parts of the spectrum. Get this right and everything downstream behaves like real film.</p></div>
+        </div>
+      </article>
+
+      <!-- 03·05 -->
+      <article class="stage-card reveal" style="--accent: var(--yellow); --accent-d: var(--yellow-d);">
+        <div class="stage-side">
+          <span class="num">Stage 03 · 05</span>
+          <h3>Exposure, grain &amp; halation</h3>
+          <p class="tag">Shape the HD density curves; texture emerges from the silver itself.</p>
+        </div>
+        <div class="stage-body">
+          <p>Once we map where silver activates, we shape the density response with the <strong>HD curves</strong> — taking a linear scene exposure and letting shadows hang on longer while highlights roll off gracefully. <strong>Grain</strong> appears where silver that <em>should</em> have activated doesn't, leaving a slightly different density than its neighbours. <strong>Halation</strong> models light that scattered back through the stock, leaving that signature reddish halo bleeding around highlights.</p>
+          <div class="why"><div class="k">Why it matters</div><p>This is why film has graceful highlight rolloff and rich shadows instead of hard digital clipping — and why the grain feels built-in, not sprinkled on top.</p></div>
+        </div>
+      </article>
+
+      <!-- 06 -->
+      <article class="stage-card reveal" style="--accent: var(--magenta); --accent-d: var(--magenta-d);">
+        <div class="stage-side">
+          <span class="num">Stage 06</span>
+          <h3>Dye design</h3>
+          <p class="tag">Cyan / magenta / yellow as asymmetric Gaussian absorption curves.</p>
+        </div>
+        <div class="stage-body">
+          <p>The three dyes are simulated as <strong>asymmetric Gaussian absorption curves</strong>, matchable to real film chemistry — and the latest update resolves those absorption curves across the <strong>same 43-band spectrum</strong> as the sensitivities, for true spectral accuracy. Density is which wavelengths a dye absorbs; transmission is what it lets pass. What you see at the end is the <em>transmission</em> — the light that remains.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Real film is all about these dyes and how they block light. Shape them and you're shaping the soul of the stock.</p></div>
+        </div>
+      </article>
+
+      <!-- 07 -->
+      <article class="stage-card reveal" style="--accent: var(--green); --accent-d: var(--green-d);">
+        <div class="stage-side">
+          <span class="num">Stage 07</span>
+          <h3>Development</h3>
+          <p class="tag">Process the metallic silver, then form the dye emulsions.</p>
+        </div>
+        <div class="stage-body">
+          <p>Controls here develop the latent image. <strong>Push / Pull</strong> is the headline move — it's how long the stock sits in the developer, letting more or less dye form where metallic silver is present. Tweak it to lift or crush the whole response.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Push/pull is the single most intuitive way to change a stock's character, just like a real lab dialing development time.</p></div>
+        </div>
+      </article>
+
+      <!-- 07.1 -->
+      <article class="stage-card reveal" style="--accent: var(--cyan); --accent-d: var(--cyan-d);">
+        <div class="stage-side">
+          <span class="num">Stage 07.1</span>
+          <h3>Bleach bypass &amp; inter-image effects</h3>
+          <p class="tag">Silver retention and the subtle chemistry that makes stocks special.</p>
+        </div>
+        <div class="stage-body">
+          <p><strong>Bleach Bypass</strong> controls how much metallic silver is washed away or retained during development. Beyond it sit the finer moves — <strong>Midtone Expansion, Developer Competition, Chroma Expansion, Dye Inhibition</strong> and <strong>Spectral Separation</strong> — each accounting for a real aspect of stock design to pull out the richest tones and colors. <strong>Bias controls</strong> apply all of this per layer.</p>
+          <div class="why"><div class="k">Why it matters</div><p>This is where a stock goes from “fine” to “unmistakably yours” — high-silver contrast, expanded midtones, or a clean delicate palette.</p></div>
+        </div>
+      </article>
+
+      <!-- 08 -->
+      <article class="stage-card reveal" style="--accent: var(--blue); --accent-d: var(--blue-d);">
+        <div class="stage-side">
+          <span class="num">Stage 08</span>
+          <h3>Printer lights</h3>
+          <p class="tag">Beer–Lambert transmission — design the light that exposes the print.</p>
+        </div>
+        <div class="stage-body">
+          <p>Now your negative is developed, <strong>Stage 08 is the printer lights</strong>. We model transmission through the negative with the <strong>Beer–Lambert law</strong> and let you design the color and power of the light used to expose the next stock. This is the hand-off from negative to print.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Printer lights are where the classic “print” character is dialed in — the single biggest lever on how the final image is balanced.</p></div>
+        </div>
+      </article>
+
+      <!-- 09–17 : the print pass -->
+      <article class="stage-card reveal" style="--accent: var(--red); --accent-d: var(--red-d);">
+        <div class="stage-side">
+          <span class="num">Stage 09 – 17</span>
+          <h3>The print pass &amp; projector</h3>
+          <p class="tag">Stages 1–8, run a second time — this time to build the print film.</p>
+        </div>
+        <div class="stage-body">
+          <p>Here's the part that makes it a true photochemical chain: <strong>stages 09 through 17 repeat the whole 1–8 process</strong>, now geared toward creating a <strong>print film</strong> from the printer light leaving the negative. That print stock is then <strong>sampled through a projector simulation</strong> — so what lands on screen isn't your input colors or even the dye colors, but <strong>the light that survives</strong> the composite dyes of negative <em>and</em> print.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Picture the projector in your local theater: the light you actually see is the light the dyes <em>didn't</em> absorb — and that's exactly what we deliver. Two full emulsions stacked, negative then print, handling the light just like real film does.</p></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STOCK LAB ============ -->
+<section class="lab" id="lab" data-screen-label="Stock Lab">
+  <div class="wrap">
+    <div class="lab-feature">
+      <div class="lab-copy reveal">
+        <span class="kick">New · Stock Lab</span>
+        <h3>Sculpt a stock by hand with the Film Stock Editor.</h3>
+        <p>We built something we haven't seen anywhere else: a <strong>Film Stock Editor</strong>. Instead of guessing at numeric sliders, you <strong>draw the curves</strong> that define your film — dye sensitivity, the HD response, and dye absorption — right on a 43-band spectral graph, and watch the stock develop live. It's the most direct, most innovative way to design a look from scratch.</p>
+        <ul class="lab-list">
+          <li><span class="b"></span><span><strong>Draw the curves by hand.</strong> Click empty curve to add a point, drag to move, right-click to delete — sculpt each layer directly across the spectrum.</span></li>
+          <li><span class="b"></span><span><strong>Per-dye peak &amp; amplitude.</strong> Set R / G / B peak wavelengths in nanometers and tune Yellow, Magenta &amp; Cyan amplitudes independently.</span></li>
+          <li><span class="b"></span><span><strong>Log view &amp; live preview.</strong> Flip to log density, switch between stocks, and see the frame re-develop in real time as you work.</span></li>
+        </ul>
+      </div>
+
+      <div class="fse-shot reveal">
+        <div class="fx-win">
+          <div class="fx-titlebar">
+            <span class="fx-lights"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>
+            Film Stock Editor
+          </div>
+          <div class="fx-body">
+            <div class="fx-h">Film Stock Editor</div>
+            <div class="fx-row">
+              <span class="fx-sel">Print Dye</span>
+              <span class="fx-check"><span class="bx">✓</span>Log View</span>
+            </div>
+            <div class="fx-row">
+              <span class="fx-seg"><span class="on">Yel</span><span>Mag</span><span>Cyan</span></span>
+              <span class="fx-cap2">Stock:</span>
+              <span class="fx-sel grow">Seneca 2383</span>
+            </div>
+
+            <div class="fx-plot">
+              <svg viewBox="0 0 800 392" preserveAspectRatio="none" role="img" aria-label="Dye absorption curves across the visible spectrum">
+                <!-- gridlines -->
+                <g stroke="#1b1c20" stroke-width="1">
+                  <line x1="40" y1="57" x2="788" y2="57" /><line x1="40" y1="118" x2="788" y2="118" />
+                  <line x1="40" y1="178" x2="788" y2="178" /><line x1="40" y1="239" x2="788" y2="239" />
+                  <line x1="40" y1="299" x2="788" y2="299" />
+                  <line x1="200" y1="20" x2="200" y2="356" /><line x1="360" y1="20" x2="360" y2="356" />
+                  <line x1="520" y1="20" x2="520" y2="356" /><line x1="680" y1="20" x2="680" y2="356" />
+                </g>
+                <!-- axis labels -->
+                <g fill="#5a5d64" font-family="JetBrains Mono, monospace" font-size="11">
+                  <text x="10" y="26">D</text><text x="10" y="61">2.5</text><text x="20" y="122">2</text>
+                  <text x="10" y="182">1.5</text><text x="20" y="243">1</text><text x="10" y="303">0.5</text>
+                </g>
+                <!-- floating control points -->
+                <g fill="#b33636">
+                  <circle cx="610" cy="62" r="6" /><circle cx="500" cy="150" r="6" /><circle cx="690" cy="205" r="6" />
+                  <circle cx="20" cy="343" r="6" /><circle cx="100" cy="336" r="6" />
+                  <circle cx="300" cy="346" r="6" /><circle cx="360" cy="344" r="6" /><circle cx="420" cy="316" r="6" />
+                </g>
+                <!-- curves (animated) -->
+                <g fill="none" stroke-linecap="round">
+                  <path class="fx-curve fx-a" d="M16,352 C 92,350 120,40 165,34 C 212,28 250,308 322,342 C 430,356 620,354 786,350" stroke="#5c7cf0" stroke-width="1.8" />
+                  <path class="fx-curve fx-b" d="M120,356 C 250,354 286,150 330,140 C 378,130 412,330 472,346 C 560,356 680,355 786,352" stroke="#57c46a" stroke-width="1.8" />
+                  <path class="fx-curve fx-c" d="M16,344 C 130,343 250,344 330,338 C 412,332 470,254 545,248 C 624,242 706,332 786,346" stroke="#ff5a52" stroke-width="3" />
+                </g>
+                <!-- spectrum strip -->
+                <defs>
+                  <linearGradient id="fxspec" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#7a3cff" /><stop offset="0.15" stop-color="#2b5cff" />
+                    <stop offset="0.30" stop-color="#14c4d6" /><stop offset="0.46" stop-color="#36d13f" />
+                    <stop offset="0.62" stop-color="#e3d23a" /><stop offset="0.78" stop-color="#e87d2a" />
+                    <stop offset="1" stop-color="#d83a2a" />
+                  </linearGradient>
+                </defs>
+                <rect x="16" y="362" width="772" height="16" fill="url(#fxspec)" />
+                <rect x="16" y="362" width="360" height="16" fill="rgba(0,0,0,0.5)" />
+                <text x="26" y="374" fill="rgba(255,255,255,0.65)" font-family="JetBrains Mono, monospace" font-size="9">Click a handle to edit · Click empty curve to add a point</text>
+              </svg>
+            </div>
+
+            <div class="fx-chan">
+              <span><b style="color:var(--red)">R</b> peak 670 nm &nbsp; pts 9</span>
+              <span><b style="color:var(--green)">G</b> peak 530 nm &nbsp; pts 9</span>
+              <span><b style="color:var(--blue)">B</b> peak 460 nm &nbsp; pts 9</span>
+            </div>
+            <div class="fx-amps">
+              <div class="fx-amp"><div class="lab">Yel Amp: 2.91</div><div class="fx-track"><div class="fill" style="width:45%"></div><div class="knob" style="left:45%"></div></div></div>
+              <div class="fx-amp"><div class="lab">Mag Amp: 1.98</div><div class="fx-track"><div class="fill" style="width:58%"></div><div class="knob" style="left:58%"></div></div></div>
+              <div class="fx-amp"><div class="lab">Cyan Amp: 0.93</div><div class="fx-track"><div class="fill" style="width:80%"></div><div class="knob" style="left:80%"></div></div></div>
+            </div>
+            <div class="fx-hints"><span>Ctrl+click canvas&nbsp;&nbsp;add point</span><span>Right-click&nbsp;&nbsp;delete</span><span>Drag&nbsp;&nbsp;move</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="curves-grid">
+      <div class="curve-card reveal">
+        <span class="ct">Stock Design · 01</span>
+        <div class="curve-fig">
+          <svg viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="100" x2="240" y2="100" stroke="oklch(0.32 0.013 264)" stroke-width="1" />
+            <path d="M0,98 C50,98 56,30 80,30 C104,30 110,98 150,98" fill="none" stroke="var(--blue)" stroke-width="2.5" />
+            <path d="M30,99 C80,99 86,40 110,40 C134,40 140,99 180,99" fill="none" stroke="var(--green)" stroke-width="2.5" opacity="0.8" />
+            <path d="M70,99 C120,99 126,24 150,24 C174,24 180,99 220,99" fill="none" stroke="var(--red)" stroke-width="2.5" opacity="0.8" />
+          </svg>
+        </div>
+        <h4>Dye sensitivity</h4>
+        <p>K, peak &amp; sigma per layer — where each emulsion layer reacts on the spectrum, and how wide that response runs.</p>
+      </div>
+
+      <div class="curve-card reveal">
+        <span class="ct">Stock Design · 02</span>
+        <div class="curve-fig">
+          <svg viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="100" x2="240" y2="100" stroke="oklch(0.32 0.013 264)" stroke-width="1" />
+            <line x1="20" y1="0" x2="20" y2="100" stroke="oklch(0.27 0.012 264)" stroke-width="1" />
+            <path d="M20,96 C70,94 96,82 130,52 C160,26 196,18 224,16" fill="none" stroke="var(--yellow)" stroke-width="2.5" />
+            <circle cx="130" cy="52" r="3.5" fill="var(--ink)" />
+          </svg>
+        </div>
+        <h4>HD curves</h4>
+        <p>Compress and roll off shadows and highlights, and set the steepness of the straight-line section between them.</p>
+      </div>
+
+      <div class="curve-card reveal">
+        <span class="ct">Stock Design · 03</span>
+        <div class="curve-fig">
+          <svg viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="100" x2="240" y2="100" stroke="oklch(0.32 0.013 264)" stroke-width="1" />
+            <path d="M0,99 C40,99 44,20 72,30 C92,37 96,99 130,99" fill="none" stroke="var(--cyan)" stroke-width="2.5" />
+            <path d="M50,99 C90,99 96,28 122,36 C146,43 150,99 190,99" fill="none" stroke="var(--magenta)" stroke-width="2.5" opacity="0.85" />
+            <path d="M90,99 C130,99 138,34 162,42 C188,50 192,99 232,99" fill="none" stroke="var(--yellow)" stroke-width="2.5" opacity="0.85" />
+          </svg>
+        </div>
+        <h4>Dye colors</h4>
+        <p>Per dye: peak, height, an asymmetric width and a minimum baseline — exactly which wavelengths each dye blocks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBERSHIP ============ -->
+<section class="sub" id="subscribe" data-screen-label="Membership">
+  <div class="wrap">
+    <div class="sub-grid">
+      <div class="sub-copy reveal">
+        <p class="eyebrow">The membership</p>
+        <h2>Get Photo Chemist — and everything else.</h2>
+        <p>Photo Chemist comes with the whole Tool Box. Become a <strong>Happy Little Noder</strong> and unlock every premium tool on the channel, plus every update and new release. One low annual fee that will <em>never</em> be raised — lock it in once and you're set.</p>
+        <div class="free-note">
+          <div class="k">Plenty is free, forever</div>
+          <p>A whole set of the Tool Box is free, always — grab the Tool Box Manager and start playing today. Photo Chemist and the rest of the premium kit unlock with a single membership whenever you're ready.</p>
+        </div>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="plan">Happy Little Noders</div>
+        <div class="amt"><b>$47.34</b><span>/ year</span></div>
+        <p class="note">Everything you see on YouTube, plus every update — for less than a single film stock LUT pack.</p>
+        <ul class="price-list">
+          <li>Full Photo Chemist DRT (every stage &amp; the Film Stock Editor)</li>
+          <li>Every premium DCTL &amp; OFX plugin in the Tool Box</li>
+          <li>All future tools &amp; updates included</li>
+          <li>Technicolor DRT, Hue Contrast Compressor, Color Slice O'matic &amp; more</li>
+          <li>Price locked — never raised</li>
+        </ul>
+        <a class="btn primary" href="https://dec18studios.com/checkout/subscribe?cartToken=kptC8qvTRVDiZHvOBtMQb4sftOOnbvA7HK3XutIz">Become a member →</a>
+        <div class="price-foot">Billed annually · cancel anytime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="install" id="install" data-screen-label="Install">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Getting started</p>
+      <h2>Install in a couple of clicks.</h2>
+      <p>The only way in is the <strong>Tool Box Manager</strong> — it installs Photo Chemist, keeps it organized, and updates it for you right alongside the rest of the kit. Works on <strong>macOS and Windows</strong>, no manual file-copying required.</p>
+    </div>
+
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Download the Tool Box Manager</b><p>Grab the latest release from <a class="inline" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">GitHub</a> and open it. It's your home base for every Dec. 18 tool.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Find Photo Chemist in the list</b><p>Browse the catalog inside the Manager and select <b>Photo Chemist</b> — it's right there alongside the rest of the kit.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Click Install</b><p>The Manager drops the OFX bundle into the right place for you — no digging through system folders.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Restart DaVinci Resolve</b><p>Relaunch Resolve so it picks up the new plugin, and make sure OFX is enabled in Resolve's plugin manager. On macOS you may first need to allow it in <b>System Settings → Privacy &amp; Security</b>.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Apply from the Effects library</b><p>Photo Chemist now lives in your OFX effects. Drop it on a node — it expects a <strong>DaVinci Wide Gamut / Linear</strong> input, so add a CST with no tone mapping just before it.</p></div>
+        </div>
+      </div>
+
+      <aside class="install-aside">
+        <div class="manager-card reveal">
+          <span class="badge">Recommended</span>
+          <h4>The Tool Box Manager</h4>
+          <p>Install, organize and auto-update Photo Chemist and every other Dec. 18 tool from one app. New stuff lands here first.</p>
+          <a class="btn primary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
+        </div>
+
+        <div class="note-card reveal">
+          <div class="k">Heads up · Mac &amp; Windows</div>
+          <p>Photo Chemist now runs on both <b>macOS and Windows</b>, installed straight through the Tool Box Manager — there's no manual install to fuss with. On macOS, if the system ever asks, choose <b>Allow Anyway</b> in Privacy &amp; Security, then reopen Resolve. Stuck? Email <a class="inline" href="mailto:create@dec18studios.com" style="color:var(--cyan)">create@dec18studios.com</a> and I'll help.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="https://dec18studios.com/color-grading-tools">Color Grading Tools</a>
+        <a href="https://dec18studios.com/color-grading-tools/technicolordrt">Technicolor DRT</a>
+        <a href="https://dec18studios.com/color-grading-tools/colorslice">Color Slice O'matic</a>
+        <a href="https://dec18studios.com/joy-of-colourgrading">Happy Little Node Trees</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============ STOCK VIEWER ============
+     Add as many stocks as you like — the dropdown + swatches grow to fit (swatches wrap).
+     Each stock can carry two real exports:
+        src  = the developed Photo Chemist (filmic) look   e.g. "assets/golden-filmic.jpg"
+        base = the plain Rec.709 / normal version          e.g. "assets/golden-rec709.jpg"
+     When `src` is set it replaces the simulated frame; when `base` is set the Hold-to-compare
+     button shows that real Rec.709 frame instead of the simulated one. Leave both "" to use
+     the built-in live color simulation. */
+  (function () {
+    var BASE_IMG = "assets/frame-web.jpg";
+    var STOCKS = [
+      { name: "Golden Daylight", color: "var(--yellow)", src: "", base: "",
+        desc: "A warm, sunlit daylight negative — gentle contrast, golden highlights, clean skin.",
+        filter: "sepia(0.22) saturate(1.14) contrast(1.05) brightness(1.03) hue-rotate(-8deg)" },
+      { name: "Tungsten Night", color: "var(--blue)", src: "", base: "",
+        desc: "A tungsten-balanced night stock — cool shadows, warm practicals, moody falloff.",
+        filter: "contrast(1.12) saturate(1.06) brightness(0.95) hue-rotate(6deg)" },
+      { name: "Vivid Reversal", color: "var(--red)", src: "", base: "",
+        desc: "A punchy reversal / slide look — deep saturation, snappy contrast, rich blacks.",
+        filter: "saturate(1.5) contrast(1.2) brightness(1.0)" },
+      { name: "Bleach Bypass", color: "var(--cyan)", src: "", base: "",
+        desc: "Silver retained in the print — desaturated, high-contrast, metallic and gritty.",
+        filter: "saturate(0.5) contrast(1.32) brightness(1.06)" },
+      { name: "Cross Process", color: "var(--green)", src: "", base: "",
+        desc: "Developed in the wrong soup on purpose — green-cyan cast, crushed, expressive.",
+        filter: "hue-rotate(-16deg) saturate(1.32) contrast(1.12) brightness(1.02)" },
+      { name: "Faded Archive", color: "var(--magenta)", src: "", base: "",
+        desc: "An aged, lifted-black stock — soft contrast, dusty palette, vintage warmth.",
+        filter: "saturate(0.82) contrast(0.86) brightness(1.1) sepia(0.16)" }
+    ];
+
+    var img = document.getElementById("stockImg");
+    var sel = document.getElementById("stockSelect");
+    var sw = document.getElementById("swatches");
+    var badge = document.getElementById("stockBadge");
+    var dot = document.getElementById("stockDot");
+    var desc = document.getElementById("stockDesc");
+    var note = document.getElementById("stockNote");
+    var cmp = document.getElementById("compareBtn");
+    var liveTag = document.getElementById("liveTag");
+    if (!img || !sel) return;
+
+    var current = 0;
+
+    STOCKS.forEach(function (s, i) {
+      var o = document.createElement("option");
+      o.value = i; o.textContent = s.name; sel.appendChild(o);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.title = s.name;
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.style.background = "var(--bg-2)";
+      b.dataset.i = i;
+      b.addEventListener("click", function () { apply(i); });
+      sw.appendChild(b);
+    });
+
+    function paintSwatches() {
+      // render each swatch as a tiny tinted thumbnail of the base frame
+      Array.prototype.forEach.call(sw.children, function (b, i) {
+        b.style.backgroundImage = "url(" + (STOCKS[i].src || BASE_IMG) + ")";
+        b.style.filter = STOCKS[i].src ? "none" : STOCKS[i].filter;
+        b.setAttribute("aria-pressed", i === current ? "true" : "false");
+      });
+    }
+
+    function apply(i) {
+      current = i;
+      var s = STOCKS[i];
+      if (s.src) {
+        img.src = s.src;
+        img.style.filter = "none";
+        if (liveTag) { liveTag.textContent = "Real export"; }
+      } else {
+        img.src = BASE_IMG;
+        img.style.filter = s.filter;
+        if (liveTag) { liveTag.textContent = "Live look sim"; }
+      }
+      badge.textContent = s.name;
+      dot.style.background = s.color;
+      desc.textContent = s.desc;
+      sel.value = i;
+      paintSwatches();
+    }
+
+    sel.addEventListener("change", function () { apply(parseInt(sel.value, 10)); });
+
+    // hold-to-compare: show the Rec.709 / original frame (real export if provided, else simulated)
+    function showOrig(on) {
+      var s = STOCKS[current];
+      if (on) {
+        if (s.base) { img.src = s.base; img.style.filter = "none"; }
+        else { img.src = BASE_IMG; img.style.filter = "saturate(0.4) contrast(0.82) brightness(1.08)"; }
+        cmp.classList.add("holding"); cmp.textContent = "Rec.709";
+      } else {
+        apply(current);
+        cmp.classList.remove("holding"); cmp.textContent = "Hold: Rec.709";
+      }
+    }
+    cmp.addEventListener("pointerdown", function (e) { e.preventDefault(); showOrig(true); });
+    cmp.addEventListener("pointerup", function () { showOrig(false); });
+    cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+    cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+
+    apply(0);
+  })();
+
+  /* ============ SCROLL REVEAL ============ */
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d8455f" />
+        <stop offset="0.5" stop-color="#b154c9" />
+        <stop offset="1" stop-color="#5b78d6" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">PC</text>
+  </svg>
+</template>
+
+</body>
+</html>
