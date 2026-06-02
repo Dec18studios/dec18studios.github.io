@@ -64,21 +64,21 @@
     background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
   }
   .topbar .row {
-    max-width: var(--maxw); margin: 0 auto; padding: 14px var(--pad);
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
   }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand .mark {
-    width: 30px; height: 30px; border-radius: 7px;
-    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
-    position: relative;
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
+            mask: url("assets/logo-full.png") left center / contain no-repeat;
   }
-  .brand .mark::after { content: ""; position: absolute; inset: 8px; border-radius: 3px; background: var(--bg); }
-  .brand b { font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.16em; }
-  .brand span { color: var(--ink-faint); font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; }
 
-  nav.toplinks { display: flex; gap: 24px; align-items: center; }
-  nav.toplinks a { font-size: 14px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
   nav.toplinks a:hover { color: var(--ink); }
   nav.toplinks a.current { color: var(--ink); }
   nav.toplinks a.cta {
@@ -222,7 +222,7 @@
     aspect-ratio: 16 / 9; background: var(--bg-1); box-shadow: 0 30px 80px -46px oklch(0 0 0 / 0.85);
     --pos: 50%; touch-action: none; cursor: ew-resize; user-select: none;
   }
-  .ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; -webkit-user-drag: none; user-select: none; }
   .ba-before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
   .ba-before img { filter: saturate(0.36) contrast(0.8) brightness(1.09); }
   .ba-tag {
@@ -306,9 +306,8 @@
 
 <header class="topbar">
   <div class="row">
-    <a class="brand" href="https://dec18studios.com/">
-      <span class="mark"></span>
-      <b>DEC18</b><span>/ Studios</span>
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
     </a>
     <!-- Nav points at the real Dec. 18 Studios pages -->
     <nav class="toplinks">
@@ -395,7 +394,7 @@
       <div class="reveal">
         <span class="tool-num">FLAGSHIP · OFX</span>
         <h3>Be the<br />chemist.</h3>
-        <div class="resolve-tag">DaVinci Resolve · OFX · macOS</div>
+        <div class="resolve-tag">DaVinci Resolve · OFX · macOS · Windows · Linux</div>
         <p class="lede">Film isn't just “old-school digital” — it's a chemical system. <strong>Photo Chemist</strong> runs your footage through a 17+ stage process, reverse-engineering RGB into a 43-band spectrum, then simulating exposure, grain, halation, dye formation, development and projection — so images look made in a darkroom, not filtered.</p>
         <div class="kn-cta">
           <a class="btn primary" href="https://dec18studios.com/color-grading-tools/photochemist">Explore Photo Chemist →</a>
@@ -562,7 +561,7 @@
       ba.style.setProperty("--pos", (p * 100) + "%");
     }
     var dragging = false;
-    ba.addEventListener("pointerdown", function (e) { dragging = true; ba.setPointerCapture(e.pointerId); setPos(e.clientX); });
+    ba.addEventListener("pointerdown", function (e) { e.preventDefault(); dragging = true; ba.setPointerCapture(e.pointerId); setPos(e.clientX); });
     ba.addEventListener("pointermove", function (e) { if (dragging) setPos(e.clientX); });
     ba.addEventListener("pointerup", function () { dragging = false; });
     ba.addEventListener("pointercancel", function () { dragging = false; });
