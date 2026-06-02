@@ -36,7 +36,7 @@
     "desc": "Natural, filmic grain that lives in the texture of the image."
   },
   {
-    "name": "Color Slice O'matic",
+    "name": "Color Slicer",
     "slug": "colorslice",
     "tier": "free",
     "color": "blue",
