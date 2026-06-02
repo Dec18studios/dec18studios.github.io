@@ -43,6 +43,34 @@
     "desc": "Slice the image into color regions for precise, targeted grading."
   },
   {
+    "name": "Contrast Sat Volume",
+    "slug": "contrast-sat-volume",
+    "tier": "pro",
+    "color": "red",
+    "desc": "GPU-accelerated OFX — compress hue shifts caused by contrast and saturation moves."
+  },
+  {
+    "name": "GradeMatch",
+    "slug": "grade-match",
+    "tier": "pro",
+    "color": "cyan",
+    "desc": "Per-channel histogram matching with vectorscope, patch sampler, and perceptual diff heatmap."
+  },
+  {
+    "name": "SplitToneX",
+    "slug": "split-tone-x",
+    "tier": "pro",
+    "color": "magenta",
+    "desc": "Dual-engine split toning with Film Density curves, SatSelect gating, and diagnostic overlays."
+  },
+  {
+    "name": "Trim Top Bottom",
+    "slug": "trim-top-bottom",
+    "tier": "pro",
+    "color": "yellow",
+    "desc": "Gently roll off highlights or lift shadows before your DRT."
+  },
+  {
     "name": "Perfect Exposure Every Time",
     "slug": "perfect-exposure",
     "tier": "free",
@@ -69,6 +97,21 @@
     "tier": "free",
     "color": "blue",
     "desc": "A diagnostic ramp for checking transforms and response."
+  },
+  {
+    "name": "Hue Inspector",
+    "slug": "hue-inspector",
+    "tier": "free",
+    "color": "yellow",
+    "desc": "Highlights hue vectors to diagnose skin tones and color balance at a glance."
+  },
+  {
+    "name": "RGB Chips",
+    "slug": "rgb-chips",
+    "tier": "free",
+    "color": "green",
+    "desc": "RGB parade-style chips overlay for exposure and white balance evaluation.",
+    "url": "https://github.com/thatcherfreeman/utility-dctls"
   },
   {
     "name": "Dolby Vision Spoofer",
