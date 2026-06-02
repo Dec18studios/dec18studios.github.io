@@ -296,6 +296,23 @@
   .reveal.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
+  /* FSE Spectral Sensitivity Visualizer */
+  .fse-viz { margin-top: 28px; }
+  .fse-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 12px; }
+  .fse-lbl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--ink-faint); text-transform: uppercase; }
+  .fse-sel {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    background: var(--bg-2); border: 1px solid var(--line-soft);
+    border-radius: 6px; padding: 4px 8px; cursor: pointer; outline: none;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center;
+    padding-right: 24px;
+  }
+  .fse-sel:hover { border-color: var(--line); color: var(--ink); }
+  .fse-canvas-wrap { position: relative; border-radius: 8px; overflow: hidden; background: oklch(0.14 0.010 264); }
+  .fse-canvas-wrap canvas { display: block; width: 100%; height: 160px; }
+
   @media (pointer: coarse) {
     nav.toplinks a { padding-block: 4px; }
     .btn, nav.toplinks a.cta, .tcard { min-height: 44px; }
@@ -399,6 +416,23 @@
         <div class="kn-cta">
           <a class="btn primary" href="https://dec18studios.com/color-grading-tools/photochemist">Explore Photo Chemist →</a>
           <a class="btn" href="#subscribe">Get it with everything — $47.34/yr →</a>
+        </div>
+        <div class="fse-viz">
+          <div class="fse-hdr">
+            <span class="fse-lbl">Neg Stock · Spectral Sensitivity</span>
+            <select class="fse-sel" id="fse-stock">
+              <option value="0">Seneca 100 Vivid</option>
+              <option value="1">Seneca Portrait 400</option>
+              <option value="2">Genesee 250D</option>
+              <option value="3">Genesee 500T</option>
+              <option value="4">Sakura Pro 400H</option>
+              <option value="5">WestBoy 47</option>
+              <option value="6">Eastboy XX 5222</option>
+            </select>
+          </div>
+          <div class="fse-canvas-wrap">
+            <canvas id="fse-canvas" width="600" height="160"></canvas>
+          </div>
         </div>
       </div>
 
@@ -598,6 +632,204 @@
     <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">D18</text>
   </svg>
 </template>
+
+<script>
+(function () {
+  // 43 bands: 360-780nm @ 10nm — neg silver spectral sensitivity, normalized peak=1.0
+  var FSE_STOCKS = [
+    { label: "Seneca 100 Vivid",
+      r: [0.00021,0.00023,0.00026,0.00028,0.00032,0.00035,0.00040,0.00046,0.00053,0.00062,0.00074,0.00090,0.00110,0.00138,0.00177,0.00234,0.00320,0.00453,0.00674,0.01061,0.01790,0.02079,0.10199,0.29017,0.42783,0.52209,0.54679,0.62379,0.80088,1.00000,0.79947,0.25456,0.10026,0.04368,0.01677,0.00732,0.00354,0.00186,0.00105,0.00063,0.00040,0.00026,0.00018],
+      g: [0.06752,0.07960,0.09385,0.11064,0.13121,0.13504,0.11189,0.08996,0.06780,0.06225,0.06193,0.06229,0.10279,0.24542,0.35996,0.43605,0.55482,0.75302,0.94148,1.00000,0.90552,0.71330,0.34997,0.04187,0.00608,0.00106,0.00022,0.00005,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+      b: [0.00790,0.02496,0.07888,0.24923,0.61113,0.78865,0.74039,0.78665,0.85175,0.74911,0.82149,1.00000,0.42529,0.04144,0.00426,0.00063,0.00012,0.00003,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+    { label: "Seneca Portrait 400",
+      r: [0.00029,0.00034,0.00040,0.00047,0.00056,0.00068,0.00084,0.00105,0.00134,0.00174,0.00232,0.00317,0.00448,0.00652,0.00917,0.01288,0.01641,0.01717,0.01586,0.01762,0.03165,0.07049,0.19216,0.33378,0.45404,0.58917,0.65638,0.66388,0.95166,1.00000,0.34432,0.05860,0.00954,0.00184,0.00042,0.00011,0.00003,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000],
+      g: [0.00698,0.01479,0.03136,0.06647,0.11001,0.09776,0.08199,0.07110,0.06425,0.06414,0.06821,0.08924,0.16898,0.28336,0.36527,0.44629,0.55867,0.75335,1.00000,0.96349,0.76118,0.57462,0.25371,0.05753,0.01052,0.00221,0.00053,0.00015,0.00004,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+      b: [0.02566,0.07716,0.23206,0.69789,1.00000,0.92658,0.90321,0.90813,0.83456,0.82361,0.94761,0.69833,0.24044,0.07329,0.03068,0.01169,0.00456,0.00199,0.00097,0.00051,0.00029,0.00017,0.00011,0.00007,0.00005,0.00003,0.00003,0.00002,0.00002,0.00001,0.00001,0.00001,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+    { label: "Genesee 250D",
+      r: [0.00005,0.00006,0.00006,0.00007,0.00009,0.00010,0.00013,0.00015,0.00019,0.00024,0.00031,0.00040,0.00055,0.00076,0.00109,0.00161,0.00248,0.00388,0.00452,0.00530,0.00862,0.01393,0.05469,0.17105,0.30030,0.45920,0.64402,0.69785,0.82674,1.00000,0.92215,0.42318,0.16570,0.05781,0.00766,0.00125,0.00025,0.00006,0.00002,0.00001,0.00000,0.00000,0.00000],
+      g: [0.00375,0.00515,0.00707,0.00970,0.01353,0.01433,0.01200,0.01026,0.00877,0.00990,0.01334,0.01564,0.03432,0.11988,0.25433,0.35890,0.47164,0.61443,0.80961,1.00000,0.80756,0.60574,0.37850,0.07342,0.01006,0.00164,0.00032,0.00007,0.00002,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+      b: [0.14714,0.21986,0.32852,0.49088,0.78726,0.80942,0.77098,0.84488,0.88378,0.78363,0.90124,1.00000,0.45728,0.09007,0.03215,0.01310,0.00422,0.00145,0.00057,0.00025,0.00012,0.00006,0.00003,0.00002,0.00001,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+    { label: "Genesee 500T",
+      r: [0.00086,0.00097,0.00108,0.00122,0.00138,0.00158,0.00182,0.00213,0.00252,0.00302,0.00370,0.00461,0.00587,0.00766,0.01029,0.01412,0.01811,0.01991,0.01664,0.01495,0.02863,0.04812,0.11634,0.32565,0.49071,0.65912,0.91456,0.85987,0.83923,1.00000,0.91221,0.42523,0.17780,0.08134,0.04050,0.02166,0.01231,0.00737,0.00462,0.00302,0.00204,0.00142,0.00102],
+      g: [0.00120,0.00151,0.00189,0.00236,0.00303,0.00399,0.00542,0.00762,0.01114,0.01679,0.02242,0.02789,0.06095,0.15485,0.27824,0.36602,0.46178,0.59865,0.81612,1.00000,0.83082,0.64974,0.42115,0.09115,0.01113,0.00173,0.00034,0.00008,0.00002,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+      b: [0.15707,0.26123,0.43447,0.72260,0.98269,1.00000,0.95720,0.93091,0.83886,0.76163,0.73971,0.71417,0.47677,0.26527,0.13131,0.05023,0.01622,0.00306,0.00060,0.00014,0.00004,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+    { label: "Sakura Pro 400H",
+      r: [0.00003,0.00003,0.00003,0.00004,0.00005,0.00005,0.00006,0.00007,0.00009,0.00011,0.00015,0.00019,0.00025,0.00035,0.00051,0.00077,0.00124,0.00215,0.00409,0.00874,0.02176,0.05230,0.16284,0.42854,0.85557,1.00000,0.96668,0.99482,0.78459,0.25930,0.05273,0.01186,0.00342,0.00119,0.00049,0.00022,0.00011,0.00006,0.00004,0.00002,0.00001,0.00001,0.00001],
+      g: [0.00033,0.00043,0.00055,0.00072,0.00095,0.00130,0.00184,0.00273,0.00424,0.00687,0.01010,0.01424,0.03025,0.08740,0.22267,0.35650,0.53421,0.73564,0.89402,1.00000,0.93456,0.52066,0.12962,0.01930,0.00298,0.00058,0.00014,0.00004,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+      b: [0.00002,0.00020,0.00181,0.01596,0.17979,0.57261,0.66950,0.66096,0.62636,0.61325,0.72131,1.00000,0.41443,0.07734,0.02560,0.01054,0.00466,0.00200,0.00095,0.00049,0.00027,0.00016,0.00010,0.00007,0.00005,0.00003,0.00002,0.00002,0.00001,0.00001,0.00001,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+    { label: "WestBoy 47",
+      r: [0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00004,0.00011,0.00032,0.00089,0.00251,0.00708,0.01995,0.05623,0.15136,0.31623,0.56234,0.75858,0.89125,1.00000,0.89125,0.56234,0.25119,0.07943,0.02512,0.00794,0.00251,0.00079,0.00025,0.00008,0.00003,0.00002,0.00002],
+      g: [0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00006,0.00019,0.00059,0.00186,0.00589,0.01862,0.05888,0.18621,0.39811,0.63096,0.87096,1.00000,0.79433,0.43652,0.17378,0.05888,0.01862,0.00589,0.00186,0.00059,0.00019,0.00006,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002],
+      b: [0.06607,0.10965,0.18197,0.30200,0.50119,0.83176,1.00000,0.58884,0.29512,0.10715,0.03020,0.00759,0.00214,0.00060,0.00017,0.00005,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001] },
+    { label: "Eastboy XX 5222",
+      r: [0.39811,0.56234,0.70795,0.89125,1.00000,0.79433,0.56234,0.39811,0.28184,0.19953,0.16596,0.15136,0.15136,0.17783,0.22387,0.30200,0.38019,0.44668,0.44668,0.35481,0.25119,0.16596,0.12589,0.15136,0.22387,0.35481,0.52481,0.56234,0.44668,0.28184,0.12589,0.04467,0.01585,0.00631,0.00251,0.00100,0.00040,0.00016,0.00006,0.00003,0.00001,0.00001,0.00001],
+      g: [0.39811,0.56234,0.70795,0.89125,1.00000,0.79433,0.56234,0.39811,0.28184,0.19953,0.16596,0.15136,0.15136,0.17783,0.22387,0.30200,0.38019,0.44668,0.44668,0.35481,0.25119,0.16596,0.12589,0.15136,0.22387,0.35481,0.52481,0.56234,0.44668,0.28184,0.12589,0.04467,0.01585,0.00631,0.00251,0.00100,0.00040,0.00016,0.00006,0.00003,0.00001,0.00001,0.00001],
+      b: [0.39811,0.56234,0.70795,0.89125,1.00000,0.79433,0.56234,0.39811,0.28184,0.19953,0.16596,0.15136,0.15136,0.17783,0.22387,0.30200,0.38019,0.44668,0.44668,0.35481,0.25119,0.16596,0.12589,0.15136,0.22387,0.35481,0.52481,0.56234,0.44668,0.28184,0.12589,0.04467,0.01585,0.00631,0.00251,0.00100,0.00040,0.00016,0.00006,0.00003,0.00001,0.00001,0.00001] }
+  ];
+
+  var N = 43, NM_START = 360, NM_STEP = 10;
+
+  // wavelength → approximate sRGB
+  function nmToRGB(nm) {
+    var r = 0, g = 0, b = 0;
+    if (nm >= 380 && nm < 440)      { r = -(nm-440)/(440-380); b = 1; }
+    else if (nm >= 440 && nm < 490) { g = (nm-440)/(490-440); b = 1; }
+    else if (nm >= 490 && nm < 510) { g = 1; b = -(nm-510)/(510-490); }
+    else if (nm >= 510 && nm < 580) { r = (nm-510)/(580-510); g = 1; }
+    else if (nm >= 580 && nm < 645) { r = 1; g = -(nm-645)/(645-580); }
+    else if (nm >= 645 && nm <= 780) { r = 1; }
+    // gamma + fade at edges
+    var f = 1;
+    if (nm >= 380 && nm < 420) f = 0.3 + 0.7*(nm-380)/40;
+    else if (nm > 700 && nm <= 780) f = 0.3 + 0.7*(780-nm)/80;
+    else if (nm < 380) f = 0;
+    var gamma = 0.80;
+    return [
+      Math.round(255 * Math.pow(r*f, gamma)),
+      Math.round(255 * Math.pow(g*f, gamma)),
+      Math.round(255 * Math.pow(b*f, gamma))
+    ];
+  }
+
+  function drawFSE(canvas, current, next, t) {
+    var dpr = window.devicePixelRatio || 1;
+    var W = canvas.clientWidth, H = canvas.clientHeight;
+    if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) {
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+    }
+    var ctx = canvas.getContext('2d');
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    var specH = 14, padT = 8, padB = specH + 6, padL = 4, padR = 4;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = 'oklch(0.14 0.010 264)';
+    ctx.fillRect(0, 0, W, H);
+
+    // spectrum bar
+    var barY = H - specH - 2, barH = specH;
+    for (var i = 0; i < plotW; i++) {
+      var nm = NM_START + (i / plotW) * (N - 1) * NM_STEP;
+      var rgb = nmToRGB(nm);
+      ctx.fillStyle = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+      ctx.fillRect(padL + i, barY, 1, barH);
+    }
+
+    // grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    [0.25, 0.5, 0.75, 1.0].forEach(function(y) {
+      var py = padT + plotH * (1 - y);
+      ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+    });
+
+    // lerp helper
+    function lerpArr(a, b, t) {
+      return a.map(function(v, i) { return v + (b[i] - v) * t; });
+    }
+    var cur = (t >= 1) ? next : {
+      r: lerpArr(current.r, next.r, t),
+      g: lerpArr(current.g, next.g, t),
+      b: lerpArr(current.b, next.b, t)
+    };
+
+    // draw curves — filled area + line
+    var channels = [
+      { key: 'b', fill: 'rgba(80,130,255,0.18)', stroke: 'rgba(80,140,255,0.85)' },
+      { key: 'g', fill: 'rgba(60,200,100,0.18)', stroke: 'rgba(60,210,100,0.85)' },
+      { key: 'r', fill: 'rgba(255,80,80,0.18)',  stroke: 'rgba(255,90,80,0.85)' }
+    ];
+
+    channels.forEach(function(ch) {
+      var data = cur[ch.key];
+      ctx.beginPath();
+      for (var i = 0; i < N; i++) {
+        var x = padL + (i / (N - 1)) * plotW;
+        var y = padT + plotH * (1 - data[i]);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      // fill to bottom
+      ctx.lineTo(padL + plotW, padT + plotH);
+      ctx.lineTo(padL, padT + plotH);
+      ctx.closePath();
+      ctx.fillStyle = ch.fill;
+      ctx.fill();
+
+      // line
+      ctx.beginPath();
+      for (var i = 0; i < N; i++) {
+        var x = padL + (i / (N - 1)) * plotW;
+        var y = padT + plotH * (1 - data[i]);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = ch.stroke;
+      ctx.lineWidth = 1.5;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+    });
+
+    ctx.restore();
+  }
+
+  var canvas = document.getElementById('fse-canvas');
+  var sel = document.getElementById('fse-stock');
+  if (!canvas || !sel) return;
+
+  var currentIdx = 0, targetIdx = 0;
+  var animStart = null, animDur = 400, rafId = null;
+  var fromStock = FSE_STOCKS[0], toStock = FSE_STOCKS[0];
+
+  function render(ts) {
+    var t = 1;
+    if (animStart !== null) {
+      t = Math.min(1, (ts - animStart) / animDur);
+      // ease in-out
+      t = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    }
+    drawFSE(canvas, fromStock, toStock, t);
+    if (t < 1) rafId = requestAnimationFrame(render);
+    else { animStart = null; fromStock = toStock; }
+  }
+
+  function startAnim(newIdx) {
+    if (newIdx === targetIdx) return;
+    fromStock = (animStart !== null)
+      ? { r: lerpAt(fromStock.r, toStock.r), g: lerpAt(fromStock.g, toStock.g), b: lerpAt(fromStock.b, toStock.b) }
+      : fromStock;
+    targetIdx = newIdx;
+    toStock = FSE_STOCKS[newIdx];
+    animStart = null; // reset on next frame
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(function(ts) {
+      animStart = ts;
+      rafId = requestAnimationFrame(render);
+    });
+  }
+
+  function lerpAt(a, b) {
+    if (!animStart) return a;
+    var elapsed = performance.now() - animStart;
+    var t = Math.min(1, elapsed / animDur);
+    t = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    return a.map(function(v, i) { return v + (b[i] - v) * t; });
+  }
+
+  sel.addEventListener('change', function() { startAnim(+sel.value); });
+  window.addEventListener('resize', function() {
+    drawFSE(canvas, fromStock, toStock, 1);
+  });
+
+  // initial draw
+  requestAnimationFrame(function(ts) {
+    animStart = ts;
+    rafId = requestAnimationFrame(render);
+  });
+  drawFSE(canvas, fromStock, toStock, 1);
+})();
+</script>
 
 </body>
 </html>
