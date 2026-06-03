@@ -1057,7 +1057,9 @@
     var animStart=null, animDur=380, rafId=null;
     var invitePhase=0, hasInteracted=false;
     var dragActive=false, dragCpIdx=-1, dragChanKey=null, dragData=null;
-    var inviteDotX=0, inviteDotY=0;
+    var persistedData={};
+    var activeCpXs=[], activeCpYs=[];
+    var mouseX=-999, mouseY=-999;
 
     var canvas  = document.getElementById('fse-canvas-pc');
     var modeSel = document.getElementById('fse-mode');
@@ -1145,14 +1147,23 @@
         interp=t>=1?nxt:{r:lerpArr(cur.r,nxt.r,t),g:lerpArr(cur.g,nxt.g,t),b:lerpArr(cur.b,nxt.b,t)};
       }
 
+      // apply persisted overrides then drag override
+      Object.keys(persistedData).forEach(function(k){
+        if(interp[k]){var ov={}; ov[k]=persistedData[k]; interp=Object.assign({},interp,ov);}
+      });
       if(dragActive&&dragData){var ov={}; ov[dragChanKey]=dragData; interp=Object.assign({},interp,ov);}
 
       var activeDef=defs[activeTab];
       var activeData=interp[activeDef.key];
       var peakCpI=0;
       for(var pi=1;pi<CP.length;pi++){if(activeData[CP[pi]]>activeData[CP[peakCpI]]) peakCpI=pi;}
-      inviteDotX=padL+(CP[peakCpI]/(N-1))*plotW;
-      inviteDotY=padT+plotH*(1-activeData[CP[peakCpI]]);
+
+      // cache active channel CP screen positions for mouse hit detection
+      activeCpXs=[]; activeCpYs=[];
+      for(var ci=0;ci<CP.length;ci++){
+        activeCpXs.push(padL+(CP[ci]/(N-1))*plotW);
+        activeCpYs.push(padT+plotH*(1-activeData[CP[ci]]));
+      }
 
       defs.forEach(function(def, idx) {
         var isActive=(idx===activeTab);
@@ -1174,16 +1185,30 @@
 
       var pulse=0.5+0.5*Math.sin(invitePhase);
       if(!hasInteracted){
-        var grd=ctx.createRadialGradient(inviteDotX,inviteDotY,0,inviteDotX,inviteDotY,18);
+        var px=activeCpXs[peakCpI], py=activeCpYs[peakCpI];
+        var grd=ctx.createRadialGradient(px,py,0,px,py,18);
         grd.addColorStop(0,'rgba(255,255,255,'+(0.45*pulse)+')');
         grd.addColorStop(1,'rgba(255,255,255,0)');
         ctx.fillStyle=grd;
-        ctx.beginPath(); ctx.arc(inviteDotX,inviteDotY,18,0,Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(inviteDotX,inviteDotY,3+1.5*pulse,0,Math.PI*2);
+        ctx.beginPath(); ctx.arc(px,py,18,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px,py,3+1.5*pulse,0,Math.PI*2);
         ctx.fillStyle='rgba(255,255,255,'+(0.65+0.35*pulse)+')'; ctx.fill();
       } else {
-        ctx.beginPath(); ctx.arc(inviteDotX,inviteDotY,4,0,Math.PI*2);
-        ctx.fillStyle=dragActive?'rgba(255,255,255,0.95)':'rgba(255,255,255,0.45)'; ctx.fill();
+        // find nearest CP to mouse for hover highlight
+        var nearestI=0, nearestD=9999;
+        for(var di=0;di<CP.length;di++){
+          var ddx=mouseX-activeCpXs[di], ddy=mouseY-activeCpYs[di];
+          var dd=Math.sqrt(ddx*ddx+ddy*ddy);
+          if(dd<nearestD){nearestD=dd; nearestI=di;}
+        }
+        for(var di=0;di<CP.length;di++){
+          var isDragging=(dragActive&&di===dragCpIdx);
+          var isNearest=(di===nearestI&&nearestD<28);
+          var dotR=isDragging?5.5:isNearest?4.5:3;
+          var dotA=isDragging?0.95:isNearest?0.72:0.35;
+          ctx.beginPath(); ctx.arc(activeCpXs[di],activeCpYs[di],dotR,0,Math.PI*2);
+          ctx.fillStyle='rgba(255,255,255,'+dotA+')'; ctx.fill();
+        }
       }
 
       ctx.restore();
@@ -1203,7 +1228,7 @@
     }
 
     function startAnim(newStock) {
-      fromStock=toStock; toStock=newStock; animStart=-1;
+      fromStock=toStock; toStock=newStock; animStart=-1; persistedData={};
     }
 
     function peakNm(arr) {
@@ -1255,36 +1280,55 @@
       mode=newMode; activeTab=0;
       var stocks=mode==='dye'?DYE_STOCKS:SENS_STOCKS;
       animStart=null; fromStock=toStock=stocks[0];
-      dragActive=false; dragData=null; hasInteracted=false; invitePhase=0;
+      dragActive=false; dragData=null; persistedData={}; hasInteracted=false; invitePhase=0;
       populateStocks(); updateTabs(); updateInfo(stocks[0]);
     }
 
     canvas.addEventListener('mousemove', function(e){
       var rect=canvas.getBoundingClientRect();
-      var mx=e.clientX-rect.left, my=e.clientY-rect.top;
+      mouseX=e.clientX-rect.left; mouseY=e.clientY-rect.top;
       if(dragActive){
         var W=canvas.clientWidth, H=canvas.clientHeight;
         var specH=14, padT=8, padB=specH+6;
         var plotH=H-padT-padB;
-        var newVal=Math.max(0,Math.min(1,1-(my-padT)/plotH));
+        var newVal=Math.max(0,Math.min(1,1-(mouseY-padT)/plotH));
         dragData[CP[dragCpIdx]]=newVal;
+      } else if(hasInteracted){
+        var nearD=9999;
+        for(var i=0;i<activeCpXs.length;i++){
+          var dx=mouseX-activeCpXs[i], dy=mouseY-activeCpYs[i];
+          var d=Math.sqrt(dx*dx+dy*dy); if(d<nearD) nearD=d;
+        }
+        canvas.style.cursor=nearD<28?'grab':'default';
       } else {
-        var dx=mx-inviteDotX, dy=my-inviteDotY;
-        canvas.style.cursor=Math.sqrt(dx*dx+dy*dy)<20?'grab':'default';
+        // pre-interaction: check peak dot
+        var peakX=activeCpXs[0]||0, peakY=activeCpYs[0]||0;
+        var best=9999;
+        for(var i=0;i<activeCpXs.length;i++){
+          var dx=mouseX-activeCpXs[i], dy=mouseY-activeCpYs[i];
+          var d=Math.sqrt(dx*dx+dy*dy); if(d<best){best=d;}
+        }
+        canvas.style.cursor=best<28?'grab':'default';
       }
     });
 
     canvas.addEventListener('mousedown', function(e){
       var rect=canvas.getBoundingClientRect();
       var mx=e.clientX-rect.left, my=e.clientY-rect.top;
-      var dx=mx-inviteDotX, dy=my-inviteDotY;
-      if(Math.sqrt(dx*dx+dy*dy)<20){
+      // find nearest CP among visible dots
+      var nearestI=0, nearestD=9999;
+      for(var i=0;i<activeCpXs.length;i++){
+        var dx=mx-activeCpXs[i], dy=my-activeCpYs[i];
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<nearestD){nearestD=d; nearestI=i;}
+      }
+      if(nearestD<28){
         hasInteracted=true;
         var defs=getChannelDefs();
         dragChanKey=defs[activeTab].key;
-        var src=toStock[dragChanKey];
-        dragCpIdx=0;
-        for(var i=1;i<CP.length;i++){if(src[CP[i]]>src[CP[dragCpIdx]]) dragCpIdx=i;}
+        dragCpIdx=nearestI;
+        // start from persisted data if available, else stock data
+        var src=persistedData[dragChanKey]||toStock[dragChanKey];
         dragData=src.slice();
         dragActive=true;
         canvas.style.cursor='grabbing';
@@ -1293,7 +1337,11 @@
     });
 
     window.addEventListener('mouseup', function(){
-      if(dragActive){dragActive=false; dragData=null; canvas.style.cursor='default';}
+      if(dragActive){
+        // persist the reshaped curve so it survives after release
+        persistedData[dragChanKey]=dragData.slice();
+        dragActive=false; dragData=null; canvas.style.cursor='default';
+      }
     });
 
     modeSel.addEventListener('change', function(){switchMode(modeSel.value);});
