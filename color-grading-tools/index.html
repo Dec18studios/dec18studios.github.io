@@ -330,15 +330,15 @@
 
 <header class="topbar">
   <div class="row">
-    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+    <a class="brand" href="https://dec18studios.com/" target="_top" aria-label="Dec. 18 Studios — home">
       <span class="logo"></span>
     </a>
     <!-- Nav points at the real Dec. 18 Studios pages -->
     <nav class="toplinks">
-      <a href="https://dec18studios.com/projects">Portfolio</a>
-      <a href="https://dec18studios.com/color-grading-tools" class="current">Tools</a>
+      <a href="https://dec18studios.com/projects" target="_top">Portfolio</a>
+      <a href="https://dec18studios.com/color-grading-tools" target="_top" class="current">Tools</a>
       <a href="#tools">All tools</a>
-      <a href="https://dec18studios.com/hire-us">Book Now</a>
+      <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
       <a href="#subscribe" class="cta">Subscribe · $47.34/yr</a>
     </nav>
   </div>
@@ -399,7 +399,7 @@
           <li>Price locked — never raised</li>
         </ul>
         <!-- Point this at your Squarespace membership signup / commerce block -->
-        <a class="btn primary" href="https://dec18studios.com/checkout/subscribe?cartToken=kptC8qvTRVDiZHvOBtMQb4sftOOnbvA7HK3XutIz">Become a member →</a>
+        <a class="btn primary" href="https://dec18studios.com/checkout/subscribe?cartToken=kptC8qvTRVDiZHvOBtMQb4sftOOnbvA7HK3XutIz" target="_top">Become a member →</a>
         <div class="price-foot">Billed annually · cancel anytime</div>
       </div>
     </div>
@@ -421,7 +421,7 @@
         <div class="resolve-tag">DaVinci Resolve · OFX · macOS · Windows · Linux</div>
         <p class="lede">Film isn't just “old-school digital” — it's a chemical system. <strong>Photo Chemist</strong> runs your footage through a 17+ stage process, reverse-engineering RGB into a 43-band spectrum, then simulating exposure, grain, halation, dye formation, development and projection — so images look made in a darkroom, not filtered.</p>
         <div class="kn-cta">
-          <a class="btn primary" href="https://dec18studios.com/photochemist">Explore Photo Chemist →</a>
+          <a class="btn primary" href="https://dec18studios.com/photochemist" target="_top">Explore Photo Chemist →</a>
           <a class="btn" href="#subscribe">Get it with everything — $47.34/yr →</a>
         </div>
         <div class="fse-viz">
@@ -494,11 +494,11 @@
       </div>
       <div class="fcol">
         <div class="fh">Explore</div>
-        <a href="https://dec18studios.com/projects">Portfolio</a>
-        <a href="https://dec18studios.com/color-grading-tools">Color Grading Tools</a>
-        <a href="https://dec18studios.com/joy-of-colourgrading">Happy Little Node Trees</a>
-        <a href="https://dec18studios.com/open-drt-ofx">Open DRT OFX</a>
-        <a href="https://dec18studios.com/hire-us">Book Now</a>
+        <a href="https://dec18studios.com/projects" target="_top">Portfolio</a>
+        <a href="https://dec18studios.com/color-grading-tools" target="_top">Color Grading Tools</a>
+        <a href="https://dec18studios.com/joy-of-colourgrading" target="_top">Happy Little Node Trees</a>
+        <a href="https://dec18studios.com/open-drt-ofx" target="_top">Open DRT OFX</a>
+        <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
       </div>
       <div class="fcol">
         <div class="fh">Contact</div>
@@ -554,6 +554,7 @@
       var a = document.createElement("a");
       a.className = "tcard reveal";
       a.href = t.url || (BASE + t.slug);
+      a.target = "_top";
       var free = t.tier === "free";
       a.innerHTML =
         '<div class="top"><span class="sw" style="background:var(--' + esc(t.color || "cyan") + ');"></span>' +
