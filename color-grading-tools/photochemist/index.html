@@ -998,7 +998,7 @@
 </script>
 
 <script>
-  /* ============ FILM STOCK EDITOR — LIVE SPECTRAL VISUALIZER ============ */
+  /* ============ FILM STOCK EDITOR — INTERACTIVE SPECTRAL VISUALIZER ============ */
   (function () {
     var SENS_STOCKS = [
       { label: "Seneca 100 Vivid",
@@ -1051,9 +1051,13 @@
     ];
 
     var N=43, NM_START=360, NM_STEP=10;
+    var CP=[0,5,11,16,21,26,32,37,42];
     var mode='dye', activeTab=0;
     var fromStock=DYE_STOCKS[0], toStock=DYE_STOCKS[0];
     var animStart=null, animDur=380, rafId=null;
+    var invitePhase=0, hasInteracted=false;
+    var dragActive=false, dragCpIdx=-1, dragChanKey=null, dragData=null;
+    var inviteDotX=0, inviteDotY=0;
 
     var canvas  = document.getElementById('fse-canvas-pc');
     var modeSel = document.getElementById('fse-mode');
@@ -1141,6 +1145,15 @@
         interp=t>=1?nxt:{r:lerpArr(cur.r,nxt.r,t),g:lerpArr(cur.g,nxt.g,t),b:lerpArr(cur.b,nxt.b,t)};
       }
 
+      if(dragActive&&dragData){var ov={}; ov[dragChanKey]=dragData; interp=Object.assign({},interp,ov);}
+
+      var activeDef=defs[activeTab];
+      var activeData=interp[activeDef.key];
+      var peakCpI=0;
+      for(var pi=1;pi<CP.length;pi++){if(activeData[CP[pi]]>activeData[CP[peakCpI]]) peakCpI=pi;}
+      inviteDotX=padL+(CP[peakCpI]/(N-1))*plotW;
+      inviteDotY=padT+plotH*(1-activeData[CP[peakCpI]]);
+
       defs.forEach(function(def, idx) {
         var isActive=(idx===activeTab);
         var fillA =isActive?'0.22)':'0.05)';
@@ -1148,32 +1161,49 @@
         var lw=isActive?2.4:1.2;
         var data=interp[def.key];
         var xs=[],ys=[];
-        for(var i=0;i<N;i++){
-          xs.push(padL+(i/(N-1))*plotW);
-          ys.push(padT+plotH*(1-data[i]));
+        for(var i=0;i<CP.length;i++){
+          xs.push(padL+(CP[i]/(N-1))*plotW);
+          ys.push(padT+plotH*(1-data[CP[i]]));
         }
         ctx.beginPath(); smoothCurve(ctx,xs,ys);
-        ctx.lineTo(xs[N-1],padT+plotH); ctx.lineTo(xs[0],padT+plotH); ctx.closePath();
+        ctx.lineTo(xs[CP.length-1],padT+plotH); ctx.lineTo(xs[0],padT+plotH); ctx.closePath();
         ctx.fillStyle=def.fillB+fillA; ctx.fill();
         ctx.beginPath(); smoothCurve(ctx,xs,ys);
         ctx.strokeStyle=def.strokeB+strokeA; ctx.lineWidth=lw; ctx.lineJoin='round'; ctx.stroke();
       });
 
+      var pulse=0.5+0.5*Math.sin(invitePhase);
+      if(!hasInteracted){
+        var grd=ctx.createRadialGradient(inviteDotX,inviteDotY,0,inviteDotX,inviteDotY,18);
+        grd.addColorStop(0,'rgba(255,255,255,'+(0.45*pulse)+')');
+        grd.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.fillStyle=grd;
+        ctx.beginPath(); ctx.arc(inviteDotX,inviteDotY,18,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(inviteDotX,inviteDotY,3+1.5*pulse,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,'+(0.65+0.35*pulse)+')'; ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.arc(inviteDotX,inviteDotY,4,0,Math.PI*2);
+        ctx.fillStyle=dragActive?'rgba(255,255,255,0.95)':'rgba(255,255,255,0.45)'; ctx.fill();
+      }
+
       ctx.restore();
     }
 
-    function render(ts) {
+    function loop(ts) {
+      if(animStart===-1) animStart=ts;
       var t=1;
-      if(animStart!==null){t=Math.min(1,(ts-animStart)/animDur);t=t<0.5?2*t*t:-1+(4-2*t)*t;}
+      if(animStart!==null){
+        t=Math.min(1,(ts-animStart)/animDur);
+        t=t<0.5?2*t*t:-1+(4-2*t)*t;
+        if(t>=1){animStart=null; fromStock=toStock; t=1;}
+      }
+      if(!hasInteracted) invitePhase=(invitePhase+0.04)%(Math.PI*2);
       draw(fromStock,toStock,t);
-      if(t<1) rafId=requestAnimationFrame(render);
-      else{animStart=null; fromStock=toStock;}
+      rafId=requestAnimationFrame(loop);
     }
 
     function startAnim(newStock) {
-      fromStock=toStock; toStock=newStock;
-      if(rafId) cancelAnimationFrame(rafId);
-      rafId=requestAnimationFrame(function(ts){animStart=ts; rafId=requestAnimationFrame(render);});
+      fromStock=toStock; toStock=newStock; animStart=-1;
     }
 
     function peakNm(arr) {
@@ -1191,7 +1221,7 @@
       defs.forEach(function(def,i){
         var nm=peakNm(stock[def.key]);
         var el=document.getElementById('fse-c'+i+'-info');
-        if(el) el.innerHTML='<b style="color:'+def.cssColor+'">'+def.label+'</b> peak '+nm+' nm &nbsp; pts 43';
+        if(el) el.innerHTML='<b style="color:'+def.cssColor+'">'+def.label+'</b> peak '+nm+' nm &nbsp; pts 9';
         var pct=Math.round((sums[i]/maxSum)*100);
         var lab=document.getElementById('fse-a'+i+'-lab');
         var fill=document.getElementById('fse-a'+i+'-fill');
@@ -1224,10 +1254,47 @@
       if(newMode===mode) return;
       mode=newMode; activeTab=0;
       var stocks=mode==='dye'?DYE_STOCKS:SENS_STOCKS;
-      if(rafId){cancelAnimationFrame(rafId); rafId=null;}
       animStart=null; fromStock=toStock=stocks[0];
-      populateStocks(); updateTabs(); updateInfo(stocks[0]); draw(fromStock,toStock,1);
+      dragActive=false; dragData=null; hasInteracted=false; invitePhase=0;
+      populateStocks(); updateTabs(); updateInfo(stocks[0]);
     }
+
+    canvas.addEventListener('mousemove', function(e){
+      var rect=canvas.getBoundingClientRect();
+      var mx=e.clientX-rect.left, my=e.clientY-rect.top;
+      if(dragActive){
+        var W=canvas.clientWidth, H=canvas.clientHeight;
+        var specH=14, padT=8, padB=specH+6;
+        var plotH=H-padT-padB;
+        var newVal=Math.max(0,Math.min(1,1-(my-padT)/plotH));
+        dragData[CP[dragCpIdx]]=newVal;
+      } else {
+        var dx=mx-inviteDotX, dy=my-inviteDotY;
+        canvas.style.cursor=Math.sqrt(dx*dx+dy*dy)<20?'grab':'default';
+      }
+    });
+
+    canvas.addEventListener('mousedown', function(e){
+      var rect=canvas.getBoundingClientRect();
+      var mx=e.clientX-rect.left, my=e.clientY-rect.top;
+      var dx=mx-inviteDotX, dy=my-inviteDotY;
+      if(Math.sqrt(dx*dx+dy*dy)<20){
+        hasInteracted=true;
+        var defs=getChannelDefs();
+        dragChanKey=defs[activeTab].key;
+        var src=toStock[dragChanKey];
+        dragCpIdx=0;
+        for(var i=1;i<CP.length;i++){if(src[CP[i]]>src[CP[dragCpIdx]]) dragCpIdx=i;}
+        dragData=src.slice();
+        dragActive=true;
+        canvas.style.cursor='grabbing';
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('mouseup', function(){
+      if(dragActive){dragActive=false; dragData=null; canvas.style.cursor='default';}
+    });
 
     modeSel.addEventListener('change', function(){switchMode(modeSel.value);});
 
@@ -1240,13 +1307,14 @@
     tabsEl.querySelectorAll('button').forEach(function(b){
       b.addEventListener('click', function(){
         activeTab=+b.dataset.i;
-        updateTabs(); draw(fromStock,toStock,1);
+        updateTabs();
       });
     });
 
     window.addEventListener('resize', function(){draw(fromStock,toStock,1);});
 
-    populateStocks(); updateTabs(); updateInfo(toStock); draw(fromStock,toStock,1);
+    populateStocks(); updateTabs(); updateInfo(toStock);
+    rafId=requestAnimationFrame(loop);
   })();
 </script>
 
