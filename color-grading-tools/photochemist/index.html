@@ -1204,8 +1204,8 @@
         for(var di=0;di<CP.length;di++){
           var isDragging=(dragActive&&di===dragCpIdx);
           var isNearest=(di===nearestI&&nearestD<28);
-          var dotR=isDragging?5.5:isNearest?4.5:3;
-          var dotA=isDragging?0.95:isNearest?0.72:0.35;
+          var dotR=isDragging?6:isNearest?5:3.5;
+          var dotA=isDragging?1.0:isNearest?0.90:0.60;
           ctx.beginPath(); ctx.arc(activeCpXs[di],activeCpYs[di],dotR,0,Math.PI*2);
           ctx.fillStyle='rgba(255,255,255,'+dotA+')'; ctx.fill();
         }
