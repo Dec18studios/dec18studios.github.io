@@ -310,6 +310,21 @@
   .fx-track .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: var(--blue); }
   .fx-track .knob { position: absolute; top: 50%; width: 15px; height: 15px; border-radius: 50%; background: #cfd2d8; transform: translate(-50%, -50%); box-shadow: 0 1px 4px oklch(0 0 0 / 0.6); }
   .fx-hints { display: flex; flex-wrap: wrap; gap: 16px; font-size: 10.5px; color: var(--ink-faint); }
+  select.fx-select {
+    background: #2b2e36; border: 1px solid #3a3e48; border-radius: 6px;
+    padding: 6px 28px 6px 10px; color: #dfe2e8; font-size: 12px; font-family: var(--mono);
+    cursor: pointer; appearance: none; -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #4a8aff 50%), linear-gradient(135deg, #4a8aff 50%, transparent 50%);
+    background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+    background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+  }
+  select.fx-select.grow { flex: 1; }
+  .fx-seg button {
+    padding: 6px 13px; font-size: 12px; font-family: var(--mono);
+    color: #cfd2d8; background: none; border: none; cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+  .fx-seg button.on { background: #4a4e58; color: #fff; }
   .fx-curve { transform-box: fill-box; transform-origin: 50% 100%; }
   @media (prefers-reduced-motion: no-preference) {
     .fx-a { animation: fxA 6.5s ease-in-out infinite; }
@@ -663,68 +678,35 @@
           <div class="fx-body">
             <div class="fx-h">Film Stock Editor</div>
             <div class="fx-row">
-              <span class="fx-sel">Print Dye</span>
+              <select class="fx-select" id="fse-mode">
+                <option value="dye">Print Dye</option>
+                <option value="sens">Neg Sensitivity</option>
+              </select>
               <span class="fx-check"><span class="bx">✓</span>Log View</span>
             </div>
             <div class="fx-row">
-              <span class="fx-seg"><span class="on">Yel</span><span>Mag</span><span>Cyan</span></span>
+              <div class="fx-seg" id="fse-tabs">
+                <button class="on" data-i="0">Yel</button>
+                <button data-i="1">Mag</button>
+                <button data-i="2">Cyan</button>
+              </div>
               <span class="fx-cap2">Stock:</span>
-              <span class="fx-sel grow">Seneca 2383</span>
+              <select class="fx-select grow" id="fse-stock"></select>
             </div>
-
             <div class="fx-plot">
-              <svg viewBox="0 0 800 392" preserveAspectRatio="none" role="img" aria-label="Dye absorption curves across the visible spectrum">
-                <!-- gridlines -->
-                <g stroke="#1b1c20" stroke-width="1">
-                  <line x1="40" y1="57" x2="788" y2="57" /><line x1="40" y1="118" x2="788" y2="118" />
-                  <line x1="40" y1="178" x2="788" y2="178" /><line x1="40" y1="239" x2="788" y2="239" />
-                  <line x1="40" y1="299" x2="788" y2="299" />
-                  <line x1="200" y1="20" x2="200" y2="356" /><line x1="360" y1="20" x2="360" y2="356" />
-                  <line x1="520" y1="20" x2="520" y2="356" /><line x1="680" y1="20" x2="680" y2="356" />
-                </g>
-                <!-- axis labels -->
-                <g fill="#5a5d64" font-family="JetBrains Mono, monospace" font-size="11">
-                  <text x="10" y="26">D</text><text x="10" y="61">2.5</text><text x="20" y="122">2</text>
-                  <text x="10" y="182">1.5</text><text x="20" y="243">1</text><text x="10" y="303">0.5</text>
-                </g>
-                <!-- floating control points -->
-                <g fill="#b33636">
-                  <circle cx="610" cy="62" r="6" /><circle cx="500" cy="150" r="6" /><circle cx="690" cy="205" r="6" />
-                  <circle cx="20" cy="343" r="6" /><circle cx="100" cy="336" r="6" />
-                  <circle cx="300" cy="346" r="6" /><circle cx="360" cy="344" r="6" /><circle cx="420" cy="316" r="6" />
-                </g>
-                <!-- curves (animated) -->
-                <g fill="none" stroke-linecap="round">
-                  <path class="fx-curve fx-a" d="M16,352 C 92,350 120,40 165,34 C 212,28 250,308 322,342 C 430,356 620,354 786,350" stroke="#5c7cf0" stroke-width="1.8" />
-                  <path class="fx-curve fx-b" d="M120,356 C 250,354 286,150 330,140 C 378,130 412,330 472,346 C 560,356 680,355 786,352" stroke="#57c46a" stroke-width="1.8" />
-                  <path class="fx-curve fx-c" d="M16,344 C 130,343 250,344 330,338 C 412,332 470,254 545,248 C 624,242 706,332 786,346" stroke="#ff5a52" stroke-width="3" />
-                </g>
-                <!-- spectrum strip -->
-                <defs>
-                  <linearGradient id="fxspec" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0" stop-color="#7a3cff" /><stop offset="0.15" stop-color="#2b5cff" />
-                    <stop offset="0.30" stop-color="#14c4d6" /><stop offset="0.46" stop-color="#36d13f" />
-                    <stop offset="0.62" stop-color="#e3d23a" /><stop offset="0.78" stop-color="#e87d2a" />
-                    <stop offset="1" stop-color="#d83a2a" />
-                  </linearGradient>
-                </defs>
-                <rect x="16" y="362" width="772" height="16" fill="url(#fxspec)" />
-                <rect x="16" y="362" width="360" height="16" fill="rgba(0,0,0,0.5)" />
-                <text x="26" y="374" fill="rgba(255,255,255,0.65)" font-family="JetBrains Mono, monospace" font-size="9">Click a handle to edit · Click empty curve to add a point</text>
-              </svg>
+              <canvas id="fse-canvas-pc" style="display:block;width:100%;aspect-ratio:800/392;height:auto;"></canvas>
             </div>
-
             <div class="fx-chan">
-              <span><b style="color:var(--red)">R</b> peak 670 nm &nbsp; pts 9</span>
-              <span><b style="color:var(--green)">G</b> peak 530 nm &nbsp; pts 9</span>
-              <span><b style="color:var(--blue)">B</b> peak 460 nm &nbsp; pts 9</span>
+              <span id="fse-c0-info"></span>
+              <span id="fse-c1-info"></span>
+              <span id="fse-c2-info"></span>
             </div>
             <div class="fx-amps">
-              <div class="fx-amp"><div class="lab">Yel Amp: 2.91</div><div class="fx-track"><div class="fill" style="width:45%"></div><div class="knob" style="left:45%"></div></div></div>
-              <div class="fx-amp"><div class="lab">Mag Amp: 1.98</div><div class="fx-track"><div class="fill" style="width:58%"></div><div class="knob" style="left:58%"></div></div></div>
-              <div class="fx-amp"><div class="lab">Cyan Amp: 0.93</div><div class="fx-track"><div class="fill" style="width:80%"></div><div class="knob" style="left:80%"></div></div></div>
+              <div class="fx-amp"><div class="lab" id="fse-a0-lab">—</div><div class="fx-track"><div class="fill" id="fse-a0-fill" style="width:100%"></div><div class="knob" id="fse-a0-knob" style="left:100%"></div></div></div>
+              <div class="fx-amp"><div class="lab" id="fse-a1-lab">—</div><div class="fx-track"><div class="fill" id="fse-a1-fill" style="width:100%"></div><div class="knob" id="fse-a1-knob" style="left:100%"></div></div></div>
+              <div class="fx-amp"><div class="lab" id="fse-a2-lab">—</div><div class="fx-track"><div class="fill" id="fse-a2-fill" style="width:100%"></div><div class="knob" id="fse-a2-knob" style="left:100%"></div></div></div>
             </div>
-            <div class="fx-hints"><span>Ctrl+click canvas&nbsp;&nbsp;add point</span><span>Right-click&nbsp;&nbsp;delete</span><span>Drag&nbsp;&nbsp;move</span></div>
+            <div class="fx-hints"><span>Click tabs to highlight a channel</span><span>Switch mode for sensitivity vs dye</span></div>
           </div>
         </div>
       </div>
@@ -1012,6 +994,259 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+
+<script>
+  /* ============ FILM STOCK EDITOR — LIVE SPECTRAL VISUALIZER ============ */
+  (function () {
+    var SENS_STOCKS = [
+      { label: "Seneca 100 Vivid",
+        r: [0.00021,0.00023,0.00026,0.00028,0.00032,0.00035,0.00040,0.00046,0.00053,0.00062,0.00074,0.00090,0.00110,0.00138,0.00177,0.00234,0.00320,0.00453,0.00674,0.01061,0.01790,0.02079,0.10199,0.29017,0.42783,0.52209,0.54679,0.62379,0.80088,1.00000,0.79947,0.25456,0.10026,0.04368,0.01677,0.00732,0.00354,0.00186,0.00105,0.00063,0.00040,0.00026,0.00018],
+        g: [0.06752,0.07960,0.09385,0.11064,0.13121,0.13504,0.11189,0.08996,0.06780,0.06225,0.06193,0.06229,0.10279,0.24542,0.35996,0.43605,0.55482,0.75302,0.94148,1.00000,0.90552,0.71330,0.34997,0.04187,0.00608,0.00106,0.00022,0.00005,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        b: [0.00790,0.02496,0.07888,0.24923,0.61113,0.78865,0.74039,0.78665,0.85175,0.74911,0.82149,1.00000,0.42529,0.04144,0.00426,0.00063,0.00012,0.00003,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "Seneca Portrait 400",
+        r: [0.00029,0.00034,0.00040,0.00047,0.00056,0.00068,0.00084,0.00105,0.00134,0.00174,0.00232,0.00317,0.00448,0.00652,0.00917,0.01288,0.01641,0.01717,0.01586,0.01762,0.03165,0.07049,0.19216,0.33378,0.45404,0.58917,0.65638,0.66388,0.95166,1.00000,0.34432,0.05860,0.00954,0.00184,0.00042,0.00011,0.00003,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000],
+        g: [0.00698,0.01479,0.03136,0.06647,0.11001,0.09776,0.08199,0.07110,0.06425,0.06414,0.06821,0.08924,0.16898,0.28336,0.36527,0.44629,0.55867,0.75335,1.00000,0.96349,0.76118,0.57462,0.25371,0.05753,0.01052,0.00221,0.00053,0.00015,0.00004,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        b: [0.02566,0.07716,0.23206,0.69789,1.00000,0.92658,0.90321,0.90813,0.83456,0.82361,0.94761,0.69833,0.24044,0.07329,0.03068,0.01169,0.00456,0.00199,0.00097,0.00051,0.00029,0.00017,0.00011,0.00007,0.00005,0.00003,0.00003,0.00002,0.00002,0.00001,0.00001,0.00001,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "Genesee 250D",
+        r: [0.00005,0.00006,0.00006,0.00007,0.00009,0.00010,0.00013,0.00015,0.00019,0.00024,0.00031,0.00040,0.00055,0.00076,0.00109,0.00161,0.00248,0.00388,0.00452,0.00530,0.00862,0.01393,0.05469,0.17105,0.30030,0.45920,0.64402,0.69785,0.82674,1.00000,0.92215,0.42318,0.16570,0.05781,0.00766,0.00125,0.00025,0.00006,0.00002,0.00001,0.00000,0.00000,0.00000],
+        g: [0.00375,0.00515,0.00707,0.00970,0.01353,0.01433,0.01200,0.01026,0.00877,0.00990,0.01334,0.01564,0.03432,0.11988,0.25433,0.35890,0.47164,0.61443,0.80961,1.00000,0.80756,0.60574,0.37850,0.07342,0.01006,0.00164,0.00032,0.00007,0.00002,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        b: [0.14714,0.21986,0.32852,0.49088,0.78726,0.80942,0.77098,0.84488,0.88378,0.78363,0.90124,1.00000,0.45728,0.09007,0.03215,0.01310,0.00422,0.00145,0.00057,0.00025,0.00012,0.00006,0.00003,0.00002,0.00001,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "Genesee 500T",
+        r: [0.00086,0.00097,0.00108,0.00122,0.00138,0.00158,0.00182,0.00213,0.00252,0.00302,0.00370,0.00461,0.00587,0.00766,0.01029,0.01412,0.01811,0.01991,0.01664,0.01495,0.02863,0.04812,0.11634,0.32565,0.49071,0.65912,0.91456,0.85987,0.83923,1.00000,0.91221,0.42523,0.17780,0.08134,0.04050,0.02166,0.01231,0.00737,0.00462,0.00302,0.00204,0.00142,0.00102],
+        g: [0.00120,0.00151,0.00189,0.00236,0.00303,0.00399,0.00542,0.00762,0.01114,0.01679,0.02242,0.02789,0.06095,0.15485,0.27824,0.36602,0.46178,0.59865,0.81612,1.00000,0.83082,0.64974,0.42115,0.09115,0.01113,0.00173,0.00034,0.00008,0.00002,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        b: [0.15707,0.26123,0.43447,0.72260,0.98269,1.00000,0.95720,0.93091,0.83886,0.76163,0.73971,0.71417,0.47677,0.26527,0.13131,0.05023,0.01622,0.00306,0.00060,0.00014,0.00004,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "Sakura Pro 400H",
+        r: [0.00003,0.00003,0.00003,0.00004,0.00005,0.00005,0.00006,0.00007,0.00009,0.00011,0.00015,0.00019,0.00025,0.00035,0.00051,0.00077,0.00124,0.00215,0.00409,0.00874,0.02176,0.05230,0.16284,0.42854,0.85557,1.00000,0.96668,0.99482,0.78459,0.25930,0.05273,0.01186,0.00342,0.00119,0.00049,0.00022,0.00011,0.00006,0.00004,0.00002,0.00001,0.00001,0.00001],
+        g: [0.00033,0.00043,0.00055,0.00072,0.00095,0.00130,0.00184,0.00273,0.00424,0.00687,0.01010,0.01424,0.03025,0.08740,0.22267,0.35650,0.53421,0.73564,0.89402,1.00000,0.93456,0.52066,0.12962,0.01930,0.00298,0.00058,0.00014,0.00004,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        b: [0.00002,0.00020,0.00181,0.01596,0.17979,0.57261,0.66950,0.66096,0.62636,0.61325,0.72131,1.00000,0.41443,0.07734,0.02560,0.01054,0.00466,0.00200,0.00095,0.00049,0.00027,0.00016,0.00010,0.00007,0.00005,0.00003,0.00002,0.00002,0.00001,0.00001,0.00001,0.00001,0.00001,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "WestBoy 47",
+        r: [0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00004,0.00011,0.00032,0.00089,0.00251,0.00708,0.01995,0.05623,0.15136,0.31623,0.56234,0.75858,0.89125,1.00000,0.89125,0.56234,0.25119,0.07943,0.02512,0.00794,0.00251,0.00079,0.00025,0.00008,0.00003,0.00002,0.00002],
+        g: [0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00006,0.00019,0.00059,0.00186,0.00589,0.01862,0.05888,0.18621,0.39811,0.63096,0.87096,1.00000,0.79433,0.43652,0.17378,0.05888,0.01862,0.00589,0.00186,0.00059,0.00019,0.00006,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002,0.00002],
+        b: [0.06607,0.10965,0.18197,0.30200,0.50119,0.83176,1.00000,0.58884,0.29512,0.10715,0.03020,0.00759,0.00214,0.00060,0.00017,0.00005,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,0.00001] },
+      { label: "Eastboy XX 5222",
+        r: [0.39811,0.56234,0.70795,0.89125,1.00000,0.79433,0.56234,0.39811,0.28184,0.19953,0.16596,0.15136,0.15136,0.17783,0.22387,0.30200,0.38019,0.44668,0.44668,0.35481,0.25119,0.16596,0.12589,0.15136,0.22387,0.35481,0.52481,0.56234,0.44668,0.28184,0.12589,0.04467,0.01585,0.00631,0.00251,0.00100,0.00040,0.00016,0.00006,0.00003,0.00001,0.00001,0.00001],
+        g: [0.39811,0.56234,0.70795,0.89125,1.00000,0.79433,0.56234,0.39811,0.28184,0.19953,0.16596,0.15136,0.15136,0.17783,0.22387,0.30200,0.38019,0.44668,0.44668,0.35481,0.25119,0.16596,0.12589,0.15136,0.22387,0.35481,0.52481,0.56234,0.44668,0.28184,0.12589,0.04467,0.01585,0.00631,0.00251,0.00100,0.00040,0.00016,0.00006,0.00003,0.00001,0.00001,0.00001],
+        b: [0.39811,0.56234,0.70795,0.89125,1.00000,0.79433,0.56234,0.39811,0.28184,0.19953,0.16596,0.15136,0.15136,0.17783,0.22387,0.30200,0.38019,0.44668,0.44668,0.35481,0.25119,0.16596,0.12589,0.15136,0.22387,0.35481,0.52481,0.56234,0.44668,0.28184,0.12589,0.04467,0.01585,0.00631,0.00251,0.00100,0.00040,0.00016,0.00006,0.00003,0.00001,0.00001,0.00001] }
+    ];
+
+    var DYE_STOCKS = [
+      { label: "Seneca Supra Endura",
+        c: [0.17011,0.15852,0.14692,0.13533,0.12374,0.11214,0.09858,0.07716,0.06035,0.04640,0.04047,0.03395,0.03534,0.04005,0.04693,0.05628,0.07196,0.09071,0.11986,0.16138,0.22440,0.30623,0.40846,0.53329,0.67384,0.82029,0.94499,1.00000,0.96948,0.85929,0.71204,0.57238,0.44796,0.34706,0.27437,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        m: [0.01808,0.02456,0.03105,0.03753,0.04402,0.05051,0.05293,0.05440,0.05723,0.07416,0.10671,0.15727,0.23022,0.33008,0.45853,0.60698,0.74920,0.87143,0.96417,1.00000,0.90888,0.69939,0.46560,0.28917,0.17304,0.10502,0.06740,0.04829,0.04061,0.03373,0.03646,0.03366,0.03000,0.02677,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        y: [0.00000,0.00000,0.00301,0.20681,0.41060,0.61440,0.82250,0.94040,0.99120,1.00000,0.95424,0.84072,0.67960,0.50265,0.34056,0.21719,0.13281,0.07931,0.04845,0.02794,0.01950,0.00824,0.00619,0.00633,0.00864,0.00427,0.00406,0.00398,0.00383,0.00710,0.00602,0.00663,0.00732,0.00756,0.01245,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "Seneca Premier Endura",
+        c: [0.23684,0.20840,0.17995,0.15151,0.12306,0.09461,0.06877,0.04543,0.03801,0.03050,0.02906,0.03016,0.03271,0.03610,0.04175,0.04916,0.06054,0.07886,0.10874,0.15596,0.22286,0.30221,0.40183,0.53757,0.69302,0.82949,0.90278,0.94407,0.98208,1.00000,0.95608,0.84769,0.69827,0.54334,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        m: [0.12955,0.11705,0.10456,0.09207,0.07957,0.06708,0.05617,0.05595,0.06430,0.08567,0.12468,0.18445,0.26535,0.37179,0.50526,0.65285,0.78528,0.88393,0.96074,1.00000,0.94399,0.77387,0.55496,0.35428,0.21784,0.12840,0.07785,0.04947,0.03256,0.02297,0.01699,0.01427,0.01255,0.01070,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        y: [0.06480,0.19642,0.32804,0.45966,0.59128,0.72290,0.83391,0.93834,1.00000,0.98895,0.93148,0.82479,0.66814,0.50652,0.36303,0.24425,0.15919,0.10161,0.06497,0.04304,0.02801,0.01720,0.01153,0.00835,0.00835,0.01080,0.01080,0.01080,0.01080,0.01080,0.01070,0.00843,0.00743,0.00590,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "Sakura Crystal Archive II",
+        c: [0.05331,0.04994,0.04657,0.04219,0.04140,0.04139,0.04104,0.03872,0.03704,0.03511,0.03511,0.03511,0.03511,0.03511,0.03670,0.04138,0.04650,0.05411,0.07533,0.11255,0.17055,0.24501,0.34574,0.47730,0.61261,0.77070,0.90156,0.97763,1.00000,0.98762,0.93730,0.82498,0.66896,0.54577,0.45264,0.38447,0.32327,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        m: [0.01483,0.01697,0.01911,0.02125,0.02775,0.02828,0.03782,0.04682,0.05845,0.07812,0.10704,0.15346,0.21488,0.29979,0.42071,0.57538,0.72040,0.87388,0.97725,1.00000,0.91320,0.70846,0.47365,0.28922,0.16157,0.09778,0.05632,0.03538,0.02144,0.01348,0.01185,0.01081,0.00891,0.00700,0.00504,0.00304,0.00101,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000],
+        y: [0.00000,0.00000,0.09873,0.20806,0.36057,0.57480,0.78464,0.92659,0.99409,1.00000,0.94010,0.80755,0.60924,0.40684,0.23318,0.14034,0.08798,0.05933,0.04007,0.02916,0.02406,0.02008,0.01852,0.01625,0.01260,0.01236,0.00803,0.00881,0.00801,0.00722,0.00658,0.00590,0.00504,0.00403,0.00302,0.00201,0.00101,0.00000,0.00000,0.00000,0.00000,0.00000,0.00000] },
+      { label: "Seneca 2383",
+        c: [0.23905,0.25107,0.26310,0.27206,0.26116,0.22912,0.17750,0.12785,0.08739,0.05899,0.04143,0.03136,0.02846,0.02759,0.02934,0.03307,0.04573,0.06425,0.09687,0.13965,0.19463,0.26840,0.35622,0.45889,0.57058,0.68121,0.78846,0.87765,0.94271,0.98595,1.00000,0.99105,0.95038,0.88479,0.79903,0.69565,0.58625,0.48051,0.38288,0.29370,0.00000,0.00000,0.00000],
+        m: [0.03856,0.04144,0.04432,0.04976,0.06731,0.07987,0.09022,0.10684,0.08164,0.08554,0.12393,0.18812,0.28854,0.42074,0.58286,0.74096,0.86496,0.94853,1.00000,0.97737,0.86933,0.69618,0.50399,0.33853,0.22519,0.14793,0.10313,0.07273,0.05344,0.04108,0.03235,0.02491,0.01973,0.01361,0.01138,0.00911,0.00743,0.00729,0.00577,0.00000,0.00000,0.00000,0.00000],
+        y: [0.10413,0.17791,0.25170,0.34165,0.47405,0.63347,0.79845,0.93106,0.99523,1.00000,0.94264,0.81663,0.64889,0.47340,0.32610,0.20858,0.13434,0.08934,0.06426,0.05082,0.04094,0.03229,0.02494,0.01982,0.01518,0.01257,0.01241,0.01250,0.01396,0.01622,0.01666,0.01860,0.01867,0.01505,0.01312,0.01130,0.00976,0.00819,0.00798,0.00581,0.00000,0.00000,0.00000] }
+    ];
+
+    var N=43, NM_START=360, NM_STEP=10;
+    var mode='dye', activeTab=0;
+    var fromStock=DYE_STOCKS[0], toStock=DYE_STOCKS[0];
+    var animStart=null, animDur=380, rafId=null;
+
+    var canvas  = document.getElementById('fse-canvas-pc');
+    var modeSel = document.getElementById('fse-mode');
+    var stockSel= document.getElementById('fse-stock');
+    var tabsEl  = document.getElementById('fse-tabs');
+    if (!canvas || !modeSel || !stockSel || !tabsEl) return;
+
+    function nmToRGB(nm) {
+      var r=0,g=0,b=0;
+      if(nm>=380&&nm<440){r=-(nm-440)/(440-380);b=1;}
+      else if(nm>=440&&nm<490){g=(nm-440)/(490-440);b=1;}
+      else if(nm>=490&&nm<510){g=1;b=-(nm-510)/(510-490);}
+      else if(nm>=510&&nm<580){r=(nm-510)/(580-510);g=1;}
+      else if(nm>=580&&nm<645){r=1;g=-(nm-645)/(645-580);}
+      else if(nm>=645&&nm<=780){r=1;}
+      var f=1;
+      if(nm>=380&&nm<420)f=0.3+0.7*(nm-380)/40;
+      else if(nm>700&&nm<=780)f=0.3+0.7*(780-nm)/80;
+      else if(nm<380)f=0;
+      var gamma=0.80;
+      return[Math.round(255*Math.pow(r*f,gamma)),Math.round(255*Math.pow(g*f,gamma)),Math.round(255*Math.pow(b*f,gamma))];
+    }
+
+    function smoothCurve(ctx, xs, ys) {
+      var n=xs.length;
+      ctx.moveTo(xs[0],ys[0]);
+      for(var i=0;i<n-1;i++){
+        var p0=i>0?i-1:0, p1=i, p2=i+1, p3=i+2<n?i+2:n-1;
+        var cp1x=xs[p1]+(xs[p2]-xs[p0])/6, cp1y=ys[p1]+(ys[p2]-ys[p0])/6;
+        var cp2x=xs[p2]-(xs[p3]-xs[p1])/6, cp2y=ys[p2]-(ys[p3]-ys[p1])/6;
+        ctx.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,xs[p2],ys[p2]);
+      }
+    }
+
+    function getChannelDefs() {
+      if(mode==='dye') return [
+        {key:'y', fillB:'rgba(255,220,30,', strokeB:'rgba(255,228,45,', label:'Yel',  cssColor:'var(--yellow)'},
+        {key:'m', fillB:'rgba(220,50,180,',  strokeB:'rgba(230,55,185,', label:'Mag',  cssColor:'var(--magenta)'},
+        {key:'c', fillB:'rgba(30,200,220,',  strokeB:'rgba(35,210,228,', label:'Cyan', cssColor:'var(--cyan)'}
+      ];
+      return [
+        {key:'b', fillB:'rgba(70,120,255,',  strokeB:'rgba(85,142,255,', label:'B', cssColor:'var(--blue)'},
+        {key:'g', fillB:'rgba(50,195,90,',   strokeB:'rgba(55,208,95,',  label:'G', cssColor:'var(--green)'},
+        {key:'r', fillB:'rgba(255,70,70,',   strokeB:'rgba(255,88,78,',  label:'R', cssColor:'var(--red)'}
+      ];
+    }
+
+    function lerpArr(a,b,t){return a.map(function(v,i){return v+(b[i]-v)*t;});}
+
+    function draw(cur, nxt, t) {
+      var dpr=window.devicePixelRatio||1;
+      var W=canvas.clientWidth, H=canvas.clientHeight;
+      if(W<=0||H<=0) return;
+      if(canvas.width!==Math.round(W*dpr)||canvas.height!==Math.round(H*dpr)){
+        canvas.width=Math.round(W*dpr); canvas.height=Math.round(H*dpr);
+      }
+      var ctx=canvas.getContext('2d');
+      ctx.save(); ctx.scale(dpr,dpr);
+
+      var specH=14, padT=8, padB=specH+6, padL=4, padR=4;
+      var plotW=W-padL-padR, plotH=H-padT-padB;
+
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+
+      var barY=H-specH-2;
+      for(var i=0;i<plotW;i++){
+        var nm=NM_START+(i/plotW)*(N-1)*NM_STEP;
+        var rgb=nmToRGB(nm);
+        ctx.fillStyle='rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+        ctx.fillRect(padL+i,barY,1,specH);
+      }
+
+      ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1;
+      [0.25,0.5,0.75,1.0].forEach(function(v){
+        var py=padT+plotH*(1-v);
+        ctx.beginPath(); ctx.moveTo(padL,py); ctx.lineTo(padL+plotW,py); ctx.stroke();
+      });
+
+      var defs=getChannelDefs();
+      var interp;
+      if(mode==='dye'){
+        interp=t>=1?nxt:{c:lerpArr(cur.c,nxt.c,t),m:lerpArr(cur.m,nxt.m,t),y:lerpArr(cur.y,nxt.y,t)};
+      } else {
+        interp=t>=1?nxt:{r:lerpArr(cur.r,nxt.r,t),g:lerpArr(cur.g,nxt.g,t),b:lerpArr(cur.b,nxt.b,t)};
+      }
+
+      defs.forEach(function(def, idx) {
+        var isActive=(idx===activeTab);
+        var fillA =isActive?'0.22)':'0.05)';
+        var strokeA=isActive?'0.94)':'0.28)';
+        var lw=isActive?2.4:1.2;
+        var data=interp[def.key];
+        var xs=[],ys=[];
+        for(var i=0;i<N;i++){
+          xs.push(padL+(i/(N-1))*plotW);
+          ys.push(padT+plotH*(1-data[i]));
+        }
+        ctx.beginPath(); smoothCurve(ctx,xs,ys);
+        ctx.lineTo(xs[N-1],padT+plotH); ctx.lineTo(xs[0],padT+plotH); ctx.closePath();
+        ctx.fillStyle=def.fillB+fillA; ctx.fill();
+        ctx.beginPath(); smoothCurve(ctx,xs,ys);
+        ctx.strokeStyle=def.strokeB+strokeA; ctx.lineWidth=lw; ctx.lineJoin='round'; ctx.stroke();
+      });
+
+      ctx.restore();
+    }
+
+    function render(ts) {
+      var t=1;
+      if(animStart!==null){t=Math.min(1,(ts-animStart)/animDur);t=t<0.5?2*t*t:-1+(4-2*t)*t;}
+      draw(fromStock,toStock,t);
+      if(t<1) rafId=requestAnimationFrame(render);
+      else{animStart=null; fromStock=toStock;}
+    }
+
+    function startAnim(newStock) {
+      fromStock=toStock; toStock=newStock;
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId=requestAnimationFrame(function(ts){animStart=ts; rafId=requestAnimationFrame(render);});
+    }
+
+    function peakNm(arr) {
+      var maxI=0;
+      for(var i=1;i<arr.length;i++) if(arr[i]>arr[maxI]) maxI=i;
+      return 360+maxI*10;
+    }
+
+    function channelSum(arr){var s=0; for(var i=0;i<arr.length;i++) s+=arr[i]; return s;}
+
+    function updateInfo(stock) {
+      var defs=getChannelDefs();
+      var sums=defs.map(function(d){return channelSum(stock[d.key]);});
+      var maxSum=Math.max.apply(null,sums);
+      defs.forEach(function(def,i){
+        var nm=peakNm(stock[def.key]);
+        var el=document.getElementById('fse-c'+i+'-info');
+        if(el) el.innerHTML='<b style="color:'+def.cssColor+'">'+def.label+'</b> peak '+nm+' nm &nbsp; pts 43';
+        var pct=Math.round((sums[i]/maxSum)*100);
+        var lab=document.getElementById('fse-a'+i+'-lab');
+        var fill=document.getElementById('fse-a'+i+'-fill');
+        var knob=document.getElementById('fse-a'+i+'-knob');
+        if(lab) lab.textContent=def.label+' Amp: '+(sums[i]/maxSum).toFixed(2);
+        if(fill) fill.style.width=pct+'%';
+        if(knob) knob.style.left=pct+'%';
+      });
+    }
+
+    function populateStocks() {
+      var stocks=mode==='dye'?DYE_STOCKS:SENS_STOCKS;
+      stockSel.innerHTML='';
+      stocks.forEach(function(s,i){
+        var o=document.createElement('option'); o.value=i; o.textContent=s.label; stockSel.appendChild(o);
+      });
+      stockSel.value='0';
+    }
+
+    function updateTabs() {
+      var defs=getChannelDefs();
+      var btns=tabsEl.querySelectorAll('button');
+      btns.forEach(function(b,i){
+        b.textContent=defs[i].label;
+        b.classList.toggle('on',i===activeTab);
+      });
+    }
+
+    function switchMode(newMode) {
+      if(newMode===mode) return;
+      mode=newMode; activeTab=0;
+      var stocks=mode==='dye'?DYE_STOCKS:SENS_STOCKS;
+      if(rafId){cancelAnimationFrame(rafId); rafId=null;}
+      animStart=null; fromStock=toStock=stocks[0];
+      populateStocks(); updateTabs(); updateInfo(stocks[0]); draw(fromStock,toStock,1);
+    }
+
+    modeSel.addEventListener('change', function(){switchMode(modeSel.value);});
+
+    stockSel.addEventListener('change', function(){
+      var stocks=mode==='dye'?DYE_STOCKS:SENS_STOCKS;
+      var s=stocks[+stockSel.value];
+      updateInfo(s); startAnim(s);
+    });
+
+    tabsEl.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click', function(){
+        activeTab=+b.dataset.i;
+        updateTabs(); draw(fromStock,toStock,1);
+      });
+    });
+
+    window.addEventListener('resize', function(){draw(fromStock,toStock,1);});
+
+    populateStocks(); updateTabs(); updateInfo(toStock); draw(fromStock,toStock,1);
   })();
 </script>
 
