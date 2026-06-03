@@ -508,7 +508,7 @@
     function card(f) {
       var a = document.createElement("a");
       a.className = "feat reveal";
-      a.href = f.url || (BASE + (f.slug || ""));
+      a.href = f.url || (f.slug ? f.slug + "/" : "#");
       var hasImg = f.still && String(f.still).trim();
       var accent = "var(--" + esc(f.color || "amber") + ")";
       a.innerHTML =
@@ -543,7 +543,7 @@
           var role = '<span class="credit">' + esc(it.role) + '</span>';
           var inner = '<span class="title">' + esc(it.title) + '</span>' + role;
           if (it.slug) {
-            return '<li><a class="row" href="' + (it.url || (BASE + it.slug)) + '">' + inner + '</a></li>';
+            return '<li><a class="row" href="' + (it.url || (it.slug + "/")) + '">' + inner + '</a></li>';
           }
           return '<li>' + inner + '</li>';
         }).join("");

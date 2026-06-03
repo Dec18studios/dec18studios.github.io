@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Project — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../project.css" />
+</head>
+<body>
+<!--
+  ════════════════════════════════════════════════════════════════════════
+  NEW PROJECT TEMPLATE — Dec. 18 Studios
+  ════════════════════════════════════════════════════════════════════════
+  1. Copy this whole folder (_template) to projects/<your-slug>/
+       e.g.  projects/take-the-stand/
+  2. Edit the window.PROJECT object below. That's the only thing to change.
+  3. Make sure the slug matches the "slug" used in projects.json so the
+     portfolio cards/rows link straight here (dec18studios.github.io/projects/<slug>/).
+
+  WHERE TO GET THE PIECES
+  • hero / stills : open the project's existing page, the big banner is the
+                    hero; the gallery images are your stills. The CDN URLs
+                    look like https://images.squarespace-cdn.com/.../file.jpg
+                    Add ?format=1500w (hero) or ?format=1000w (stills) for speed.
+  • vimeo         : the number in a vimeo.com/<id> link (or paste the whole
+                    link). Leave "" to hide the film player and lead with stills.
+  • color         : one of red yellow green cyan blue magenta amber — sets the
+                    accent line + lightbox tint. Match the card color in projects.json.
+  • prev / next   : the projects on either side in the portfolio order. Set to
+                    null to grey-out that arrow.
+-->
+<div id="app"></div>
+
+<script>
+  window.PROJECT = {
+    slug: "your-slug",
+    title: "Project Title",
+    category: "Narrative",
+    role: "Color Grade",
+    deliverables: "1 Deliverable · Custom Look Design",   // optional — remove the line to hide
+    color: "amber",
+    credits: [
+      { role: "Director", name: "First Last" },
+      { role: "Director of Photography", name: "First Last" },
+      { role: "Colorist", name: "Greg Enright" }
+    ],
+    video: "",   // YouTube or Vimeo — id or full link, e.g. "https://youtu.be/abc123" or "76979871". Leave "" to hide the player.
+    hero: "https://images.squarespace-cdn.com/.../hero.jpg?format=1500w",
+    stills: [
+      "https://images.squarespace-cdn.com/.../still-1.jpg?format=1000w",
+      "https://images.squarespace-cdn.com/.../still-2.jpg?format=1000w",
+      "https://images.squarespace-cdn.com/.../still-3.jpg?format=1000w"
+    ],
+    prev: null,                                            // or { slug: "...", title: "..." }
+    next: null                                             // or { slug: "...", title: "..." }
+  };
+</script>
+<script src="../project.js"></script>
+</body>
+</html>
