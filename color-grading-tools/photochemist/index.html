@@ -883,7 +883,7 @@
      the built-in live color simulation. */
   (function () {
     var BASE_IMG = "assets/frame-web.jpg";
-    var STOCKS = [
+    var FALLBACK_STOCKS = [
       { name: "Golden Daylight", color: "var(--yellow)", src: "", base: "",
         desc: "A warm, sunlit daylight negative. Gentle contrast, golden highlights, clean skin.",
         filter: "sepia(0.22) saturate(1.14) contrast(1.05) brightness(1.03) hue-rotate(-8deg)" },
@@ -904,80 +904,97 @@
         filter: "saturate(0.82) contrast(0.86) brightness(1.1) sepia(0.16)" }
     ];
 
-    var img = document.getElementById("stockImg");
-    var sel = document.getElementById("stockSelect");
-    var sw = document.getElementById("swatches");
-    var badge = document.getElementById("stockBadge");
-    var dot = document.getElementById("stockDot");
-    var desc = document.getElementById("stockDesc");
-    var note = document.getElementById("stockNote");
-    var cmp = document.getElementById("compareBtn");
-    var liveTag = document.getElementById("liveTag");
-    if (!img || !sel) return;
+    function initViewer(STOCKS) {
+      var img = document.getElementById("stockImg");
+      var sel = document.getElementById("stockSelect");
+      var sw = document.getElementById("swatches");
+      var badge = document.getElementById("stockBadge");
+      var dot = document.getElementById("stockDot");
+      var desc = document.getElementById("stockDesc");
+      var note = document.getElementById("stockNote");
+      var cmp = document.getElementById("compareBtn");
+      var liveTag = document.getElementById("liveTag");
+      if (!img || !sel) return;
 
-    var current = 0;
+      var current = 0;
 
-    STOCKS.forEach(function (s, i) {
-      var o = document.createElement("option");
-      o.value = i; o.textContent = s.name; sel.appendChild(o);
-      var b = document.createElement("button");
-      b.type = "button";
-      b.title = s.name;
-      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
-      b.style.background = "var(--bg-2)";
-      b.dataset.i = i;
-      b.addEventListener("click", function () { apply(i); });
-      sw.appendChild(b);
-    });
-
-    function paintSwatches() {
-      // render each swatch as a tiny tinted thumbnail of the base frame
-      Array.prototype.forEach.call(sw.children, function (b, i) {
-        b.style.backgroundImage = "url(" + (STOCKS[i].src || BASE_IMG) + ")";
-        b.style.filter = STOCKS[i].src ? "none" : STOCKS[i].filter;
-        b.setAttribute("aria-pressed", i === current ? "true" : "false");
+      STOCKS.forEach(function (s, i) {
+        var o = document.createElement("option");
+        o.value = i; o.textContent = s.name; sel.appendChild(o);
+        var b = document.createElement("button");
+        b.type = "button";
+        b.title = s.name;
+        b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+        b.style.background = "var(--bg-2)";
+        b.dataset.i = i;
+        b.addEventListener("click", function () { apply(i); });
+        sw.appendChild(b);
       });
-    }
 
-    function apply(i) {
-      current = i;
-      var s = STOCKS[i];
-      if (s.src) {
-        img.src = s.src;
-        img.style.filter = "none";
-        if (liveTag) { liveTag.textContent = "Real export"; }
-      } else {
-        img.src = BASE_IMG;
-        img.style.filter = s.filter;
-        if (liveTag) { liveTag.textContent = "Live look sim"; }
+      function paintSwatches() {
+        Array.prototype.forEach.call(sw.children, function (b, i) {
+          b.style.backgroundImage = "url(" + (STOCKS[i].src || BASE_IMG) + ")";
+          b.style.filter = STOCKS[i].src ? "none" : STOCKS[i].filter;
+          b.setAttribute("aria-pressed", i === current ? "true" : "false");
+        });
       }
-      badge.textContent = s.name;
-      dot.style.background = s.color;
-      desc.textContent = s.desc;
-      sel.value = i;
-      paintSwatches();
-    }
 
-    sel.addEventListener("change", function () { apply(parseInt(sel.value, 10)); });
-
-    // hold-to-compare: show the Rec.709 / original frame (real export if provided, else simulated)
-    function showOrig(on) {
-      var s = STOCKS[current];
-      if (on) {
-        if (s.base) { img.src = s.base; img.style.filter = "none"; }
-        else { img.src = BASE_IMG; img.style.filter = "saturate(0.4) contrast(0.82) brightness(1.08)"; }
-        cmp.classList.add("holding"); cmp.textContent = "Rec.709";
-      } else {
-        apply(current);
-        cmp.classList.remove("holding"); cmp.textContent = "Hold: Rec.709";
+      function apply(i) {
+        current = i;
+        var s = STOCKS[i];
+        if (s.src) {
+          img.src = s.src;
+          img.style.filter = "none";
+          if (liveTag) { liveTag.textContent = "Real export"; }
+        } else {
+          img.src = BASE_IMG;
+          img.style.filter = s.filter;
+          if (liveTag) { liveTag.textContent = "Live look sim"; }
+        }
+        badge.textContent = s.name;
+        dot.style.background = s.color;
+        desc.textContent = s.desc;
+        sel.value = i;
+        paintSwatches();
       }
-    }
-    cmp.addEventListener("pointerdown", function (e) { e.preventDefault(); showOrig(true); });
-    cmp.addEventListener("pointerup", function () { showOrig(false); });
-    cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
-    cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
 
-    apply(0);
+      sel.addEventListener("change", function () { apply(parseInt(sel.value, 10)); });
+
+      // hold-to-compare: show the Rec.709 / original frame (real export if provided, else simulated)
+      function showOrig(on) {
+        var s = STOCKS[current];
+        if (on) {
+          if (s.base) { img.src = s.base; img.style.filter = "none"; }
+          else { img.src = BASE_IMG; img.style.filter = "saturate(0.4) contrast(0.82) brightness(1.08)"; }
+          cmp.classList.add("holding"); cmp.textContent = "Rec.709";
+        } else {
+          apply(current);
+          cmp.classList.remove("holding"); cmp.textContent = "Hold: Rec.709";
+        }
+      }
+      cmp.addEventListener("pointerdown", function (e) { e.preventDefault(); showOrig(true); });
+      cmp.addEventListener("pointerup", function () { showOrig(false); });
+      cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+      cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+
+      apply(0);
+    }
+
+    // Try loading looks from manifest; fall back to hardcoded filter stocks
+    fetch('looks/manifest.json')
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .catch(function() { return null; })
+      .then(function(m) {
+        if (m && m.length) {
+          initViewer(m.map(function(e) {
+            return { name: e.name, color: e.color || 'var(--ink)',
+                     desc: e.desc || '', filter: e.filter || 'none',
+                     src: e.graded || '', base: e.rec709 || '' };
+          }));
+        } else {
+          initViewer(FALLBACK_STOCKS);
+        }
+      });
   })();
 
   /* ============ SCROLL REVEAL ============ */

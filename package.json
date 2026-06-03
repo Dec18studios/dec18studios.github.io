@@ -1,0 +1,11 @@
+{
+  "name": "dec18studios-github-pages",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "edit": "node edit-copy.mjs"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}
