@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hue Tools · Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* ---- Surfaces : rich cool charcoal ---- */
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    /* ---- Ink ---- */
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    /* ---- Six hue vectors ---- */
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: oklch(0.80 0.110 200 / 0.35); }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 16px var(--pad);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
+            mask: url("assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a {
+    font-size: 15.5px; color: var(--ink-dim); font-weight: 500;
+    transition: color 0.18s;
+  }
+  nav.toplinks a:hover { color: var(--ink); }
+  @media (max-width: 860px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 22px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+      -webkit-mask: linear-gradient(90deg, #000 86%, transparent);
+              mask: linear-gradient(90deg, #000 86%, transparent);
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(56px, 9vw, 120px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -10%; right: -8%; width: 720px; height: 720px;
+    background: conic-gradient(from 0deg,
+      var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(120px); opacity: 0.16; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 5vw, 72px); align-items: center;
+  }
+  .hero-grid { align-items: start; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  h1.hero-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(44px, 7.2vw, 92px);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 55%, var(--cyan) 78%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    margin-top: 24px; font-size: clamp(17px, 2vw, 21px); color: var(--ink-dim); max-width: 46ch; text-wrap: pretty;
+  }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 40px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ WHEEL PLAYGROUND ============ */
+  .wheel-card {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line-soft); border-radius: 20px; padding: 28px;
+  }
+  .wheel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .webgl-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--cyan);
+    border: 1px solid oklch(0.80 0.110 200 / 0.4); border-radius: 5px; padding: 3px 7px; }
+  .webgl-tag.off { color: var(--ink-faint); border-color: var(--line); }
+
+  .wheel-stage { position: relative; aspect-ratio: 1; max-width: 300px; margin: 0 auto; }
+  .wheel-stage canvas { width: 100%; height: 100%; display: block; border-radius: 50%; }
+  .wheel-fallback {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--red) 0deg, var(--yellow) 60deg, var(--green) 120deg,
+      var(--cyan) 180deg, var(--blue) 240deg, var(--magenta) 300deg, var(--red) 360deg);
+  }
+  .vdot {
+    position: absolute; width: 15px; height: 15px; border-radius: 50%;
+    transform: translate(-50%, -50%); border: 2px solid var(--bg); pointer-events: none;
+    box-shadow: 0 0 0 1px oklch(1 0 0 / 0.22), 0 3px 8px oklch(0 0 0 / 0.55);
+    transition: transform 0.18s;
+  }
+  .vdot.lit { transform: translate(-50%, -50%) scale(1.5); z-index: 3; }
+  .wheel-caption { margin-top: 14px; font-family: var(--mono); font-size: 10.5px; line-height: 1.5;
+    color: var(--ink-faint); text-align: center; text-wrap: pretty; }
+
+  .ctl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; margin-top: 20px; }
+  .ctl-label { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono);
+    font-size: 11.5px; letter-spacing: 0.03em; color: var(--ink-dim); margin-bottom: 7px; }
+  .ctl-label b { color: var(--ink); font-weight: 500; }
+  input[type=range] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 99px;
+    background: var(--line); outline: none; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 17px; height: 17px; border-radius: 50%;
+    background: var(--ink); border: 3px solid var(--bg-1); box-shadow: 0 2px 8px oklch(0 0 0 / 0.5);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 17px; height: 17px; border-radius: 50%; background: var(--ink); border: 3px solid var(--bg-1);
+  }
+  .ctl-row { display: flex; gap: 10px; align-items: flex-end; margin-top: 18px; }
+  .seg { flex: 1; display: flex; flex-direction: column; gap: 6px; font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+  .seg select {
+    font-family: var(--mono); font-size: 12px; color: var(--ink); background: var(--bg-2);
+    border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer;
+  }
+  .toggle, .reset {
+    font-family: var(--mono); font-size: 12px; padding: 9px 13px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--bg-2); color: var(--ink-dim); cursor: pointer; transition: all 0.16s;
+  }
+  .toggle[aria-pressed="true"] { background: var(--cyan-d); border-color: var(--cyan); color: var(--cyan); }
+  .toggle:hover, .reset:hover { color: var(--ink); border-color: oklch(0.42 0.013 264); }
+
+  .vlegend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 20px; }
+  .vchip {
+    display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 8px;
+    background: var(--bg-2); border: 1px solid transparent; cursor: pointer; transition: all 0.15s;
+    font-size: 12px; font-family: var(--mono); color: var(--ink-dim);
+  }
+  .vchip:hover { border-color: var(--line); color: var(--ink); }
+  .vchip .sw { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(56px, 8vw, 110px); position: relative; }
+  .sec-head { max-width: 60ch; margin-bottom: clamp(36px, 5vw, 60px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+
+  .divider { height: 1px; background: var(--line-soft); }
+
+  /* ============ TOOL CARDS ============ */
+  .tool {
+    --accent: var(--cyan);
+    --accent-d: var(--cyan-d);
+    border-top: 1px solid var(--line-soft);
+    padding-block: clamp(48px, 7vw, 86px);
+    scroll-margin-top: 80px;
+  }
+  .tool-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  @media (max-width: 940px) { .tool-grid { grid-template-columns: 1fr; } }
+
+  .tool-num {
+    font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.2em; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .tool-num::before { content: ""; width: 28px; height: 2px; background: var(--accent); display: inline-block; }
+  .tool h3 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(32px, 4.4vw, 52px);
+    letter-spacing: -0.02em; line-height: 1; margin: 16px 0 6px;
+  }
+  .tool .resolve-tag { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.04em; }
+  .tool .lede { margin-top: 22px; color: var(--ink-dim); font-size: 17px; text-wrap: pretty; }
+
+  .callout {
+    margin-top: 26px; border-radius: 14px; padding: 20px 22px;
+    background: var(--accent-d); border: 1px solid transparent;
+    position: relative; overflow: hidden;
+  }
+  .callout::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .callout .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .callout p { margin-top: 8px; font-size: 15.5px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  /* param table */
+  .ptable {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+  }
+  .ptable .thead {
+    display: grid; grid-template-columns: 1.35fr 0.9fr 2.4fr;
+    padding: 13px 20px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint); border-bottom: 1px solid var(--line-soft); background: var(--bg);
+  }
+  .prow {
+    display: grid; grid-template-columns: 1.35fr 0.9fr 2.4fr; gap: 8px;
+    padding: 13px 20px; border-bottom: 1px solid var(--line-soft); align-items: center;
+  }
+  .prow:last-child { border-bottom: none; }
+  .prow:hover { background: var(--bg-2); }
+  .pname { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14.5px; }
+  .pname .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; box-shadow: 0 0 0 1px oklch(1 0 0 / 0.12); }
+  .prange { font-family: var(--mono); font-size: 12.5px; color: var(--ink-dim); }
+  .pdesc { font-size: 13.5px; color: var(--ink-dim); line-height: 1.45; text-wrap: pretty; }
+  .prow.group td, .pgroup {
+    grid-column: 1 / -1; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); padding: 11px 20px 5px; border-bottom: 1px solid var(--line-soft); background: var(--bg);
+  }
+  @media (max-width: 540px) {
+    .ptable .thead, .prow { grid-template-columns: 1fr; gap: 4px; }
+    .ptable .thead { display: none; }
+    .prange { color: var(--accent); }
+  }
+
+  .feat-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .feat-tags span {
+    font-family: var(--mono); font-size: 11.5px; color: var(--ink-dim);
+    border: 1px solid var(--line); border-radius: 99px; padding: 5px 12px;
+  }
+
+  /* ============ CONCEPTS ============ */
+  /* ============ FRAME DEMO ============ */
+  #frame { border-top: 1px solid var(--line-soft); }
+  .frame-stage { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--line-soft); background: var(--bg-1) center / cover no-repeat;
+    box-shadow: 0 30px 80px -42px oklch(0 0 0 / 0.85); }
+  .frame-stage canvas { width: 100%; height: 100%; display: block; }
+  .split-handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 44px; transform: translateX(-50%);
+    cursor: ew-resize; display: flex; align-items: center; justify-content: center; touch-action: none; z-index: 2; }
+  .split-line { position: absolute; top: 0; bottom: 0; width: 2px; background: oklch(1 0 0 / 0.9); }
+  .split-grip { width: 38px; height: 38px; border-radius: 50%; background: oklch(0.98 0 0 / 0.95); color: var(--bg);
+    display: grid; place-items: center; font-size: 16px; font-weight: 700; box-shadow: 0 4px 16px oklch(0 0 0 / 0.55); }
+  .frame-tag { position: absolute; top: 14px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 5px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff;
+    backdrop-filter: blur(4px); z-index: 1; pointer-events: none; }
+  .frame-tag.before { left: 14px; }
+  .frame-tag.after  { right: 14px; }
+
+  .frame-controls { margin-top: 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 22px; }
+  @media (max-width: 720px) { .frame-controls { grid-template-columns: repeat(2, 1fr); } }
+  .frame-row2 { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; margin-top: 22px; }
+  .frame-row2 .ctl { flex: 1 1 220px; }
+  .frame-extra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 24px;
+    padding-top: 22px; border-top: 1px solid var(--line-soft); }
+  .looks-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-faint); margin-right: 4px; }
+  .preset { font-family: var(--mono); font-size: 12px; padding: 8px 14px; border-radius: 99px; border: 1px solid var(--line);
+    background: var(--bg-2); color: var(--ink-dim); cursor: pointer; transition: all 0.16s; }
+  .preset:hover { color: var(--ink); border-color: oklch(0.42 0.013 264); }
+
+  .concepts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 820px) { .concepts-grid { grid-template-columns: 1fr; } }
+  .concept {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 26px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .concept h4 { font-family: var(--display); font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+  .concept p { font-size: 15px; color: var(--ink-dim); text-wrap: pretty; }
+  .concept .figure {
+    height: 130px; border-radius: 11px; background: var(--bg); border: 1px solid var(--line-soft);
+    display: grid; place-items: center; overflow: hidden; position: relative;
+  }
+  .concept.wide { grid-column: 1 / -1; }
+
+  /* checker fig */
+  .checker {
+    width: 100%; height: 100%;
+    background-image:
+      linear-gradient(45deg, oklch(0.80 0.11 200 / 0.5) 25%, transparent 25%),
+      linear-gradient(-45deg, oklch(0.80 0.11 200 / 0.5) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, oklch(0.80 0.11 200 / 0.5) 75%),
+      linear-gradient(-45deg, transparent 75%, oklch(0.80 0.11 200 / 0.5) 75%);
+    background-size: 22px 22px; background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+    -webkit-mask: radial-gradient(circle at 50% 50%, #000 30%, transparent 72%);
+            mask: radial-gradient(circle at 50% 50%, #000 30%, transparent 72%);
+  }
+
+  /* neutral guard fig: gradient strip with guard */
+  .guardfig { width: 100%; height: 100%; position: relative; }
+  .guardfig .strip {
+    position: absolute; inset: 22px 24px;
+    background: linear-gradient(90deg, oklch(0.6 0 0), oklch(0.62 0.205 25));
+    border-radius: 6px;
+  }
+  .guardfig .veil {
+    position: absolute; inset: 22px 24px; border-radius: 6px;
+    background: linear-gradient(90deg, var(--bg) 0%, transparent 46%);
+  }
+  .guardfig .lbl { position: absolute; bottom: 4px; font-family: var(--mono); font-size: 10px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  .guardfig .lbl.l { left: 24px; } .guardfig .lbl.r { right: 24px; }
+
+  /* expand range fig: bell curves */
+  .bellfig { width: 100%; height: 100%; }
+
+  /* matrix fig */
+  .matfig { display: flex; gap: 4px; align-items: center; font-family: var(--mono); }
+  .tetra { width: 96px; height: 96px; }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint);
+  }
+  footer .frow { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: flex-end; }
+  footer .big {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 56px); letter-spacing: -0.02em; color: var(--ink);
+    line-height: 1;
+  }
+  footer a.link { color: var(--cyan); font-family: var(--mono); font-size: 14px; }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ============ TOUCH / MOBILE HARDENING ============ */
+  @media (pointer: coarse) {
+    /* fat, easy-to-grab sliders with a thin visible track */
+    input[type=range] {
+      height: 42px;
+      background: linear-gradient(var(--line), var(--line)) center / 100% 6px no-repeat;
+    }
+    input[type=range]::-webkit-slider-thumb { width: 26px; height: 26px; border-width: 4px; }
+    input[type=range]::-moz-range-track { background: transparent; height: 6px; }
+    input[type=range]::-moz-range-thumb { width: 26px; height: 26px; border-width: 4px; }
+    .ctl-label { margin-bottom: 2px; }
+    /* >= 44px tap targets */
+    .toggle, .reset, .preset, .seg select { min-height: 44px; }
+    .vchip { padding: 12px 10px; }
+    .split-handle { width: 60px; }
+    .split-grip { width: 46px; height: 46px; font-size: 18px; }
+    nav.toplinks a { padding-block: 4px; }
+  }
+
+  /* slightly larger preview + roomier controls on phones */
+  @media (max-width: 600px) {
+    .ctl-grid { gap: 16px; }
+    .frame-row2 .ctl { flex: 1 1 100%; }
+    .frame-extra { gap: 8px; }
+    h1.hero-title { overflow-wrap: break-word; }
+    .wheel-card { padding: 22px 18px; }
+  }
+
+  /* ============ NAV CTA ============ */
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+
+  /* ============ MEMBERSHIP ============ */
+  .sub { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .sub-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .sub-grid { grid-template-columns: 1fr; } }
+  .sub-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
+  .sub-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
+  .sub-copy p strong { color: var(--ink); font-weight: 600; }
+  .sub-copy .free-note { margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--cyan-d); position: relative; overflow: hidden; }
+  .sub-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan); }
+  .sub-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .sub-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); }
+  .price-card { position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden; }
+  .price-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta)); }
+  .price-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--magenta); }
+  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 72px); line-height: 1; letter-spacing: -0.03em; }
+  .price-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
+  .price-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .price-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .price-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+  .price-list li::before { content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px; }
+  .price-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
+  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  /* ============ INSTALL ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start;
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px;
+  }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--green);
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.74 0.165 148 / 0.4); background: var(--green-d);
+    display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--cyan); }
+  .step .st a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
+  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
+  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
+  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
+  .note-card { background: var(--yellow-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--yellow); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  details.manual { margin-top: 8px; border: 1px solid var(--line-soft); border-radius: 14px; background: var(--bg-1); overflow: hidden; }
+  details.manual summary { cursor: pointer; padding: 16px 20px; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--ink-dim); list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details.manual summary::-webkit-details-marker { display: none; }
+  details.manual summary::after { content: "+"; font-size: 16px; color: var(--ink-faint); }
+  details.manual[open] summary::after { content: "–"; }
+  details.manual .mbody { padding: 0 20px 18px; }
+  details.manual ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+  details.manual li { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  details.manual code { font-family: var(--mono); font-size: 12px; background: var(--bg-2); border-radius: 5px; padding: 1px 6px; color: var(--cyan); }
+
+  /* ============ EXPANDED FOOTER ============ */
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="https://dec18studios.com/color-grading-tools">All tools</a>
+      <a href="#frame">Preview</a>
+      <a href="#saturation">Saturation</a>
+      <a href="#remix">Remix</a>
+      <a href="#density">Density</a>
+      <a href="#mastery">Mastery</a>
+      <a href="#subscribe" class="cta">Get it · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Tetrahedral color toolkit · DaVinci Resolve DCTL</p>
+        <h1 class="hero-title">Six hue vectors.<br /><em>Total control.</em></h1>
+        <p class="hero-sub">A suite of four colorist tools that grade each primary and secondary hue independently (saturation, remap, and density) with clean tetrahedral matrix math and zero hue bleed unless you ask for it.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#saturation">Explore the tools</a>
+          <a class="btn" href="#concepts">How the math works</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>4</b><span>tools</span></div>
+          <div class="m"><b>6</b><span>hue vectors</span></div>
+          <div class="m"><b>60°</b><span>vector spacing</span></div>
+          <div class="m"><b>0</b><span>bleed by default</span></div>
+        </div>
+      </div>
+
+      <!-- interactive wheel playground — the real Hue Mastery DCTL ported to GLSL -->
+      <div class="wheel-card">
+        <div class="wheel-head">
+          <p class="eyebrow">Live · Hue engine preview</p>
+          <span class="webgl-tag" id="webglTag">WebGL</span>
+        </div>
+        <div class="wheel-stage">
+          <canvas id="wheelCanvas"></canvas>
+          <div class="wheel-fallback" id="wheelFallback" hidden></div>
+          <!-- vector dots injected by JS -->
+        </div>
+        <div class="wheel-caption">HSV test wheel. Hue&nbsp;=&nbsp;angle, saturation&nbsp;=&nbsp;radius. A live preview of the hue engine.</div>
+
+        <div class="ctl-grid">
+          <div class="ctl">
+            <div class="ctl-label"><span>Global Sat</span><b data-out="sat">+0.00</b></div>
+            <input type="range" id="cSat" min="-0.5" max="0.5" step="0.005" value="0" />
+          </div>
+          <div class="ctl">
+            <div class="ctl-label"><span>Global Dens</span><b data-out="dens">+0.00</b></div>
+            <input type="range" id="cDens" min="-0.5" max="0.5" step="0.005" value="0" />
+          </div>
+          <div class="ctl">
+            <div class="ctl-label"><span>RGB Rotate</span><b data-out="rgbrot">+0.00</b></div>
+            <input type="range" id="cRgbRot" min="-1" max="1" step="0.01" value="0" />
+          </div>
+          <div class="ctl">
+            <div class="ctl-label"><span>CMY Rotate</span><b data-out="cmyrot">+0.00</b></div>
+            <input type="range" id="cCmyRot" min="-1" max="1" step="0.01" value="0" />
+          </div>
+        </div>
+
+        <div class="ctl" style="margin-top:16px;">
+          <div class="ctl-label"><span>Neutral Guard</span><b data-out="guard">0.00</b></div>
+          <input type="range" id="cGuard" min="0" max="1" step="0.01" value="0" />
+        </div>
+
+        <div class="ctl-row">
+          <label class="seg">
+            <span>Pass Order</span>
+            <select id="cOrder">
+              <option value="0">Remix · Sat · Dens</option>
+              <option value="1">Remix · Dens · Sat</option>
+              <option value="2">Sat · Remix · Dens</option>
+              <option value="3">Sat · Dens · Remix</option>
+              <option value="4">Dens · Remix · Sat</option>
+              <option value="5">Dens · Sat · Remix</option>
+            </select>
+          </label>
+          <button class="toggle" id="cShow" aria-pressed="false">Showcase</button>
+          <button class="reset" id="cReset">Reset</button>
+        </div>
+
+        <div class="vlegend" id="vlegend"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ FRAME DEMO ============ -->
+<section id="frame">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Live preview</p>
+      <h2>See it on a frame</h2>
+      <p>Drag the divider to compare. The same per-vector moves (saturation, density, and hue rotation, grouped by RGB and CMY) applied live to a real still. Toggle Showcase to map exactly where the grade lands.</p>
+    </div>
+
+    <div class="frame-demo reveal">
+      <div class="frame-stage" id="frameStage">
+        <canvas id="imgCanvas"></canvas>
+        <span class="frame-tag before">Original</span>
+        <span class="frame-tag after">Graded</span>
+        <div class="split-handle" id="splitHandle"><div class="split-line"></div><div class="split-grip">↔</div></div>
+      </div>
+
+      <div class="frame-controls">
+        <div class="ctl">
+          <div class="ctl-label"><span>Global Sat</span><b data-iout="sat">+0.00</b></div>
+          <input type="range" id="iSat" min="-0.5" max="0.5" step="0.005" value="0" />
+        </div>
+        <div class="ctl">
+          <div class="ctl-label"><span>Global Dens</span><b data-iout="dens">+0.00</b></div>
+          <input type="range" id="iDens" min="-0.5" max="0.5" step="0.005" value="0" />
+        </div>
+        <div class="ctl">
+          <div class="ctl-label"><span>RGB Rotate</span><b data-iout="rgbrot">+0.00</b></div>
+          <input type="range" id="iRgbRot" min="-1" max="1" step="0.01" value="0" />
+        </div>
+        <div class="ctl">
+          <div class="ctl-label"><span>CMY Rotate</span><b data-iout="cmyrot">+0.00</b></div>
+          <input type="range" id="iCmyRot" min="-1" max="1" step="0.01" value="0" />
+        </div>
+      </div>
+
+      <div class="frame-row2">
+        <div class="ctl">
+          <div class="ctl-label"><span>Neutral Guard</span><b data-iout="guard">0.00</b></div>
+          <input type="range" id="iGuard" min="0" max="1" step="0.01" value="0" />
+        </div>
+        <label class="seg">
+          <span>Pass Order</span>
+          <select id="iOrder">
+            <option value="0">Remix · Sat · Dens</option>
+            <option value="1">Remix · Dens · Sat</option>
+            <option value="2">Sat · Remix · Dens</option>
+            <option value="3">Sat · Dens · Remix</option>
+            <option value="4">Dens · Remix · Sat</option>
+            <option value="5">Dens · Sat · Remix</option>
+          </select>
+        </label>
+        <button class="toggle" id="iShow" aria-pressed="false">Showcase</button>
+        <button class="reset" id="iReset">Reset</button>
+      </div>
+
+      <div class="frame-extra">
+        <span class="looks-label">Looks</span>
+        <button class="preset" data-preset="teal_orange">Teal &amp; Orange</button>
+        <button class="preset" data-preset="warm">Warm Skin</button>
+        <button class="preset" data-preset="film">Film Density</button>
+        <button class="preset" data-preset="desat">Desaturate</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOL 01 — SATURATION ============ -->
+<section class="tool" id="saturation" style="--accent: var(--cyan); --accent-d: var(--cyan-d);">
+  <div class="wrap">
+    <div class="tool-grid reveal">
+      <div>
+        <span class="tool-num">Tool 01</span>
+        <h3>Hue Saturation</h3>
+        <div class="resolve-tag">In Resolve: <b>AGE Hue Saturation</b> · the “AGE” prefix is just a sort tag</div>
+        <p class="lede">Controls saturation independently per hue vector using a tetrahedral matrix. Each slider sets how saturated that color region becomes without touching the other five hues. A Global Sat slider offsets all six at once.</p>
+        <div class="callout">
+          <div class="k">Why it's useful</div>
+          <p>Resolve's built-in hue-sat curves smear across broad hue bands with limited isolation. This gives precise, independent control over each of the six primary/secondary zones with clean matrix math, and no hue bleed unless you explicitly dial in Expand Range.</p>
+        </div>
+        <div class="feat-tags">
+          <span>Neutral Guard</span><span>Expand Range</span><span>Showcase Effect</span>
+        </div>
+      </div>
+      <div>
+        <div class="ptable">
+          <div class="thead"><div>Parameter</div><div>Range</div><div>Function</div></div>
+          <div class="pgroup">Per-vector saturation</div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--red)"></span>Red Sat</div><div class="prange">−1 … +1</div><div class="pdesc">Saturation gain applied only to the red vector.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--yellow)"></span>Yellow Sat</div><div class="prange">−1 … +1</div><div class="pdesc">Independent gain on the yellow region.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--green)"></span>Green Sat</div><div class="prange">−1 … +1</div><div class="pdesc">Independent gain on the green region.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--cyan)"></span>Cyan Sat</div><div class="prange">−1 … +1</div><div class="pdesc">Independent gain on the cyan region.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--blue)"></span>Blue Sat</div><div class="prange">−1 … +1</div><div class="pdesc">Independent gain on the blue region.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--magenta)"></span>Magenta Sat</div><div class="prange">−1 … +1</div><div class="pdesc">Independent gain on the magenta region.</div></div>
+          <div class="pgroup">Global</div>
+          <div class="prow"><div class="pname">Global Sat</div><div class="prange">−1 … +1</div><div class="pdesc">Offsets all six vectors simultaneously.</div></div>
+          <div class="prow"><div class="pname">Neutral Guard</div><div class="prange">0 … 1</div><div class="pdesc">Smootherstep fade that keeps the effect off low-saturation grey/neutral pixels.</div></div>
+          <div class="prow"><div class="pname">Expand Range</div><div class="prange">0 … 1</div><div class="pdesc">Gaussian rolloff that spills each vector's effect into its wheel neighbours.</div></div>
+          <div class="prow"><div class="pname">Showcase Effect</div><div class="prange">toggle</div><div class="pdesc">Checker overlay weighted by effect magnitude to reveal affected areas.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOL 02 — REMIX ============ -->
+<section class="tool" id="remix" style="--accent: var(--magenta); --accent-d: var(--magenta-d);">
+  <div class="wrap">
+    <div class="tool-grid reveal">
+      <div>
+        <span class="tool-num">Tool 02</span>
+        <h3>Hue Remix</h3>
+        <div class="resolve-tag">In Resolve: <b>AGE Hue Remix</b></div>
+        <p class="lede">Pushes each hue vector toward its neighbour on the wheel. Every slider is bidirectional. Red positive pushes toward Magenta, negative toward Yellow; Yellow positive contracts toward Red, negative toward Green. The remap runs through the same tetrahedral structure, so transitions stay clean and artifact-free.</p>
+        <div class="callout">
+          <div class="k">Why it's useful</div>
+          <p>Subtle hue remapping in look development: nudging skin tones a touch warmer or cooler, pushing foliage greens toward teal or yellow, or pulling a single color off an undesirable cast. Far finer than rotating the whole color wheel.</p>
+        </div>
+        <div class="feat-tags">
+          <span>Bidirectional</span><span>Neutral Guard</span><span>Expand Range</span><span>Showcase Effect</span>
+        </div>
+      </div>
+      <div>
+        <div class="ptable">
+          <div class="thead"><div>Vector</div><div>− / +</div><div>Direction</div></div>
+          <div class="pgroup">Per-vector remap (bidirectional)</div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--red)"></span>Red</div><div class="prange">−1 … +1</div><div class="pdesc">− toward Yellow · + toward Magenta</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--yellow)"></span>Yellow</div><div class="prange">−1 … +1</div><div class="pdesc">− toward Green · + toward Red</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--green)"></span>Green</div><div class="prange">−1 … +1</div><div class="pdesc">− toward Cyan · + toward Yellow</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--cyan)"></span>Cyan</div><div class="prange">−1 … +1</div><div class="pdesc">− toward Blue · + toward Green</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--blue)"></span>Blue</div><div class="prange">−1 … +1</div><div class="pdesc">− toward Magenta · + toward Cyan</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--magenta)"></span>Magenta</div><div class="prange">−1 … +1</div><div class="pdesc">− toward Red · + toward Blue</div></div>
+          <div class="pgroup">Global</div>
+          <div class="prow"><div class="pname">Neutral Guard</div><div class="prange">0 … 1</div><div class="pdesc">Protects neutral pixels from the remap.</div></div>
+          <div class="prow"><div class="pname">Expand Range</div><div class="prange">0 … 1</div><div class="pdesc">Gaussian spill into neighbouring hues.</div></div>
+          <div class="prow"><div class="pname">Showcase Effect</div><div class="prange">toggle</div><div class="pdesc">Checker overlay weighted by effect magnitude.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOL 03 — DENSITY ============ -->
+<section class="tool" id="density" style="--accent: var(--red); --accent-d: var(--red-d);">
+  <div class="wrap">
+    <div class="tool-grid reveal">
+      <div>
+        <span class="tool-num">Tool 03</span>
+        <h3>Vector Density</h3>
+        <div class="resolve-tag">In Resolve: <b>AGE Vector Density</b></div>
+        <p class="lede">Controls density (darkening and lightening) independently per hue vector. RGB primaries respond at full scale; CMY secondaries apply at half scale to preserve their characteristic filmic absorption. Density darkens by subtracting from all three channels of a vertex rather than just the off-diagonals, giving a more subtractive-dye quality than saturation alone.</p>
+        <div class="callout">
+          <div class="k">Why it's useful</div>
+          <p>Film stocks carry different dye densities per color layer. Replicate that: make reds denser and more saturated at once, or pull density out of cyan to open shadow detail in blue-heavy scenes. The CMY half-scale mirrors how secondary dye layers respond more subtly than primaries.</p>
+        </div>
+        <div class="feat-tags">
+          <span>RGB full-scale</span><span>CMY half-scale</span><span>Neutral Guard</span><span>Expand Range</span><span>Showcase Effect</span>
+        </div>
+      </div>
+      <div>
+        <div class="ptable">
+          <div class="thead"><div>Vector</div><div>Scale</div><div>Function</div></div>
+          <div class="pgroup">Primary vectors, full scale</div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--red)"></span>Red Dens</div><div class="prange">1.0×</div><div class="pdesc">Subtractive darken/lighten of the red vertex.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--green)"></span>Green Dens</div><div class="prange">1.0×</div><div class="pdesc">Full-scale density on green.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--blue)"></span>Blue Dens</div><div class="prange">1.0×</div><div class="pdesc">Full-scale density on blue.</div></div>
+          <div class="pgroup">Secondary vectors, half scale</div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--cyan)"></span>Cyan Dens</div><div class="prange">0.5×</div><div class="pdesc">Half-scale to preserve filmic absorption.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--magenta)"></span>Magenta Dens</div><div class="prange">0.5×</div><div class="pdesc">Half-scale density on magenta.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--yellow)"></span>Yellow Dens</div><div class="prange">0.5×</div><div class="pdesc">Half-scale density on yellow.</div></div>
+          <div class="pgroup">Global</div>
+          <div class="prow"><div class="pname">Global Dens</div><div class="prange">−1 … +1</div><div class="pdesc">Offsets all vectors at their respective scales.</div></div>
+          <div class="prow"><div class="pname">Neutral Guard</div><div class="prange">0 … 1</div><div class="pdesc">Protects neutral pixels.</div></div>
+          <div class="prow"><div class="pname">Expand Range</div><div class="prange">0 … 1</div><div class="pdesc">Gaussian spill into neighbours.</div></div>
+          <div class="prow"><div class="pname">Showcase Effect</div><div class="prange">toggle</div><div class="pdesc">Magnitude-weighted checker overlay.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOL 04 — MASTERY ============ -->
+<section class="tool" id="mastery" style="--accent: var(--green); --accent-d: var(--green-d);">
+  <div class="wrap">
+    <div class="tool-grid reveal">
+      <div>
+        <span class="tool-num">Tool 04 · Master</span>
+        <h3>Hue Mastery</h3>
+        <div class="resolve-tag">In Resolve: <b>AGE Hue Mastery</b></div>
+        <p class="lede">Combines all three operations (Remix, Saturation, and Density) in one tool, grouped by hue. Each of the six vectors carries its own Sat, Dens, and Remix slider. Global RGB and Global CMY sections add group-level offsets, and a Pass Order dropdown sets the serial processing order across the operations.</p>
+        <div class="callout">
+          <div class="k">Why it's useful</div>
+          <p>When a look needs coordinated hue, saturation, and density moves, say a film emulation where the red layer is denser, shifted toward orange, and more saturated. Three separate tools means three nodes and no way to see the interaction. Mastery gives you the full three-dimensional character of a hue zone in one place. Pass order matters: <b>Remix first</b> means saturation acts on the remapped position; <b>Sat first</b> means remix moves already-saturated colors.</p>
+        </div>
+        <div class="feat-tags">
+          <span>Per-hue Sat / Dens / Remix</span><span>Global RGB</span><span>Global CMY</span><span>Pass Order</span><span>Neutral Guard</span><span>Showcase Effect</span>
+        </div>
+      </div>
+      <div>
+        <div class="ptable">
+          <div class="thead"><div>Control</div><div>Axes</div><div>Function</div></div>
+          <div class="pgroup">Per-hue, each vector has 3 axes</div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--red)"></span>Red</div><div class="prange">Sat · Dens · Remix</div><div class="pdesc">Full 3-axis control of the red zone.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--yellow)"></span>Yellow</div><div class="prange">Sat · Dens · Remix</div><div class="pdesc">Full 3-axis control of the yellow zone.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--green)"></span>Green</div><div class="prange">Sat · Dens · Remix</div><div class="pdesc">Full 3-axis control of the green zone.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--cyan)"></span>Cyan</div><div class="prange">Sat · Dens · Remix</div><div class="pdesc">Full 3-axis control of the cyan zone.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--blue)"></span>Blue</div><div class="prange">Sat · Dens · Remix</div><div class="pdesc">Full 3-axis control of the blue zone.</div></div>
+          <div class="prow"><div class="pname"><span class="sw" style="background:var(--magenta)"></span>Magenta</div><div class="prange">Sat · Dens · Remix</div><div class="pdesc">Full 3-axis control of the magenta zone.</div></div>
+          <div class="pgroup">Group offsets</div>
+          <div class="prow"><div class="pname">Global RGB</div><div class="prange">Sat · Dens · Rotate</div><div class="pdesc">Affects only the three primary vectors.</div></div>
+          <div class="prow"><div class="pname">Global CMY</div><div class="prange">Sat · Dens · Rotate</div><div class="pdesc">Affects only the three secondary vectors.</div></div>
+          <div class="pgroup">Master</div>
+          <div class="prow"><div class="pname">Pass Order</div><div class="prange">dropdown</div><div class="pdesc">Serial order across operations, e.g. Remix→Sat→Dens or Sat→Dens→Remix (all 6 permutations).</div></div>
+          <div class="prow"><div class="pname">Neutral Guard</div><div class="prange">0 … 1</div><div class="pdesc">Master-level neutral protection.</div></div>
+          <div class="prow"><div class="pname">Showcase Effect</div><div class="prange">toggle</div><div class="pdesc">Master-level magnitude checker overlay.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONCEPTS ============ -->
+<section id="concepts">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Shared engine</p>
+      <h2>The math every tool shares</h2>
+      <p>All four tools are built on the same foundation: six hue vectors arranged on the wheel, interpolated with a tetrahedral matrix, and gated by the same guard, spill, and visualization helpers.</p>
+    </div>
+
+    <div class="concepts-grid reveal">
+      <div class="concept wide">
+        <div class="figure" style="height:170px;">
+          <!-- six-vector wheel diagram -->
+          <svg viewBox="0 0 520 160" width="100%" height="100%" style="display:block;">
+            <g font-family="JetBrains Mono, monospace" font-size="10">
+              <!-- mini wheel -->
+              <g transform="translate(80,80)">
+                <circle r="52" fill="none" stroke="oklch(0.32 0.013 264)" stroke-width="1"/>
+                <circle cx="0" cy="-52" r="6" fill="var(--red)"/>
+                <circle cx="45" cy="-26" r="6" fill="var(--magenta)"/>
+                <circle cx="45" cy="26" r="6" fill="var(--blue)"/>
+                <circle cx="0" cy="52" r="6" fill="var(--cyan)"/>
+                <circle cx="-45" cy="26" r="6" fill="var(--green)"/>
+                <circle cx="-45" cy="-26" r="6" fill="var(--yellow)"/>
+              </g>
+              <g fill="oklch(0.72 0.010 264)">
+                <text x="170" y="42">Red · 0°</text>
+                <text x="170" y="62">Yellow · 60°</text>
+                <text x="170" y="82">Green · 120°</text>
+                <text x="310" y="42">Cyan · 180°</text>
+                <text x="310" y="62">Blue · 240°</text>
+                <text x="310" y="82">Magenta · 300°</text>
+              </g>
+              <text x="170" y="120" fill="oklch(0.55 0.010 264)">Neighbours sit at 60° · 120° · 180° around each vertex.</text>
+            </g>
+          </svg>
+        </div>
+        <h4>Six hue vectors &amp; the tetrahedral matrix</h4>
+        <p>Each primary and secondary hue is a vertex sampled at 60° spacing. Rather than the broad hue-band masking Resolve uses natively, the tools interpolate between vertices with a tetrahedral matrix, the same fast, artifact-free interpolation used in 3D LUT engines. That clean structure is why effects stay isolated to their vector with no cross-contamination.</p>
+      </div>
+
+      <div class="concept">
+        <div class="figure">
+          <div class="guardfig">
+            <div class="strip"></div>
+            <div class="veil"></div>
+            <span class="lbl l">neutral / grey</span>
+            <span class="lbl r">saturated</span>
+          </div>
+        </div>
+        <h4>Neutral Guard</h4>
+        <p>A smootherstep fade keyed to each pixel's input saturation. Low-saturation greys and neutrals are held back from the effect while saturated colors receive it fully, so a red boost never tints skin shadows or a grey wall.</p>
+      </div>
+
+      <div class="concept">
+        <div class="figure">
+          <svg class="bellfig" viewBox="0 0 240 120" preserveAspectRatio="none">
+            <g fill="none" stroke-width="2.5">
+              <path d="M0,110 C40,110 50,30 70,30 C90,30 100,110 140,110" stroke="var(--red)"/>
+              <path d="M40,112 C80,112 90,66 110,66 C130,66 140,112 180,112" stroke="var(--yellow)" opacity="0.7"/>
+              <path d="M-30,112 C10,112 20,66 40,66 C60,66 70,112 110,112" stroke="var(--magenta)" opacity="0.7"/>
+            </g>
+            <line x1="0" y1="112" x2="240" y2="112" stroke="oklch(0.32 0.013 264)"/>
+          </svg>
+        </div>
+        <h4>Expand Range</h4>
+        <p>A Gaussian rolloff that spills each vertex's delta into its wheel neighbours at 60° / 120° / 180°. Boost Red and a softened amount lifts Yellow and Magenta too, letting an effect spread naturally across adjacent hues instead of stopping hard at a vector boundary.</p>
+      </div>
+
+      <div class="concept">
+        <div class="figure"><div class="checker"></div></div>
+        <h4>Showcase Effect</h4>
+        <p>A diagnostic overlay: a checker pattern whose opacity is weighted by effect magnitude at each pixel. Wherever the tool is doing more work the checker reads stronger, giving you an instant map of exactly which regions of frame are being touched.</p>
+      </div>
+
+      <div class="concept">
+        <div class="figure" style="overflow:hidden;">
+          <svg viewBox="0 0 240 120" width="100%" height="100%">
+            <g font-family="JetBrains Mono, monospace" font-size="9" fill="oklch(0.72 0.010 264)">
+              <rect x="22" y="34" width="40" height="22" rx="4" fill="var(--magenta-d)" stroke="var(--magenta)"/>
+              <text x="42" y="49" text-anchor="middle" fill="var(--magenta)">Remix</text>
+              <rect x="100" y="34" width="40" height="22" rx="4" fill="var(--cyan-d)" stroke="var(--cyan)"/>
+              <text x="120" y="49" text-anchor="middle" fill="var(--cyan)">Sat</text>
+              <rect x="178" y="34" width="40" height="22" rx="4" fill="var(--red-d)" stroke="var(--red)"/>
+              <text x="198" y="49" text-anchor="middle" fill="var(--red)">Dens</text>
+              <path d="M64,45 L98,45" stroke="oklch(0.55 0.010 264)" marker-end="url(#ar)"/>
+              <path d="M142,45 L176,45" stroke="oklch(0.55 0.010 264)" marker-end="url(#ar)"/>
+              <defs><marker id="ar" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="oklch(0.55 0.010 264)"/></marker></defs>
+              <text x="120" y="82" text-anchor="middle">one of six selectable permutations</text>
+            </g>
+          </svg>
+        </div>
+        <h4>Pass Order (Mastery)</h4>
+        <p>The master tool runs the three operations serially, and the order changes the result. Remix-first saturates the remapped position; Sat-first remaps colors that are already pushed. All six permutations are selectable so you can place each operation exactly where it belongs in the chain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBERSHIP ============ -->
+<section class="sub" id="subscribe" data-screen-label="Membership">
+  <div class="wrap">
+    <div class="sub-grid">
+      <div class="sub-copy reveal">
+        <p class="eyebrow">The membership</p>
+        <h2>Get the Hue Tools, and everything else.</h2>
+        <p>All four hue tools (Saturation, Remix, Density and Mastery) come with the whole Tool Box. Become a <strong>Happy Little Noder</strong> and unlock every premium tool on the channel, plus every update and new release. One low annual fee that will <em>never</em> be raised. Lock it in once and you're set.</p>
+        <div class="free-note">
+          <div class="k">Plenty is free, forever</div>
+          <p>A whole set of the Tool Box is free, always. Grab the Tool Box Manager and start playing today. The Hue Tools and the rest of the premium kit unlock with a single membership whenever you're ready.</p>
+        </div>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="plan">Happy Little Noders</div>
+        <div class="amt"><b>$47.34</b><span>/ year</span></div>
+        <p class="note">Everything you see on YouTube, plus every update, for less than a single film stock LUT pack.</p>
+        <ul class="price-list">
+          <li>All four Hue Tools: Saturation, Remix, Density &amp; Mastery</li>
+          <li>Every premium DCTL &amp; OFX plugin in the Tool Box</li>
+          <li>All future tools &amp; updates included</li>
+          <li>Photo Chemist, Technicolor DRT, Color Slice O'matic &amp; more</li>
+          <li>Price locked, never raised</li>
+        </ul>
+        <a class="btn primary" href="https://dec18studios.com/checkout/subscribe?cartToken=kptC8qvTRVDiZHvOBtMQb4sftOOnbvA7HK3XutIz">Become a member →</a>
+        <div class="price-foot">Billed annually · cancel anytime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="https://dec18studios.com/color-grading-tools">Color Grading Tools</a>
+        <a href="https://dec18studios.com/color-grading-tools/photochemist">Photo Chemist</a>
+        <a href="https://dec18studios.com/color-grading-tools/technicolordrt">Technicolor DRT</a>
+        <a href="https://dec18studios.com/color-grading-tools/colorslice">Color Slice O'matic</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============================================================
+     Vector markers + legend
+     Angle convention: clockwise from top — Red 0°, Yellow 60° … Magenta 300°,
+     matching the shader's atan(dx,dy) hue mapping.
+     ============================================================ */
+  const VECTORS = [
+    { name: "Red",     angle: 0,   varc: "--red" },
+    { name: "Yellow",  angle: 60,  varc: "--yellow" },
+    { name: "Green",   angle: 120, varc: "--green" },
+    { name: "Cyan",    angle: 180, varc: "--cyan" },
+    { name: "Blue",    angle: 240, varc: "--blue" },
+    { name: "Magenta", angle: 300, varc: "--magenta" },
+  ];
+
+  const stage = document.querySelector(".wheel-stage");
+  const legend = document.getElementById("vlegend");
+  const R = 0.5; // markers sit on the rim
+
+  VECTORS.forEach((v) => {
+    const a = v.angle * Math.PI / 180;
+    const x = 50 + R * 100 * Math.sin(a);
+    const y = 50 - R * 100 * Math.cos(a);
+    const dot = document.createElement("div");
+    dot.className = "vdot";
+    dot.style.left = x + "%";
+    dot.style.top = y + "%";
+    dot.style.background = `var(${v.varc})`;
+    stage.appendChild(dot);
+
+    const chip = document.createElement("div");
+    chip.className = "vchip";
+    chip.innerHTML = `<span class="sw" style="background:var(${v.varc})"></span>${v.name}`;
+    chip.addEventListener("mouseenter", () => dot.classList.add("lit"));
+    chip.addEventListener("mouseleave", () => dot.classList.remove("lit"));
+    legend.appendChild(chip);
+  });
+
+  /* ============================================================
+     Cosmetic hue-preview shader for the landing page.
+     A lightweight HSV approximation that mimics the look of the
+     Hue Tools engine — it is NOT the production grading math.
+     ============================================================ */
+  const FRAG = `
+  precision highp float;
+  varying vec2 vUv;
+  uniform float uSat, uDens, uRgbRot, uCmyRot, uGuard;
+  uniform int   uOrder;
+  uniform int   uShow;
+
+  float clampVal(float x, float lo, float hi){ return max(lo, min(hi, x)); }
+  float smootherStep(float e0, float e1, float x){
+    x = clamp((x - e0) / (e1 - e0), 0.0, 1.0);
+    return x*x*x*(x*(x*6.0 - 15.0) + 10.0);
+  }
+  float rgb2Sat(vec3 c){
+    float lo = min(min(c.x, c.y), c.z);
+    float hi = max(max(c.x, c.y), c.z);
+    return (hi == 0.0) ? 0.0 : (hi - lo) / hi;
+  }
+  vec3 hsv2rgb(vec3 c){
+    vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+  }
+  vec3 checkerCol(vec2 px){
+    float cs = 16.0;
+    float a = mod(floor(px.x / cs), 2.0);
+    float b = mod(floor(px.y / cs), 2.0);
+    float on = (a == b) ? 1.0 : 0.0;
+    return mix(vec3(0.27), vec3(0.30), on);
+  }
+
+  // Cosmetic HSV ops — a plausible stand-in for the real engine.
+  vec3 opRotate(vec3 hsv, float rgbRot, float cmyRot){
+    float t = fract(hsv.x * 3.0);
+    float primW = pow(abs(cos(3.14159265 * t)), 2.0);   // near a primary
+    float secW = 1.0 - primW;                            // near a secondary
+    hsv.x = fract(hsv.x + (rgbRot * primW + cmyRot * secW) * 0.06);
+    return hsv;
+  }
+  vec3 opSat(vec3 hsv, float gsat){
+    hsv.y = clamp(hsv.y * (1.0 + gsat), 0.0, 1.0);
+    return hsv;
+  }
+  vec3 opDens(vec3 hsv, float gdens){
+    hsv.z = clamp(hsv.z * (1.0 - gdens * 0.60), 0.0, 1.5);  // darken / lighten
+    hsv.y = clamp(hsv.y * (1.0 + gdens * 0.30), 0.0, 1.0);  // slight sat coupling
+    return hsv;
+  }
+
+  void main(){
+    vec2 d = vUv - 0.5;
+    float rad = length(d) * 2.0;          // 0 (centre) .. 1 (rim)
+    if (rad > 1.0) discard;
+
+    float ang = degrees(atan(d.x, d.y));  // clockwise from top
+    float hue = mod(ang, 360.0) / 360.0;
+    float sat0 = clamp(rad, 0.0, 1.0);
+    vec3 inC = hsv2rgb(vec3(hue, sat0, 1.0));
+
+    vec3 hsv = vec3(hue, sat0, 1.0);
+    if (uOrder == 0)      { hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opSat(hsv, uSat); hsv = opDens(hsv, uDens); }
+    else if (uOrder == 1){ hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opDens(hsv, uDens); hsv = opSat(hsv, uSat); }
+    else if (uOrder == 2){ hsv = opSat(hsv, uSat); hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opDens(hsv, uDens); }
+    else if (uOrder == 3){ hsv = opSat(hsv, uSat); hsv = opDens(hsv, uDens); hsv = opRotate(hsv, uRgbRot, uCmyRot); }
+    else if (uOrder == 4){ hsv = opDens(hsv, uDens); hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opSat(hsv, uSat); }
+    else                 { hsv = opDens(hsv, uDens); hsv = opSat(hsv, uSat); hsv = opRotate(hsv, uRgbRot, uCmyRot); }
+    vec3 rgb = hsv2rgb(hsv);
+
+    float alpha = 1.0;
+    if (uGuard > 0.0) alpha = smootherStep(0.0, uGuard, sat0);
+    vec3 outC = mix(inC, rgb, alpha);
+
+    if (uShow == 1){
+      float diff = clampVal((abs(outC.x - inC.x) + abs(outC.y - inC.y) + abs(outC.z - inC.z)) / 3.0 * 30.0, 0.0, 1.0);
+      outC = mix(checkerCol(gl_FragCoord.xy), outC, diff);
+    }
+
+    float aa = smoothstep(1.0, 0.98, rad);
+    gl_FragColor = vec4(clamp(outC, 0.0, 1.0), aa);
+  }`;
+
+  const VERT = `
+  attribute vec2 aPos; varying vec2 vUv;
+  void main(){ vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }`;
+
+  const canvas = document.getElementById("wheelCanvas");
+  const tag = document.getElementById("webglTag");
+  const gl = canvas.getContext("webgl", { premultipliedAlpha: false, antialias: true })
+          || canvas.getContext("experimental-webgl", { premultipliedAlpha: false });
+
+  const els = {
+    sat:    document.getElementById("cSat"),
+    dens:   document.getElementById("cDens"),
+    rgbrot: document.getElementById("cRgbRot"),
+    cmyrot: document.getElementById("cCmyRot"),
+    guard:  document.getElementById("cGuard"),
+    order:  document.getElementById("cOrder"),
+    show:   document.getElementById("cShow"),
+    reset:  document.getElementById("cReset"),
+  };
+  const outs = {};
+  document.querySelectorAll("[data-out]").forEach((o) => (outs[o.dataset.out] = o));
+
+  function syncReadouts() {
+    const sgn = (v) => (v >= 0 ? "+" : "") + v.toFixed(2);
+    outs.sat.textContent    = sgn(parseFloat(els.sat.value));
+    outs.dens.textContent   = sgn(parseFloat(els.dens.value));
+    outs.rgbrot.textContent = sgn(parseFloat(els.rgbrot.value));
+    outs.cmyrot.textContent = sgn(parseFloat(els.cmyrot.value));
+    outs.guard.textContent  = parseFloat(els.guard.value).toFixed(2);
+  }
+
+  if (!gl) {
+    // graceful fallback: static conic wheel, controls hidden-but-present
+    document.getElementById("wheelFallback").hidden = false;
+    canvas.style.display = "none";
+    tag.textContent = "CSS"; tag.classList.add("off");
+    syncReadouts();
+  } else {
+    function compile(type, src) {
+      const sh = gl.createShader(type);
+      gl.shaderSource(sh, src); gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh));
+      return sh;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, "aPos");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    const U = {};
+    ["uSat","uDens","uRgbRot","uCmyRot","uGuard","uOrder","uShow"].forEach(
+      (n) => (U[n] = gl.getUniformLocation(prog, n))
+    );
+
+    function resize() {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const css = canvas.clientWidth || 300;
+      const size = Math.max(64, Math.round(css * dpr));
+      if (canvas.width !== size) { canvas.width = size; canvas.height = size; }
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    function render() {
+      resize();
+      gl.uniform1f(U.uSat,    parseFloat(els.sat.value));
+      gl.uniform1f(U.uDens,   parseFloat(els.dens.value));
+      gl.uniform1f(U.uRgbRot, parseFloat(els.rgbrot.value));
+      gl.uniform1f(U.uCmyRot, parseFloat(els.cmyrot.value));
+      gl.uniform1f(U.uGuard,  parseFloat(els.guard.value));
+      gl.uniform1i(U.uOrder,  parseInt(els.order.value, 10));
+      gl.uniform1i(U.uShow,   els.show.getAttribute("aria-pressed") === "true" ? 1 : 0);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    function update() { syncReadouts(); render(); }
+
+    [els.sat, els.dens, els.rgbrot, els.cmyrot, els.guard].forEach((el) =>
+      el.addEventListener("input", update)
+    );
+    els.order.addEventListener("change", update);
+    els.show.addEventListener("click", () => {
+      const on = els.show.getAttribute("aria-pressed") === "true";
+      els.show.setAttribute("aria-pressed", on ? "false" : "true");
+      render();
+    });
+    els.reset.addEventListener("click", () => {
+      els.sat.value = 0; els.dens.value = 0; els.rgbrot.value = 0; els.cmyrot.value = 0; els.guard.value = 0;
+      els.order.value = "0"; els.show.setAttribute("aria-pressed", "false");
+      update();
+    });
+    window.addEventListener("resize", render);
+
+    update();
+  }
+
+  /* ----- scroll reveal ----- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+</script>
+
+<script>
+  /* ============================================================
+     Before/after frame demo — same cosmetic hue-preview shader,
+     run on a real still with a draggable compare divider.
+     ============================================================ */
+  (function () {
+    const FRAME_SRC = "assets/frame-sample.jpg";
+    const stage = document.getElementById("frameStage");
+    const canvas = document.getElementById("imgCanvas");
+    const handle = document.getElementById("splitHandle");
+
+    const els = {
+      sat: document.getElementById("iSat"), dens: document.getElementById("iDens"),
+      rgbrot: document.getElementById("iRgbRot"), cmyrot: document.getElementById("iCmyRot"),
+      guard: document.getElementById("iGuard"), order: document.getElementById("iOrder"),
+      show: document.getElementById("iShow"), reset: document.getElementById("iReset"),
+    };
+    const outs = {};
+    document.querySelectorAll("[data-iout]").forEach((o) => (outs[o.dataset.iout] = o));
+
+    function syncReadouts() {
+      const sgn = (v) => (v >= 0 ? "+" : "") + v.toFixed(2);
+      outs.sat.textContent = sgn(+els.sat.value);
+      outs.dens.textContent = sgn(+els.dens.value);
+      outs.rgbrot.textContent = sgn(+els.rgbrot.value);
+      outs.cmyrot.textContent = sgn(+els.cmyrot.value);
+      outs.guard.textContent = (+els.guard.value).toFixed(2);
+    }
+
+    const gl = canvas.getContext("webgl", { premultipliedAlpha: false })
+            || canvas.getContext("experimental-webgl");
+
+    if (!gl) {
+      // fallback: just show the still
+      stage.style.backgroundImage = `url("${FRAME_SRC}")`;
+      canvas.style.display = "none";
+      handle.style.display = "none";
+      syncReadouts();
+      return;
+    }
+
+    const VERT = `attribute vec2 aPos; varying vec2 vUv;
+      void main(){ vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }`;
+
+    const FRAG = `
+      precision highp float;
+      varying vec2 vUv;
+      uniform sampler2D uImage;
+      uniform float uSat, uDens, uRgbRot, uCmyRot, uGuard, uSplit;
+      uniform int uOrder, uShow;
+
+      float clampVal(float x, float lo, float hi){ return max(lo, min(hi, x)); }
+      float smootherStep(float e0, float e1, float x){
+        x = clamp((x - e0) / (e1 - e0), 0.0, 1.0);
+        return x*x*x*(x*(x*6.0 - 15.0) + 10.0);
+      }
+      vec3 checkerCol(vec2 px){
+        float cs = 20.0;
+        float a = mod(floor(px.x / cs), 2.0);
+        float b = mod(floor(px.y / cs), 2.0);
+        return mix(vec3(0.27), vec3(0.30), (a == b) ? 1.0 : 0.0);
+      }
+      vec3 rgb2hsv(vec3 c){
+        vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
+        vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+        vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+        float d = q.x - min(q.w, q.y);
+        float e = 1.0e-10;
+        return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+      }
+      vec3 hsv2rgb(vec3 c){
+        vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
+        vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+        return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+      }
+      vec3 opRotate(vec3 hsv, float rgbRot, float cmyRot){
+        float t = fract(hsv.x * 3.0);
+        float primW = pow(abs(cos(3.14159265 * t)), 2.0);
+        float secW = 1.0 - primW;
+        hsv.x = fract(hsv.x + (rgbRot * primW + cmyRot * secW) * 0.06);
+        return hsv;
+      }
+      vec3 opSat(vec3 hsv, float gsat){ hsv.y = clamp(hsv.y * (1.0 + gsat), 0.0, 1.0); return hsv; }
+      vec3 opDens(vec3 hsv, float gdens){
+        hsv.z = clamp(hsv.z * (1.0 - gdens * 0.60), 0.0, 1.5);
+        hsv.y = clamp(hsv.y * (1.0 + gdens * 0.30), 0.0, 1.0);
+        return hsv;
+      }
+
+      void main(){
+        vec3 inC = texture2D(uImage, vUv).rgb;
+        vec3 hsv = rgb2hsv(inC);
+        float sat0 = hsv.y;
+
+        if (uOrder == 0)      { hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opSat(hsv, uSat); hsv = opDens(hsv, uDens); }
+        else if (uOrder == 1){ hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opDens(hsv, uDens); hsv = opSat(hsv, uSat); }
+        else if (uOrder == 2){ hsv = opSat(hsv, uSat); hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opDens(hsv, uDens); }
+        else if (uOrder == 3){ hsv = opSat(hsv, uSat); hsv = opDens(hsv, uDens); hsv = opRotate(hsv, uRgbRot, uCmyRot); }
+        else if (uOrder == 4){ hsv = opDens(hsv, uDens); hsv = opRotate(hsv, uRgbRot, uCmyRot); hsv = opSat(hsv, uSat); }
+        else                 { hsv = opDens(hsv, uDens); hsv = opSat(hsv, uSat); hsv = opRotate(hsv, uRgbRot, uCmyRot); }
+        vec3 graded = hsv2rgb(hsv);
+
+        float alpha = 1.0;
+        if (uGuard > 0.0) alpha = smootherStep(0.0, uGuard, sat0);
+        vec3 outC = mix(inC, graded, alpha);
+
+        if (uShow == 1){
+          float diff = clampVal((abs(outC.x - inC.x) + abs(outC.y - inC.y) + abs(outC.z - inC.z)) / 3.0 * 30.0, 0.0, 1.0);
+          outC = mix(checkerCol(gl_FragCoord.xy), outC, diff);
+        }
+
+        float showOrig = step(vUv.x, uSplit);
+        vec3 finalC = mix(outC, inC, showOrig);
+        float line = smoothstep(0.004, 0.0, abs(vUv.x - uSplit));
+        finalC = mix(finalC, vec3(1.0), line * 0.65);
+        gl_FragColor = vec4(finalC, 1.0);
+      }`;
+
+    function compile(type, src) {
+      const sh = gl.createShader(type);
+      gl.shaderSource(sh, src); gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh));
+      return sh;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, "aPos");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    const U = {};
+    ["uSat","uDens","uRgbRot","uCmyRot","uGuard","uSplit","uOrder","uShow","uImage"]
+      .forEach((n) => (U[n] = gl.getUniformLocation(prog, n)));
+
+    let texReady = false;
+    let split = 0.5;
+
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    const img = new Image();
+    img.onload = function () {
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
+      texReady = true;
+      render();
+    };
+    img.src = FRAME_SRC;
+
+    function resize() {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const w = Math.max(64, Math.round(canvas.clientWidth * dpr));
+      const h = Math.max(36, Math.round(canvas.clientHeight * dpr));
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    function render() {
+      if (!texReady) return;
+      resize();
+      gl.useProgram(prog);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.uniform1i(U.uImage, 0);
+      gl.uniform1f(U.uSat, +els.sat.value);
+      gl.uniform1f(U.uDens, +els.dens.value);
+      gl.uniform1f(U.uRgbRot, +els.rgbrot.value);
+      gl.uniform1f(U.uCmyRot, +els.cmyrot.value);
+      gl.uniform1f(U.uGuard, +els.guard.value);
+      gl.uniform1f(U.uSplit, split);
+      gl.uniform1i(U.uOrder, parseInt(els.order.value, 10));
+      gl.uniform1i(U.uShow, els.show.getAttribute("aria-pressed") === "true" ? 1 : 0);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    function update() { syncReadouts(); render(); }
+
+    [els.sat, els.dens, els.rgbrot, els.cmyrot, els.guard].forEach((el) => el.addEventListener("input", update));
+    els.order.addEventListener("change", update);
+    els.show.addEventListener("click", () => {
+      const on = els.show.getAttribute("aria-pressed") === "true";
+      els.show.setAttribute("aria-pressed", on ? "false" : "true");
+      render();
+    });
+    els.reset.addEventListener("click", () => {
+      els.sat.value = 0; els.dens.value = 0; els.rgbrot.value = 0; els.cmyrot.value = 0; els.guard.value = 0;
+      els.order.value = "0"; els.show.setAttribute("aria-pressed", "false");
+      update();
+    });
+
+    const PRESETS = {
+      teal_orange: { sat: 0.18, dens: 0.08, rgbrot: 0.12, cmyrot: -0.35, guard: 0.12, order: "0" },
+      warm:        { sat: 0.10, dens: 0.05, rgbrot: 0.22, cmyrot: 0.00, guard: 0.20, order: "0" },
+      film:        { sat: 0.06, dens: 0.30, rgbrot: 0.00, cmyrot: 0.00, guard: 0.10, order: "4" },
+      desat:       { sat: -0.40, dens: 0.00, rgbrot: 0.00, cmyrot: 0.00, guard: 0.00, order: "0" },
+    };
+    document.querySelectorAll(".preset").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const p = PRESETS[btn.dataset.preset]; if (!p) return;
+        els.sat.value = p.sat; els.dens.value = p.dens; els.rgbrot.value = p.rgbrot;
+        els.cmyrot.value = p.cmyrot; els.guard.value = p.guard; els.order.value = p.order;
+        update();
+      });
+    });
+
+    // ----- draggable compare divider -----
+    function setSplitFromX(clientX) {
+      const r = stage.getBoundingClientRect();
+      split = Math.min(0.985, Math.max(0.015, (clientX - r.left) / r.width));
+      handle.style.left = (split * 100) + "%";
+      render();
+    }
+    let dragging = false;
+    handle.addEventListener("pointerdown", (e) => { dragging = true; handle.setPointerCapture(e.pointerId); e.preventDefault(); });
+    handle.addEventListener("pointermove", (e) => { if (dragging) setSplitFromX(e.clientX); });
+    handle.addEventListener("pointerup", () => { dragging = false; });
+    handle.addEventListener("pointercancel", () => { dragging = false; });
+    stage.addEventListener("pointerdown", (e) => { if (e.target === handle || handle.contains(e.target)) return; setSplitFromX(e.clientX); });
+    window.addEventListener("resize", render);
+
+    syncReadouts();
+  })();
+</script>
+</body>
+</html>
