@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dec. 18 Studios — Color, Edit, Finish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.010 50);
+    --bg-1:      oklch(0.205 0.012 50);
+    --bg-2:      oklch(0.245 0.013 50);
+    --bg-3:      oklch(0.285 0.014 50);
+    --line:      oklch(0.34 0.013 50);
+    --line-soft: oklch(0.28 0.011 50);
+
+    --ink:       oklch(0.96 0.008 60);
+    --ink-dim:   oklch(0.78 0.012 60);
+    --ink-faint: oklch(0.60 0.012 60);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+    --amber:   oklch(0.78 0.135 62);
+
+    --maxw: 1200px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --serif: "Instrument Serif", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --grad: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.64 0.205 25 / 0.32); }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12.5px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px; font-family: var(--sans);
+    font-weight: 600; font-size: 16px; border-radius: 10px; padding: 13px 22px;
+    cursor: pointer; transition: transform .15s, background .15s, border-color .15s, filter .15s;
+    white-space: nowrap; border: 1px solid transparent;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn-primary:hover { background: oklch(0.88 0.01 60); }
+  .btn-ghost { background: oklch(1 0 0 / 0.05); color: var(--ink); border-color: var(--line); }
+  .btn-ghost:hover { border-color: var(--ink-faint); background: oklch(1 0 0 / 0.09); }
+  .btn-amber { background: var(--amber); color: #1a1206; }
+  .btn-amber:hover { filter: brightness(1.06); }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    transition: background .3s, border-color .3s, backdrop-filter .3s;
+    border-bottom: 1px solid transparent;
+  }
+  header.topbar.scrolled {
+    background: oklch(0.165 0.010 50 / 0.82); backdrop-filter: blur(14px);
+    border-bottom-color: var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 18px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .logo {
+    display: block; height: clamp(38px, 4.4vw, 46px); aspect-ratio: 862 / 380;
+    background: var(--grad);
+    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
+            mask: url("assets/logo-full.png") left center / contain no-repeat;
+  }
+  nav.toplinks { display: flex; gap: 28px; align-items: center; }
+  nav.toplinks a.lnk { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color .18s; }
+  nav.toplinks a.lnk:hover { color: var(--ink); }
+  nav.toplinks .btn { padding: 10px 18px; font-size: 15px; }
+  @media (max-width: 760px) {
+    nav.toplinks { gap: 16px; }
+    nav.toplinks a.lnk { display: none; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; }
+  .hero-slides { position: absolute; inset: 0; z-index: 0; background: #0c0a08; }
+  .hero-slides .slide {
+    position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s ease;
+    background-size: cover; background-position: 60% 42%;
+  }
+  .hero-slides .slide.on { opacity: 1; }
+  .hero-scrim {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      linear-gradient(90deg, oklch(0.12 0.01 50 / 0.94) 0%, oklch(0.12 0.01 50 / 0.7) 36%, oklch(0.12 0.01 50 / 0.08) 70%),
+      linear-gradient(0deg, oklch(0.11 0.01 50 / 0.94) 0%, transparent 46%);
+  }
+  .hero-inner { position: relative; z-index: 2; width: 100%; padding-bottom: clamp(56px, 8vh, 104px); padding-top: 120px; }
+  .hero h1 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(46px, 7.4vw, 92px);
+    line-height: 0.97; letter-spacing: -0.025em; margin: 22px 0 0; max-width: 14ch;
+  }
+  .hero h1 em {
+    font-style: normal; background: var(--grad);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero .sub { margin-top: 24px; font-size: clamp(18px, 2.1vw, 22px); color: var(--ink-dim); max-width: 50ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+  .hero-clients {
+    margin-top: 52px; display: flex; align-items: center; gap: clamp(18px, 3vw, 34px); flex-wrap: wrap;
+    color: var(--ink-faint); font-family: var(--mono); font-size: 14px; letter-spacing: 0.05em;
+  }
+  .hero-clients .lab { color: var(--ink-faint); letter-spacing: 0.18em; text-transform: uppercase; font-size: 11.5px; white-space: nowrap; }
+  .hero-clients .names { display: flex; gap: clamp(16px, 2.4vw, 28px); flex-wrap: wrap; color: var(--ink-dim); }
+  .hero-tape { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--grad); opacity: 0.9; z-index: 3; }
+  .hero-dots { position: absolute; right: var(--pad); bottom: clamp(56px, 8vh, 104px); z-index: 3; display: flex; gap: 9px; }
+  .hero-dots button {
+    width: 9px; height: 9px; border-radius: 50%; border: none; cursor: pointer; padding: 0;
+    background: oklch(1 0 0 / 0.3); transition: background .2s, transform .2s;
+  }
+  .hero-dots button.on { background: var(--ink); transform: scale(1.15); }
+  @media (max-width: 620px) { .hero-dots { display: none; } }
+
+  /* ============ section frame ============ */
+  section.band { padding: clamp(72px, 11vh, 132px) 0; position: relative; }
+  .kicker { display: flex; align-items: center; gap: 12px; }
+  .kicker .eyebrow { white-space: nowrap; }
+  .kicker::before { content: ""; width: 26px; height: 2px; background: var(--accent, var(--amber)); display: inline-block; }
+  .h2 { font-family: var(--display); font-weight: 700; font-size: clamp(32px, 4.6vw, 56px); line-height: 1.02; letter-spacing: -0.022em; margin-top: 16px; }
+  .lead { font-size: clamp(18px, 2vw, 21px); color: var(--ink-dim); margin-top: 20px; max-width: 56ch; text-wrap: pretty; }
+
+  /* ABOUT */
+  .about-top { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(28px, 5vw, 70px); align-items: end; }
+  @media (max-width: 860px) { .about-top { grid-template-columns: 1fr; } }
+  .about-statement { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 3vw, 33px); line-height: 1.28; color: var(--ink); text-wrap: pretty; }
+  .about-statement em { font-style: italic; color: var(--amber); }
+  .services { margin-top: clamp(48px, 6vw, 76px); display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line-soft); border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden; }
+  @media (max-width: 860px) { .services { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .services { grid-template-columns: 1fr; } }
+  .svc { background: var(--bg-1); padding: 30px 26px; min-height: 188px; display: flex; flex-direction: column; }
+  .svc .no { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.1em; }
+  .svc h3 { font-family: var(--display); font-weight: 600; font-size: 22px; margin-top: auto; }
+  .svc p { font-size: 15px; color: var(--ink-dim); margin-top: 10px; line-height: 1.5; }
+  .svc .bar { height: 3px; width: 32px; border-radius: 2px; margin-bottom: 16px; background: var(--c, var(--amber)); }
+
+  /* personal charm card */
+  .meet { margin-top: clamp(48px, 6vw, 72px); display: grid; grid-template-columns: 96px 1fr; gap: 24px; align-items: start; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: clamp(24px, 3vw, 34px); }
+  @media (max-width: 540px) { .meet { grid-template-columns: 1fr; } }
+  .meet .portrait { width: 96px; height: 96px; border-radius: 14px; overflow: hidden; background: var(--bg-2) url("assets/greg.jpg") 50% 53% / 108% no-repeat; border: 1px solid var(--line); }
+  .meet .portrait .ph { width: 100%; height: 100%; background-image: repeating-linear-gradient(135deg, oklch(0.3 0.01 50) 0 9px, oklch(0.26 0.01 50) 9px 18px); display: grid; place-items: center; }
+  .meet .portrait .ph span { font-family: var(--mono); font-size: 9px; color: var(--ink-faint); text-align: center; letter-spacing: 0.06em; }
+  .meet .who { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .meet .quote { font-family: var(--serif); font-size: clamp(19px, 2.2vw, 24px); line-height: 1.35; margin-top: 10px; text-wrap: pretty; }
+  .meet .sig { margin-top: 14px; font-size: 15px; color: var(--ink-dim); }
+
+  /* TOOLS */
+  .tools { background: var(--bg-1); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+  .tools-head { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  @media (max-width: 760px) { .tools-head { grid-template-columns: 1fr; } }
+  .tool-grid { margin-top: clamp(40px, 5vw, 60px); display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 760px) { .tool-grid { grid-template-columns: 1fr; } }
+  .tool { position: relative; background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: clamp(26px, 3vw, 36px); overflow: hidden; transition: transform .18s, border-color .18s; }
+  .tool:hover { transform: translateY(-3px); border-color: var(--ink-faint); }
+  .tool .glow { position: absolute; top: -40%; right: -20%; width: 320px; height: 320px; border-radius: 50%; filter: blur(90px); opacity: 0.16; pointer-events: none; }
+  .tool .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); position: relative; }
+  .tool h3 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3vw, 34px); margin-top: 12px; letter-spacing: -0.01em; position: relative; }
+  .tool p { color: var(--ink-dim); margin-top: 12px; font-size: 16px; position: relative; max-width: 42ch; }
+  .tool .go { margin-top: 22px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: var(--ink); position: relative; }
+  .tool .go .arr { transition: transform .18s; }
+  .tool:hover .go .arr { transform: translateX(4px); }
+  .tools-note { margin-top: 26px; font-size: 15px; color: var(--ink-faint); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chip { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; color: var(--ink-dim); }
+
+  /* BOOK */
+  .book { position: relative; overflow: hidden; }
+  .book-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; }
+  .book-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, oklch(0.13 0.01 50 / 0.93), oklch(0.12 0.01 50 / 0.97)); }
+  .book .wrap { position: relative; z-index: 1; }
+  .book-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  @media (max-width: 860px) { .book-grid { grid-template-columns: 1fr; } }
+  .book-copy .lead { margin-top: 22px; }
+  .book-reassure { margin-top: 30px; display: flex; flex-direction: column; gap: 14px; }
+  .book-reassure li { list-style: none; display: flex; gap: 12px; align-items: flex-start; color: var(--ink-dim); font-size: 16px; }
+  .book-reassure .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 8px; flex: none; background: var(--amber); }
+  .book-meta { margin-top: 32px; font-family: var(--mono); font-size: 13px; color: var(--ink-faint); line-height: 1.9; }
+  .book-meta a { color: var(--ink-dim); border-bottom: 1px solid var(--line); }
+
+  /* FORM (the "shelf") */
+  .intake { background: var(--bg-1); border: 1px solid var(--line); border-radius: 18px; padding: clamp(26px, 3vw, 38px); box-shadow: 0 30px 80px oklch(0 0 0 / 0.4); }
+  .intake .formhead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+  .intake .formhead h3 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
+  .intake .formhead .step { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); letter-spacing: 0.1em; }
+  .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); }
+  .field label .opt { color: var(--ink-faint); text-transform: none; letter-spacing: 0; }
+  .field input, .field select, .field textarea {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+    color: var(--ink); font-family: var(--sans); font-size: 15.5px; width: 100%; transition: border-color .15s, background .15s;
+  }
+  .field textarea { resize: vertical; min-height: 92px; line-height: 1.5; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--amber); background: var(--bg-3); }
+  .field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink-faint) 50%), linear-gradient(135deg, var(--ink-faint) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+  .checks { display: flex; flex-wrap: wrap; gap: 9px; }
+  .checks label {
+    font-family: var(--sans); font-size: 14.5px; text-transform: none; letter-spacing: 0; color: var(--ink-dim);
+    border: 1px solid var(--line); border-radius: 999px; padding: 8px 15px; cursor: pointer; transition: all .15s; user-select: none;
+  }
+  .checks input { position: absolute; opacity: 0; pointer-events: none; }
+  .checks label:hover { border-color: var(--ink-faint); }
+  .checks label.on { background: var(--amber); color: #1a1206; border-color: var(--amber); font-weight: 600; }
+  .intake .submit { margin-top: 22px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .intake .submit .note { font-size: 13px; color: var(--ink-faint); }
+  @media (max-width: 460px) { .fgrid { grid-template-columns: 1fr; } }
+
+  /* FOOTER */
+  footer.site { background: var(--bg); border-top: 1px solid var(--line-soft); padding: clamp(56px, 7vw, 88px) 0 40px; }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: clamp(28px, 4vw, 56px); }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .foot-grid { grid-template-columns: 1fr; } }
+  .foot-brand .logo { height: 40px; margin-bottom: 18px; }
+  .foot-brand p { color: var(--ink-dim); font-size: 15.5px; max-width: 34ch; }
+  .foot-col h4 { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px; }
+  .foot-col a, .foot-col p { display: block; color: var(--ink-dim); font-size: 15.5px; margin-bottom: 10px; transition: color .15s; }
+  .foot-col a:hover { color: var(--ink); }
+  .foot-bottom { max-width: var(--maxw); margin: clamp(40px, 5vw, 64px) auto 0; padding: 22px var(--pad) 0; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--ink-faint); font-size: 13.5px; font-family: var(--mono); letter-spacing: 0.03em; }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } .hero-slides .slide { transition: none; } }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar" id="topbar">
+  <div class="row">
+    <a class="logo" href="https://dec18studios.com/" aria-label="Dec. 18 Studios"></a>
+    <nav class="toplinks">
+      <a class="lnk" href="#about">Studio</a>
+      <a class="lnk" href="#tools">Tools</a>
+      <a class="lnk" href="https://dec18studios.com/projects">Work</a>
+      <a class="btn btn-amber" href="#book">Book a session</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Hero">
+  <div class="hero-slides" id="heroSlides"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-inner">
+    <div class="wrap">
+      <div class="eyebrow">Color · Edit · Finish — Dec. 18 Studios</div>
+      <h1>Make it look<br />the way it <em>felt.</em></h1>
+      <p class="sub">A color and finishing studio for films, commercials, and documentaries. We grade, cut, and finish work that has to look the part.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#book">Book a color session →</a>
+        <a class="btn btn-ghost" href="#tools">Learn about our custom tools</a>
+      </div>
+      <div class="hero-clients">
+        <span class="lab">Trusted on work for</span>
+        <span class="names"><span>Netflix</span><span>Philadelphia Eagles</span><span>PECO</span><span>Kismet</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-dots" id="heroDots"></div>
+  <div class="hero-tape"></div>
+</section>
+
+<!-- ============ ABOUT / WHAT WE DO ============ -->
+<section class="band" id="about">
+  <div class="wrap">
+    <div class="about-top">
+      <div class="reveal">
+        <div class="kicker"><span class="eyebrow">About Dec. 18 Studios</span></div>
+        <p class="about-statement">We're a post house built around the grade. Short films, commercials, documentaries: we shape the look, cut the story, and finish to spec, so the final picture feels like it <em>means it.</em></p>
+      </div>
+      <div class="reveal">
+        <p class="lead">Color is the part of post most people feel but can't name. We treat it as storytelling, not a filter. Every project gets a look designed for it, protected from camera to delivery.</p>
+      </div>
+    </div>
+
+    <div class="services reveal">
+      <div class="svc"><div class="bar" style="--c: var(--cyan)"></div><h3>Color Grading</h3><p>Custom look design, shot matching, and finishing in DaVinci Resolve.</p><div class="no" style="margin-top:18px">01</div></div>
+      <div class="svc"><div class="bar" style="--c: var(--magenta)"></div><h3>Editorial</h3><p>Story-first cutting for narrative, branded, and documentary work.</p><div class="no" style="margin-top:18px">02</div></div>
+      <div class="svc"><div class="bar" style="--c: var(--amber)"></div><h3>VFX & Cleanup</h3><p>Comps, paint-outs, screen replacements, and the fixes nobody should notice.</p><div class="no" style="margin-top:18px">03</div></div>
+      <div class="svc"><div class="bar" style="--c: var(--green)"></div><h3>Finishing & DCP</h3><p>Conform, mastering, and festival-ready DCP and delivery packages.</p><div class="no" style="margin-top:18px">04</div></div>
+    </div>
+
+    <div class="meet reveal">
+      <div class="portrait" role="img" aria-label="Greg Enright"></div>
+      <div>
+        <div class="who">Behind the studio · Greg Enright</div>
+        <p class="quote">"I'm your friendly neighborhood colorist. I take the craft seriously and keep the process easy. Tell me about your film and let's make it look the way you imagined it."</p>
+        <p class="sig">Greg Enright — Colorist & Finishing Editor</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOLS ============ -->
+<section class="band tools" id="tools">
+  <div class="wrap">
+    <div class="tools-head">
+      <div class="reveal">
+        <div class="kicker" style="--accent: var(--magenta)"><span class="eyebrow">Built in the suite</span></div>
+        <h2 class="h2">Pro-grade color tools anyone can use.</h2>
+        <p class="lead">The same instruments we reach for on paid client work, built for DaVinci Resolve. Professional grade under the hood, simple enough for editors and hobbyists to pick up on day one.</p>
+      </div>
+      <a class="btn btn-ghost reveal" href="https://dec18studios.com/color-grading-tools">See all tools</a>
+    </div>
+
+    <div class="tool-grid">
+      <a class="tool reveal" href="https://dec18studios.com/color-grading-tools">
+        <div class="glow" style="background: var(--magenta)"></div>
+        <div class="tag">Film stock emulation · OFX</div>
+        <h3>Photo Chemist</h3>
+        <p>A full photochemical pipeline that develops digital footage the way a darkroom would, from photons to final print. Not a filter, a film lab in a node.</p>
+        <span class="go">Learn about Photo Chemist <span class="arr">→</span></span>
+      </a>
+      <a class="tool reveal" href="https://dec18studios.com/color-grading-tools">
+        <div class="glow" style="background: var(--cyan)"></div>
+        <div class="tag">Six vector hue control · DCTL</div>
+        <h3>Hue Tools</h3>
+        <p>Six-vector hue, saturation, and density control on the color wheel. Precise, musical, and built to feel like part of Resolve, not bolted on.</p>
+        <span class="go">Learn about Hue Tools <span class="arr">→</span></span>
+      </a>
+    </div>
+
+    <div class="tools-note reveal">
+      <span>Members get every tool and update.</span>
+      <span class="chip">Happy Little Noders · $47.34/yr</span>
+      <span>A price we've never raised.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOK ============ -->
+<section class="band book" id="book" data-screen-label="Booking">
+  <div class="book-bg" id="bookBg"></div>
+  <div class="wrap">
+    <div class="book-grid">
+      <div class="book-copy reveal">
+        <div class="kicker"><span class="eyebrow">Start a project</span></div>
+        <h2 class="h2">Tell us about<br />your film.</h2>
+        <p class="lead">The more we know up front, the faster we can talk look, schedule, and budget. Fill this out and we'll get back to you, usually within a day.</p>
+        <ul class="book-reassure">
+          <li><span class="dot"></span><span>Real answers from a real colorist, not a sales funnel.</span></li>
+          <li><span class="dot"></span><span>Remote-friendly. We work with teams in LA, Southern CA, and beyond.</span></li>
+          <li><span class="dot"></span><span>Free consultation to talk through the look and plan before anything starts.</span></li>
+        </ul>
+        <div class="book-meta">
+          <div><a href="mailto:create@dec18studios.com">create@dec18studios.com</a></div>
+          <div>(708) 476-3598 · text or voicemail</div>
+          <div>Mon–Fri · 08:00–17:00 PST</div>
+        </div>
+      </div>
+
+      <form class="intake reveal" id="intake">
+        <div class="formhead">
+          <h3>Project inquiry</h3>
+          <span class="step">Takes about a minute</span>
+        </div>
+        <div class="fgrid">
+          <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" placeholder="Your name" required /></div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" placeholder="you@studio.com" required /></div>
+          <div class="field"><label for="f-title">Project title <span class="opt">(optional)</span></label><input id="f-title" name="title" type="text" placeholder="Working title" /></div>
+          <div class="field"><label for="f-type">Project type</label>
+            <select id="f-type" name="type">
+              <option>Short film</option><option>Feature</option><option>Commercial / Branded</option>
+              <option>Documentary</option><option>Music video</option><option>Series / Episodic</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field full"><label>Services needed</label>
+            <div class="checks" id="svcChecks">
+              <label><input type="checkbox" value="Color Grading" />Color Grading</label>
+              <label><input type="checkbox" value="Editorial" />Editorial</label>
+              <label><input type="checkbox" value="VFX & Cleanup" />VFX & Cleanup</label>
+              <label><input type="checkbox" value="Finishing & DCP" />Finishing & DCP</label>
+            </div>
+          </div>
+          <div class="field"><label for="f-time">Timeline</label>
+            <select id="f-time" name="timeline">
+              <option>Just exploring</option><option>Within a month</option><option>1–3 months out</option><option>Locked date / urgent</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-budget">Budget range <span class="opt">(optional)</span></label>
+            <select id="f-budget" name="budget">
+              <option>Not sure yet</option><option>Under $1k</option><option>$1k–$5k</option><option>$5k–$15k</option><option>$15k+</option>
+            </select>
+          </div>
+          <div class="field full"><label for="f-specs">Footage &amp; format <span class="opt">(camera, codec, runtime, resolution)</span></label><input id="f-specs" name="specs" type="text" placeholder="e.g. ARRI Alexa, ProRes 4444, 14 min, UHD" /></div>
+          <div class="field full"><label for="f-about">Tell us about it</label><textarea id="f-about" name="about" placeholder="The story, the look you're after, references, anything that helps us understand the project."></textarea></div>
+        </div>
+        <div class="submit">
+          <button type="submit" class="btn btn-amber">Send project inquiry →</button>
+          <span class="note">Opens your email, pre-filled. Nothing sends without your okay.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="https://dec18studios.com/" aria-label="Dec. 18 Studios"></a>
+        <p>A color and finishing studio. Based remote, serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Studio</h4>
+        <a href="#about">What we do</a>
+        <a href="https://dec18studios.com/projects">Portfolio</a>
+        <a href="#tools">Color grading tools</a>
+        <a href="#book">Book a project</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <p>(708) 476-3598</p>
+        <a href="https://www.youtube.com/@dec.18Studios">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios">Instagram</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span id="yr"></span> Dec. 18 Studios</span>
+    <span>Capturing &amp; refining moments.</span>
+  </div>
+</footer>
+
+<script>
+  /* ---- HERO SLIDESHOW ----
+     Swap, add, or reorder shots here. First item shows on load.
+     Use a local path (assets/…) or any public image URL. */
+  const HERO_SHOTS = [
+    "assets/grade-still.jpg"
+  ];
+  const HOLD_MS = 6000;
+
+  (function heroShow() {
+    const stage = document.getElementById("heroSlides");
+    const dots = document.getElementById("heroDots");
+    if (HERO_SHOTS.length <= 1) dots.style.display = "none";
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    HERO_SHOTS.forEach((src, i) => {
+      const s = document.createElement("div");
+      s.className = "slide" + (i === 0 ? " on" : "");
+      s.style.backgroundImage = `url("${src}")`;
+      stage.appendChild(s);
+      const d = document.createElement("button");
+      d.className = i === 0 ? "on" : "";
+      d.setAttribute("aria-label", "Show shot " + (i + 1));
+      d.addEventListener("click", () => go(i));
+      dots.appendChild(d);
+    });
+    const slides = [...stage.children];
+    const buttons = [...dots.children];
+    let cur = 0, timer = null;
+    function go(n) {
+      if (n === cur) return;
+      slides[cur].classList.remove("on"); buttons[cur].classList.remove("on");
+      cur = n;
+      slides[cur].classList.add("on"); buttons[cur].classList.add("on");
+      restart();
+    }
+    function next() { go((cur + 1) % slides.length); }
+    function restart() { if (timer) clearInterval(timer); if (!reduce && slides.length > 1) timer = setInterval(next, HOLD_MS); }
+    restart();
+  })();
+
+  /* ---- sticky bar bg on scroll ---- */
+  const bar = document.getElementById("topbar");
+  const onScroll = () => bar.classList.toggle("scrolled", window.scrollY > 40);
+  onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
+
+  /* ---- service chip toggles ---- */
+  document.querySelectorAll("#svcChecks label").forEach(l => {
+    const cb = l.querySelector("input");
+    const sync = () => l.classList.toggle("on", cb.checked);
+    cb.addEventListener("change", sync); sync();
+  });
+
+  /* ---- booking form -> mailto compose ----
+     To use a hosted form service or Squarespace form instead,
+     replace this handler with your endpoint. */
+  document.getElementById("intake").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const v = id => (document.getElementById(id)?.value || "").trim();
+    const svcs = [...document.querySelectorAll("#svcChecks input:checked")].map(c => c.value);
+    const lines = [
+      "PROJECT INQUIRY — Dec. 18 Studios", "",
+      "Name: " + v("f-name"),
+      "Email: " + v("f-email"),
+      "Project title: " + (v("f-title") || "—"),
+      "Project type: " + v("f-type"),
+      "Services needed: " + (svcs.length ? svcs.join(", ") : "—"),
+      "Timeline: " + v("f-time"),
+      "Budget: " + v("f-budget"),
+      "Footage & format: " + (v("f-specs") || "—"), "",
+      "About the project:", v("f-about") || "—"
+    ];
+    const subject = "New project inquiry" + (v("f-title") ? " — " + v("f-title") : "");
+    window.location.href = "mailto:create@dec18studios.com?subject=" +
+      encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+  });
+
+  /* ---- booking bg uses the first hero shot ---- */
+  document.getElementById("bookBg").style.backgroundImage = `url("${HERO_SHOTS[0]}")`;
+
+  /* ---- reveal on scroll ---- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  document.getElementById("yr").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

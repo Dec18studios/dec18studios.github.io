@@ -1,0 +1,125 @@
+{
+  "updated": "2026-06-03",
+  "featured": [
+    {
+      "name": "Another",
+      "slug": "another",
+      "role": "Color Grade",
+      "desc": "A moody narrative short graded for quiet tension and clean skin tones.",
+      "color": "cyan",
+      "still": "https://images.squarespace-cdn.com/content/v1/64b5b9cabb610c6dc5d964df/9d07fac7-6ba1-43f1-8aea-f1295b0590b8/1.8.1_1.8.1.jpg?format=1000w",
+      "url": ""
+    },
+    {
+      "name": "Breaking The Rules",
+      "slug": "break-the-rules",
+      "role": "Color · Edit · VFX",
+      "desc": "Full finishing pass: editorial, look design, and invisible cleanup.",
+      "color": "magenta",
+      "still": "https://images.squarespace-cdn.com/content/v1/64b5b9cabb610c6dc5d964df/b11d87f5-5075-4d18-b255-ab133975ddcb/Breaking+The+Rules_1.10.1.jpg?format=1000w",
+      "url": ""
+    },
+    {
+      "name": "Take The Stand",
+      "slug": "take-the-stand",
+      "role": "Color Grade",
+      "desc": "Courtroom drama with a grounded, contrast-forward grade.",
+      "color": "amber",
+      "still": "https://images.squarespace-cdn.com/content/v1/64b5b9cabb610c6dc5d964df/255a5727-b616-459f-9eac-f75b551a9cbb/1.5.1_1.5.1.jpg?format=1000w",
+      "url": ""
+    },
+    {
+      "name": "Brie.",
+      "slug": "brie",
+      "role": "Color · Edit",
+      "desc": "A warm, intimate short cut and graded to feel lived-in.",
+      "color": "green",
+      "still": "https://images.squarespace-cdn.com/content/v1/64b5b9cabb610c6dc5d964df/b48ae65e-aaea-40df-bf7b-25c5dcfabb8a/Scene_1-8_Long_trim3_Greg_Barcode_1.32.1.jpg?format=1000w",
+      "url": ""
+    },
+    {
+      "name": "Blunt Wraps",
+      "slug": "blunt-wraps",
+      "role": "Color Grade",
+      "desc": "Saturated, stylized look built to pop on screen.",
+      "color": "red",
+      "still": "https://images.squarespace-cdn.com/content/v1/64b5b9cabb610c6dc5d964df/5e76da78-3b09-48cb-bf6c-d68ff78e4d0b/1.10.1_1.10.1.jpg?format=1000w",
+      "url": ""
+    },
+    {
+      "name": "The Real Ghostbusters of San Diego",
+      "slug": "ghostbusters",
+      "role": "Color · Edit",
+      "desc": "Documentary-style series cut and graded for a natural, true-to-life feel.",
+      "color": "blue",
+      "still": "https://images.squarespace-cdn.com/content/v1/64b5b9cabb610c6dc5d964df/bd8c2858-105e-479c-95ed-aa2a16cdeefa/1.2.1_1.2.1.jpg?format=1000w",
+      "url": ""
+    }
+  ],
+  "allWorks": [
+    {
+      "category": "Narrative",
+      "items": [
+        { "title": "The Delay", "role": "Color Grade", "slug": "" },
+        { "title": "Breaking The Rules", "role": "Color · Edit · VFX", "slug": "break-the-rules" },
+        { "title": "The Hoover Man", "role": "VFX · Color Grade", "slug": "" },
+        { "title": "The Butterfly", "role": "VFX", "slug": "" },
+        { "title": "CDL", "role": "Color Grade", "slug": "" },
+        { "title": "Mirrors", "role": "Color · Edit", "slug": "" },
+        { "title": "Red Boots", "role": "Color · Edit", "slug": "" },
+        { "title": "Brie.", "role": "Color · Edit", "slug": "brie" },
+        { "title": "Fatal Anniversary", "role": "Color Grade", "slug": "" },
+        { "title": "The Real Ghostbusters of San Diego", "role": "Color · Edit", "slug": "ghostbusters" },
+        { "title": "Another", "role": "Color Grade", "slug": "another" },
+        { "title": "Love & Misery", "role": "Color · Edit", "slug": "" },
+        { "title": "M.ai", "role": "Color · Edit", "slug": "" },
+        { "title": "Roadkill", "role": "Color Grade", "slug": "" },
+        { "title": "The One", "role": "Color Grade", "slug": "" },
+        { "title": "Blunt Wraps", "role": "Color Grade", "slug": "blunt-wraps" },
+        { "title": "The Michelada Man 2", "role": "Color · Edit", "slug": "" },
+        { "title": "The Michelada Man", "role": "Color · Edit", "slug": "" }
+      ]
+    },
+    {
+      "category": "Commercial",
+      "items": [
+        { "title": "The Wise Ox", "role": "Color · Edit", "slug": "" },
+        { "title": "Collins & Coupe", "role": "Color · Edit", "slug": "" },
+        { "title": "Kettle Coffee", "role": "Color · Edit", "slug": "" },
+        { "title": "Kismet Refining", "role": "Digital Marketing", "slug": "" },
+        { "title": "Osprey Backpacks", "role": "Color · VFX", "slug": "" },
+        { "title": "Old Harbor Distilling", "role": "Color · Edit", "slug": "" },
+        { "title": "IBCD", "role": "Digital Marketing", "slug": "" },
+        { "title": "Fresh n Go", "role": "Digital Marketing", "slug": "" }
+      ]
+    },
+    {
+      "category": "Corporate Video",
+      "items": [
+        { "title": "Eagle TNF Amazon Promo", "role": "VFX", "slug": "" },
+        { "title": "Phillies / Gov. Shapiro Playoff Promo", "role": "VFX", "slug": "" },
+        { "title": "Sky Core", "role": "VFX", "slug": "" },
+        { "title": "MHS 2", "role": "VFX", "slug": "" },
+        { "title": "US Construction", "role": "VFX", "slug": "" },
+        { "title": "Highbury · Broadway", "role": "VFX", "slug": "" },
+        { "title": "SJU", "role": "VFX", "slug": "" },
+        { "title": "AVE", "role": "VFX", "slug": "" },
+        { "title": "Southern Land Sansom", "role": "VFX", "slug": "" },
+        { "title": "Crosely Quarterly", "role": "Graphic Design", "slug": "" },
+        { "title": "MHS", "role": "VFX", "slug": "" },
+        { "title": "Ocean Resorts", "role": "VFX · Edit", "slug": "" },
+        { "title": "Green Point", "role": "VFX", "slug": "" },
+        { "title": "Ocean Resorts II", "role": "VFX", "slug": "" },
+        { "title": "Elevated Angles · Winter", "role": "VFX", "slug": "" },
+        { "title": "Peco Energy", "role": "VFX", "slug": "" },
+        { "title": "Salamon Construction", "role": "VFX", "slug": "" },
+        { "title": "Highbury Black Theater", "role": "VFX", "slug": "" },
+        { "title": "Highbury Florida", "role": "VFX", "slug": "" },
+        { "title": "Elevated Angles · Fall", "role": "VFX", "slug": "" },
+        { "title": "SJ Prep", "role": "VFX", "slug": "" },
+        { "title": "Tatnall", "role": "VFX", "slug": "" },
+        { "title": "Caron", "role": "VFX", "slug": "" }
+      ]
+    }
+  ]
+}
