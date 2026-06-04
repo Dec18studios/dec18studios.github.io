@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Film Negative Space CST — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.80 0.110 200 / 0.32); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
+            mask: url("assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--cyan); border: 1px solid var(--cyan); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.090 200); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(48px, 7vw, 92px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -18%; right: -14%; width: 780px; height: 780px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(140px); opacity: 0.13; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: clamp(32px, 5vw, 60px); align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .free-badge {
+    font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--cyan); border: 1px solid oklch(0.80 0.110 200 / 0.45); background: var(--cyan-d);
+    border-radius: 99px; padding: 5px 12px;
+  }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(38px, 5.8vw, 70px); line-height: 0.99; letter-spacing: -0.02em; margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--cyan), var(--blue) 40%, var(--magenta) 78%, var(--red));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 52ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--cyan); color: var(--bg); border-color: var(--cyan); }
+  .btn.primary:hover { background: oklch(0.86 0.090 200); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ HERO PIPELINE PANEL ============ */
+  .panel {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line-soft); border-radius: 18px; padding: clamp(18px, 2.4vw, 26px); overflow: hidden;
+    box-shadow: 0 40px 90px -52px oklch(0 0 0 / 0.9);
+  }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+  .panel-head .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .panel-head .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--cyan);
+    border: 1px solid oklch(0.80 0.110 200 / 0.45); border-radius: 5px; padding: 3px 8px; }
+
+  /* signal-flow diagram */
+  .flow { display: flex; flex-direction: column; gap: 10px; }
+  .flow-step {
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+    background: var(--bg); border: 1px solid var(--line-soft); border-radius: 12px; padding: 13px 15px;
+    position: relative;
+  }
+  .flow-step .ix {
+    font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--cyan);
+    width: 26px; height: 26px; border-radius: 7px; border: 1px solid oklch(0.80 0.110 200 / 0.4);
+    background: var(--cyan-d); display: grid; place-items: center; flex: none;
+  }
+  .flow-step .ix.alt { color: var(--magenta); border-color: oklch(0.65 0.205 332 / 0.4); background: var(--magenta-d); }
+  .flow-step b { font-size: 15px; font-weight: 600; }
+  .flow-step span.d { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin-top: 2px; letter-spacing: 0.02em; text-wrap: pretty; }
+  .flow-arrow { text-align: center; color: var(--ink-faint); font-family: var(--mono); font-size: 13px; line-height: 1; height: 6px; }
+  .flow-step.gc { border-color: oklch(0.65 0.205 332 / 0.4); background: linear-gradient(180deg, var(--magenta-d), transparent 85%); }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(52px, 7vw, 100px); position: relative; }
+  .sec-head { max-width: 64ch; margin-bottom: clamp(34px, 5vw, 54px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+
+  /* ============ STORY : the problem ============ */
+  .story { border-top: 1px solid var(--line-soft); }
+  .story-grid { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
+  @media (max-width: 880px) { .story-grid { grid-template-columns: 1fr; } }
+  .story-copy h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 46px);
+    letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px;
+  }
+  .story-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.7vw, 18px); text-wrap: pretty; }
+  .story-copy p strong { color: var(--ink); font-weight: 600; }
+  .compare-card {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: clamp(22px, 3vw, 30px);
+  }
+  .compare-card .ch { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px; }
+  .vs-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; }
+  .vs-col { background: var(--bg); border: 1px solid var(--line-soft); border-radius: 13px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .vs-col.old { opacity: 0.92; }
+  .vs-col .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .vs-col.old .tag { color: var(--ink-faint); }
+  .vs-col.new .tag { color: var(--cyan); }
+  .vs-col ul { list-style: none; display: grid; gap: 9px; }
+  .vs-col li { font-size: 13.5px; color: var(--ink-dim); display: flex; gap: 9px; align-items: flex-start; line-height: 1.45; text-wrap: pretty; }
+  .vs-col.old li::before { content: "×"; color: var(--ink-faint); font-family: var(--mono); flex: none; }
+  .vs-col.new li::before { content: "✓"; color: var(--green); font-family: var(--mono); font-weight: 700; flex: none; }
+  .vs-col.new { border-color: oklch(0.80 0.110 200 / 0.35); background: linear-gradient(180deg, var(--cyan-d), transparent 80%); }
+  .vs-arrow { display: grid; place-items: center; color: var(--ink-faint); font-family: var(--mono); font-size: 18px; }
+  @media (max-width: 560px) { .vs-row { grid-template-columns: 1fr; } .vs-arrow { transform: rotate(90deg); padding: 4px 0; } }
+
+  /* ============ CHARACTERISTIC CURVE ============ */
+  .curve { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .curve-grid { display: grid; grid-template-columns: 0.84fr 1.16fr; gap: clamp(30px, 5vw, 60px); align-items: center; }
+  @media (max-width: 900px) { .curve-grid { grid-template-columns: 1fr; } }
+  .curve-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 46px); letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px; }
+  .curve-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.7vw, 18px); text-wrap: pretty; }
+  .curve-copy p strong { color: var(--ink); font-weight: 600; }
+  .curve-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .curve-tags .chip { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-dim); border: 1px solid var(--line); border-radius: 99px; padding: 7px 13px; background: var(--bg-1); }
+  .curve-tags .chip b { color: var(--ink); font-weight: 600; }
+
+  .graph-card { background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line-soft); border-radius: 18px; padding: clamp(16px, 2.2vw, 24px); box-shadow: 0 40px 90px -52px oklch(0 0 0 / 0.9); }
+  .graph-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .graph-head .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .gseg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .gseg button { font-family: var(--mono); font-size: 11px; letter-spacing: 0.03em; color: var(--ink-dim); background: var(--bg-2); border: none; border-right: 1px solid var(--line-soft); padding: 9px 13px; cursor: pointer; transition: background 0.16s, color 0.16s; white-space: nowrap; }
+  .gseg button:last-child { border-right: none; }
+  .gseg button:hover { background: var(--bg-3); color: var(--ink); }
+  .gseg button[aria-pressed="true"] { background: var(--cyan); color: var(--bg); font-weight: 600; }
+
+  .plot { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--line-soft);
+    background: radial-gradient(120% 120% at 50% 0%, var(--bg-1), var(--bg) 70%); }
+  .plot svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .plot .axis { position: absolute; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); pointer-events: none; }
+  .plot .axis.bl { left: 9px; bottom: 8px; }
+  .plot .axis.tr { right: 9px; top: 8px; }
+  .plot .axis.in { left: 50%; bottom: 7px; transform: translateX(-50%); }
+  .plot .axis.out { left: 8px; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: left center; }
+  .graph-foot { margin-top: 12px; font-family: var(--mono); font-size: 11.5px; line-height: 1.5; color: var(--ink-faint); min-height: 3.2em; text-wrap: pretty; }
+  .graph-foot b { color: var(--cyan); font-weight: 600; }
+
+  /* live controls */
+  .ctrls { margin-top: 16px; display: grid; gap: 11px; }
+  .ctrl { display: grid; grid-template-columns: 116px 1fr 52px; gap: 12px; align-items: center; }
+  .ctrl label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.03em; color: var(--ink-dim); }
+  .ctrl output { font-family: var(--mono); font-size: 12px; color: var(--cyan); text-align: right; font-variant-numeric: tabular-nums; }
+  .ctrl input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 99px; background: var(--bg-3); outline: none; cursor: pointer; }
+  .ctrl input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--cyan); border: 2px solid var(--bg); cursor: pointer; box-shadow: 0 0 0 1px var(--line); }
+  .ctrl input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border: 2px solid var(--bg); border-radius: 50%; background: var(--cyan); cursor: pointer; }
+  .ctrls-foot { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-top: 6px; }
+  .ctrls-foot .graph-foot { margin-top: 0; flex: 1; }
+  .btn-reset { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-dim); background: var(--bg-2); border: 1px solid var(--line); border-radius: 7px; padding: 7px 12px; cursor: pointer; transition: all 0.16s; flex: none; }
+  .btn-reset:hover { color: var(--ink); border-color: oklch(0.42 0.013 264); }
+  @media (max-width: 520px) { .ctrl { grid-template-columns: 96px 1fr 46px; gap: 9px; } }
+
+  /* ============ FORMATS STRIP ============ */
+  .fmt-strip { border-top: 1px solid var(--line-soft); }
+  .fmt-wrap { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: clamp(24px, 3.5vw, 36px); }
+  .fmt-wrap .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); }
+  .fmt-wrap h3 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 3vw, 32px); letter-spacing: -0.015em; margin-top: 12px; }
+  .fmt-wrap p { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; max-width: 62ch; text-wrap: pretty; }
+  .fmt-list { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+  .fmt {
+    font-family: var(--mono); font-size: 12.5px; color: var(--ink-dim);
+    border: 1px solid var(--line); border-radius: 99px; padding: 8px 14px; background: var(--bg);
+    transition: border-color 0.16s, color 0.16s;
+  }
+  .fmt:hover { border-color: oklch(0.80 0.110 200 / 0.5); color: var(--ink); }
+
+  /* ============ ONE TOOL : PIPELINE ============ */
+  .tools { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .tool-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 880px) { .tool-cards { grid-template-columns: 1fr; } }
+  .tool-card {
+    --accent: var(--cyan); --accent-d: var(--cyan-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; overflow: hidden;
+    display: flex; flex-direction: column; transition: border-color 0.18s, transform 0.18s;
+  }
+  .tool-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  .tool-card .tc-top { padding: clamp(22px, 3vw, 30px); background: linear-gradient(180deg, var(--accent-d), transparent 70%); border-bottom: 1px solid var(--line-soft); }
+  .tool-card .tc-kind { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px; }
+  .tool-card .tc-kind::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+  .tool-card h3 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 2.6vw, 29px); letter-spacing: -0.015em; line-height: 1.06; margin-top: 14px; }
+  .tool-card .tc-sub { margin-top: 12px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .tool-card .tc-body { padding: clamp(22px, 3vw, 30px); display: flex; flex-direction: column; gap: 14px; }
+  .tool-card .tc-flow-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .tool-card .tc-foot { margin-top: auto; padding: 16px clamp(22px, 3vw, 30px); border-top: 1px solid var(--line-soft); font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); }
+
+  /* ============ MODES ============ */
+  .modes { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .mode-grid { grid-template-columns: 1fr; } }
+  .mode-card {
+    --accent: var(--cyan); --accent-d: var(--cyan-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: clamp(22px, 3vw, 28px);
+    display: flex; flex-direction: column; gap: 14px; transition: border-color 0.18s, transform 0.18s; position: relative; overflow: hidden;
+  }
+  .mode-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .mode-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  .mode-card .mc-top { display: flex; align-items: center; gap: 12px; }
+  .mode-card .mc-dot { width: 11px; height: 11px; border-radius: 3px; background: var(--accent); flex: none; }
+  .mode-card .mc-name { font-family: var(--display); font-weight: 700; font-size: clamp(20px, 2.4vw, 25px); letter-spacing: -0.015em; }
+  .mode-card .mc-dir { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--accent);
+    border: 1px solid var(--line); border-radius: 99px; padding: 5px 11px; align-self: flex-start; background: var(--accent-d); }
+  .mode-card p { color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .mode-card p strong { color: var(--ink); font-weight: 600; }
+  .mode-card .mc-use { margin-top: auto; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); line-height: 1.5; border-top: 1px solid var(--line-soft); padding-top: 12px; text-wrap: pretty; }
+  .mode-card .mc-use b { color: var(--accent); font-weight: 600; }
+
+  /* ============ NODE SETUP ============ */
+  .setup { margin-top: clamp(28px, 4vw, 40px); background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; overflow: hidden; }
+  .setup .su-head { padding: 18px clamp(22px, 3vw, 28px); border-bottom: 1px solid var(--line-soft); display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .setup .su-head .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .setup .su-head .sub { font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .nodechain { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: stretch; padding: clamp(22px, 3vw, 30px); }
+  @media (max-width: 720px) { .nodechain { grid-template-columns: 1fr; } .nodechain .nc-arrow { transform: rotate(90deg); justify-self: center; padding: 2px 0; } }
+  .nc-node { --accent: var(--cyan); --accent-d: var(--cyan-d); background: var(--bg); border: 1px solid var(--line-soft); border-radius: 13px; padding: 18px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden; }
+  .nc-node::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .nc-node.ghost { --accent: var(--ink-faint); border-style: dashed; background: transparent; }
+  .nc-node .nc-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .nc-node .nc-name { font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .nc-node .nc-d { font-size: 13px; color: var(--ink-dim); text-wrap: pretty; line-height: 1.45; }
+  .nc-node.ghost .nc-tag { color: var(--ink-faint); }
+  .nc-arrow { display: grid; place-items: center; color: var(--ink-faint); font-family: var(--mono); font-size: 18px; }
+
+  /* ============ WHEN TO USE ============ */
+  .whichbox { margin-top: clamp(28px, 4vw, 40px); background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; overflow: hidden; }
+  .whichbox .wb-head { padding: 18px clamp(22px, 3vw, 28px); border-bottom: 1px solid var(--line-soft); font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .which-row { display: grid; grid-template-columns: 0.34fr 0.66fr; gap: 16px; padding: 18px clamp(22px, 3vw, 28px); border-bottom: 1px solid var(--line-soft); align-items: baseline; }
+  .which-row:last-child { border-bottom: none; }
+  @media (max-width: 620px) { .which-row { grid-template-columns: 1fr; gap: 7px; } }
+  .which-row .wr-when { font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--ink); }
+  .which-row .wr-do { color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .which-row .wr-do b { color: var(--cyan); font-weight: 600; font-family: var(--mono); font-size: 13px; }
+
+  /* ============ PARAMETER TABLES ============ */
+  .params { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .ptable-wrap { display: grid; gap: clamp(28px, 4vw, 40px); }
+  .ptable-block .pt-cap { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .ptable-block .pt-cap .sw { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+  .ptable-block .pt-cap h3 { font-family: var(--display); font-weight: 700; font-size: clamp(20px, 2.6vw, 27px); letter-spacing: -0.015em; }
+  .ptable-block .pt-cap .pill { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--line); border-radius: 99px; padding: 3px 9px; }
+  .ptable { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden; }
+  .ptable thead th {
+    text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 500; padding: 14px 18px; background: var(--bg-2); border-bottom: 1px solid var(--line-soft);
+  }
+  .ptable tbody td { padding: 16px 18px; border-bottom: 1px solid var(--line-soft); vertical-align: top; font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .ptable tbody tr:last-child td { border-bottom: none; }
+  .ptable tbody tr:hover td { background: oklch(0.80 0.110 200 / 0.05); }
+  .ptable td.pname { font-family: var(--display); font-weight: 600; font-size: 15px; color: var(--ink); white-space: nowrap; }
+  .ptable td.prange { font-family: var(--mono); font-size: 12.5px; color: var(--cyan); white-space: nowrap; }
+  @media (max-width: 720px) {
+    .ptable, .ptable thead, .ptable tbody, .ptable tr, .ptable td, .ptable th { display: block; }
+    .ptable thead { display: none; }
+    .ptable tbody tr { border-bottom: 1px solid var(--line); padding: 6px 0; }
+    .ptable tbody td { border-bottom: none; padding: 6px 18px; }
+    .ptable td.pname { font-size: 16px; padding-top: 14px; }
+    .ptable td.prange::before { content: "Range · "; color: var(--ink-faint); }
+  }
+
+  /* ============ GET IT (free) ============ */
+  .getit { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .getit-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .getit-grid { grid-template-columns: 1fr; } }
+  .getit-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
+  .getit-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
+  .getit-copy p strong { color: var(--ink); font-weight: 600; }
+  .getit-copy .pc-note { margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--magenta-d); position: relative; overflow: hidden; }
+  .getit-copy .pc-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--magenta); }
+  .getit-copy .pc-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--magenta); font-weight: 600; }
+  .getit-copy .pc-note p { margin-top: 8px; font-size: 15px; color: var(--ink); max-width: none; }
+  .free-card { position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden; }
+  .free-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--cyan), var(--blue), var(--magenta)); }
+  .free-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); }
+  .free-card .amt { display: flex; align-items: baseline; gap: 10px; margin-top: 16px; }
+  .free-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(44px, 7vw, 64px); line-height: 1; letter-spacing: -0.03em; }
+  .free-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
+  .free-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .free-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .free-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+  .free-list li::before { content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px; }
+  .free-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
+  .free-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  /* ============ INSTALL ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start;
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px;
+  }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--cyan);
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.80 0.110 200 / 0.4); background: var(--cyan-d);
+    display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--cyan); }
+  .step .st a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
+  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); }
+  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
+  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
+  .note-card { background: var(--yellow-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--yellow); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    .btn, nav.toplinks a.cta { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">All tools</a>
+      <a href="#curve">Curve</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#modes">Modes</a>
+      <a href="#params">Parameters</a>
+      <a href="#install">Install</a>
+      <a href="#getit" class="cta">Free · Get it</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="badge-row">
+          <span class="free-badge">Free</span>
+          <p class="eyebrow">Color space transform · DCTL · DaVinci Resolve</p>
+        </div>
+        <h1 class="hero-title">Grade inside<br />a film<br /><em>negative.</em></h1>
+        <p class="hero-sub">Film Negative Space CST simulates photochemical negative processing as a color space transform. It works entirely in scene-linear, applies a real asymmetric negative characteristic curve and printer-light balance, and hands you back the same log you came in on. Gamut safety is built right into the controls. Free, and built to feed straight into PhotoChemist.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#getit">Get it free →</a>
+          <a class="btn" href="#tools">See the pipeline</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>11</b><span>log formats</span></div>
+          <div class="m"><b>4</b><span>processing modes</span></div>
+          <div class="m"><b>2</b><span>ways to run it</span></div>
+        </div>
+      </div>
+
+      <!-- Hero pipeline panel -->
+      <div class="panel reveal">
+        <div class="panel-head">
+          <span class="lbl">Processing pipeline</span>
+          <span class="tag">scene-linear</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step"><span class="ix">1</span><div><b>Input log</b><span class="d">whatever you feed it</span></div></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step"><span class="ix">2</span><div><b>Linearise</b><span class="d">decode from one of 11 log formats</span></div></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step"><span class="ix">3</span><div><b>Pivot contrast</b><span class="d">asymmetric curve around mid grey</span></div></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step"><span class="ix">4</span><div><b>Printer lights</b><span class="d">R/G/B balance in log-density space</span></div></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step"><span class="ix">5</span><div><b>Re-encode</b><span class="d">back to the same log you started in</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORY : the problem ============ -->
+<section class="story" data-screen-label="Why it exists">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-copy reveal">
+        <p class="eyebrow">Why it exists</p>
+        <h2>Film contrast isn't display contrast.</h2>
+        <p>Resolve's built-in contrast tools work in <strong>display-referred</strong> space. They pivot symmetrically and treat highlights and shadows the same way. That is not how a film negative behaves.</p>
+        <p>A real negative is <strong>scene-referred and asymmetric</strong>: it compresses the highlights hard and extends shadow gradation gently. This tool applies that characteristic curve correctly to any log format, in scene-linear, with printer-light color balance built in, so the look you get is the look the chemistry would have given you.</p>
+      </div>
+
+      <div class="compare-card reveal">
+        <div class="ch">Built-in contrast vs. negative characteristic</div>
+        <div class="vs-row">
+          <div class="vs-col old">
+            <span class="tag">Display-referred contrast</span>
+            <ul>
+              <li>Symmetric pivot, same curve up and down</li>
+              <li>Works after the display transform</li>
+              <li>No printer-light color balance</li>
+              <li>Doesn't match how a negative responds</li>
+            </ul>
+          </div>
+          <div class="vs-arrow">→</div>
+          <div class="vs-col new">
+            <span class="tag">Film Negative Space CST</span>
+            <ul>
+              <li>Asymmetric: above vs below mid grey, separately</li>
+              <li>Works in scene-linear, before encoding back</li>
+              <li>Printer lights R/G/B in log-density space</li>
+              <li>Reversible — enter and exit the negative space</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHARACTERISTIC CURVE ============ -->
+<section class="curve" id="curve" data-screen-label="The characteristic curve">
+  <div class="wrap">
+    <div class="curve-grid">
+      <div class="curve-copy reveal">
+        <p class="eyebrow">The negative response · interactive</p>
+        <h2>Feel the curve move.</h2>
+        <p>An interactive visualization of how the controls reshape tone around mid grey. <strong>Mid Grey In</strong> sets the input pivot, <strong>Mid Grey Out</strong> sets where it lands, and <strong>Contrast Above / Below</strong> bend the highlights and shadows independently around it.</p>
+        <p>At the defaults it's a straight line — mid grey 0.18 in and out, contrast 1.0 both ways. Push the sliders to shape the response, then flip to <strong>Invert</strong> for the exact inverse or <strong>Animal</strong> to watch the pair land back on the diagonal.</p>
+        <div class="curve-tags">
+          <span class="chip">Pivot · <b>Mid grey</b></span>
+          <span class="chip">Above · <b>highlights</b></span>
+          <span class="chip">Below · <b>shadows</b></span>
+        </div>
+      </div>
+
+      <div class="graph-card reveal">
+        <div class="graph-head">
+          <span class="lbl">Linear in → Linear out</span>
+          <div class="gseg" id="gseg" role="group" aria-label="Curve mode">
+            <button type="button" data-m="forward" aria-pressed="true">Forward</button>
+            <button type="button" data-m="invert" aria-pressed="false">Invert</button>
+            <button type="button" data-m="animal" aria-pressed="false">Animal</button>
+          </div>
+        </div>
+        <div class="plot">
+          <svg id="curveSvg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" aria-label="Characteristic curve graph">
+            <defs>
+              <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="oklch(0.80 0.110 200 / 0.22)" />
+                <stop offset="1" stop-color="oklch(0.80 0.110 200 / 0)" />
+              </linearGradient>
+            </defs>
+            <g id="gridG"></g>
+            <line id="refLine" x1="0" y1="400" x2="400" y2="0" stroke="oklch(0.55 0.010 264)" stroke-width="1.25" stroke-dasharray="5 6" opacity="0.55" vector-effect="non-scaling-stroke" />
+            <path id="areaPath" fill="url(#areaFill)" stroke="none" />
+            <path id="curvePath" fill="none" stroke="oklch(0.80 0.110 200)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" style="filter: drop-shadow(0 0 6px oklch(0.80 0.110 200 / 0.5));" />
+            <line id="pivotVx" stroke="oklch(0.80 0.110 200 / 0.4)" stroke-width="1" stroke-dasharray="3 4" vector-effect="non-scaling-stroke" />
+            <line id="pivotHz" stroke="oklch(0.80 0.110 200 / 0.4)" stroke-width="1" stroke-dasharray="3 4" vector-effect="non-scaling-stroke" />
+            <circle id="pivotDot" r="5.5" fill="oklch(0.80 0.110 200)" stroke="oklch(0.165 0.012 264)" stroke-width="2" />
+          </svg>
+          <span class="axis bl">Shadows</span>
+          <span class="axis tr">Highlights</span>
+          <span class="axis in">Input</span>
+          <span class="axis out">Output</span>
+        </div>
+        <div class="ctrls" id="ctrls">
+          <div class="ctrl"><label>Mid Grey In</label><input type="range" id="c_in" min="0.01" max="1" step="0.001" value="0.18" /><output id="o_in">0.180</output></div>
+          <div class="ctrl"><label>Mid Grey Out</label><input type="range" id="c_out" min="0.01" max="1" step="0.001" value="0.18" /><output id="o_out">0.180</output></div>
+          <div class="ctrl"><label>Contrast Below</label><input type="range" id="c_below" min="0.1" max="3" step="0.01" value="1" /><output id="o_below">1.00</output></div>
+          <div class="ctrl"><label>Contrast Above</label><input type="range" id="c_above" min="0.1" max="3" step="0.01" value="1" /><output id="o_above">1.00</output></div>
+          <div class="ctrl"><label>Blend Width</label><input type="range" id="c_blend" min="0" max="0.5" step="0.01" value="0" /><output id="o_blend">0.00</output></div>
+        </div>
+        <div class="ctrls-foot">
+          <p class="graph-foot" id="graphFoot"></p>
+          <button type="button" class="btn-reset" id="resetBtn">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FORMATS ============ -->
+<section class="fmt-strip" id="pipeline" data-screen-label="Formats">
+  <div class="wrap">
+    <div class="fmt-wrap reveal">
+      <div class="k">Step 2 · linearise</div>
+      <h3>Decode from the log you're actually working in.</h3>
+      <p>The CST linearises from your source log before doing anything, so the contrast curve and printer lights operate in true scene-linear. Pick your format and it re-encodes back to the same one on the way out.</p>
+      <div class="fmt-list">
+        <span class="fmt">Linear</span>
+        <span class="fmt">DaVinci Intermediate</span>
+        <span class="fmt">PhotoChemist</span>
+        <span class="fmt">FilmLight T-Log</span>
+        <span class="fmt">ACEScct</span>
+        <span class="fmt">ARRI LogC3</span>
+        <span class="fmt">ARRI LogC4</span>
+        <span class="fmt">RED Log3G10</span>
+        <span class="fmt">Panasonic V-Log</span>
+        <span class="fmt">Sony S-Log3</span>
+        <span class="fmt">Fujifilm F-Log2</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ONE TOOL : PIPELINE ============ -->
+<section class="tools" id="tools" data-screen-label="The pipeline">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">One node, the whole chain</p>
+      <h2>Everything happens in a single DCTL.</h2>
+      <p>The negative pipeline runs end to end in one node. A per-channel CMY gamut compressor is built right into the controls, so wide-gamut excursions get caught in the same pass, right before re-encoding. Toggle it off when you don't need it.</p>
+    </div>
+
+    <div class="tool-cards" style="grid-template-columns: 1fr;">
+      <article class="tool-card reveal">
+        <div class="tc-top">
+          <span class="tc-kind">Film Negative Space CST · DCTL</span>
+          <h3>Linearise · negative characteristic · printer lights · gamut safety · re-encode</h3>
+          <p class="tc-sub">Photochemical negative processing as a color space transform. The full signal flow lives in one node, with the gamut compressor built into the same control set so you set the contrast and the gamut safety together.</p>
+        </div>
+        <div class="tc-body">
+          <span class="tc-flow-label">Signal flow</span>
+          <div class="flow">
+            <div class="flow-step"><span class="ix">1</span><div><b>Input log → linearise</b><span class="d">decode from one of 11 log formats</span></div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><span class="ix">2</span><div><b>Pivot contrast</b><span class="d">asymmetric, above / below mid grey</span></div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><span class="ix">3</span><div><b>Printer lights R/G/B</b><span class="d">balance in log-density space</span></div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step gc"><span class="ix alt">4</span><div><b>CMY gamut compress</b><span class="d">per-channel, linear space · built in, toggleable</span></div></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><span class="ix">5</span><div><b>Re-encode to log</b><span class="d">back to the same format you started in</span></div></div>
+          </div>
+        </div>
+        <div class="tc-foot">Set the contrast, the printer balance and the gamut safety once, in a single node.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODES ============ -->
+<section class="modes" id="modes" data-screen-label="Processing modes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Four modes</p>
+      <h2>Go in, come back out, or both at once.</h2>
+      <p>The CST linearizes your input, moves the mid grey point, lets you grade, and inverts back out. Three modes give you the two ways people run it — a two-node <strong>Sandwich</strong> or a single-node <strong>Animal Style</strong> — and a fourth handles the PhotoChemist print step.</p>
+    </div>
+
+    <div class="mode-grid">
+      <article class="mode-card reveal" style="--accent: var(--cyan); --accent-d: var(--cyan-d);">
+        <div class="mc-top"><span class="mc-dot"></span><span class="mc-name">Forward</span></div>
+        <span class="mc-dir">Digital → Negative</span>
+        <p>Sandwich mode, going one direction. Linearizes your input, moves the mid grey, and takes you <strong>into</strong> the negative space.</p>
+        <div class="mc-use">The <b>opening node</b> of a sandwich.</div>
+      </article>
+
+      <article class="mode-card reveal" style="--accent: var(--blue); --accent-d: var(--blue-d);">
+        <div class="mc-top"><span class="mc-dot"></span><span class="mc-name">Invert</span></div>
+        <span class="mc-dir">Negative → Digital</span>
+        <p>The other half of the sandwich. <strong>Reverts the changes</strong> a Forward node made, landing you back on your usual signal. Same settings, opposite direction.</p>
+        <div class="mc-use">The <b>closing node</b> of a sandwich.</div>
+      </article>
+
+      <article class="mode-card reveal" style="--accent: var(--green); --accent-d: var(--green-d);">
+        <div class="mc-top"><span class="mc-dot"></span><span class="mc-name">Animal Style</span></div>
+        <span class="mc-dir">In and out, one node</span>
+        <p>Goes in and back out inside a <strong>single node</strong>. The printer-light controls become contextual to the space in the middle and are baked in, with limited coloring tools along for the ride.</p>
+        <div class="mc-use">A whole negative move in <b>one node</b>, no sandwich.</div>
+      </article>
+
+      <article class="mode-card reveal" style="--accent: var(--magenta); --accent-d: var(--magenta-d);">
+        <div class="mc-top"><span class="mc-dot"></span><span class="mc-name">PhotoChemist Print Prep</span></div>
+        <span class="mc-dir">Forward + print invert</span>
+        <p>Runs the forward pass and printer lights, then <strong>inverts the result like a print off a negative</strong> and folds in the built-in gamut compression. Built for the PhotoChemist print stage.</p>
+        <div class="mc-use">The <b>print step</b> in a PhotoChemist chain.</div>
+      </article>
+    </div>
+
+    <div class="setup reveal">
+      <div class="su-head">
+        <span class="k">Sandwich mode · two nodes</span>
+        <span class="sub">One DCTL, dropped twice — go in, grade, come back out.</span>
+      </div>
+      <div class="nodechain">
+        <div class="nc-node" style="--accent: var(--cyan); --accent-d: var(--cyan-d);">
+          <span class="nc-tag">Node 1 · Forward</span>
+          <span class="nc-name">Go in</span>
+          <span class="nc-d">Convert your signal into the negative space. Set your mid grey and contrast here.</span>
+        </div>
+        <div class="nc-arrow">→</div>
+        <div class="nc-node ghost">
+          <span class="nc-tag">Nodes between</span>
+          <span class="nc-name">Your grade</span>
+          <span class="nc-d">Work the image while it lives in the negative space — your normal tools, reacting differently.</span>
+        </div>
+        <div class="nc-arrow">→</div>
+        <div class="nc-node" style="--accent: var(--blue); --accent-d: var(--blue-d);">
+          <span class="nc-tag">Node 2 · Invert</span>
+          <span class="nc-name">Come back out</span>
+          <span class="nc-d">Copy your settings here and flip the mode to Invert. It reverts the Forward node exactly.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="whichbox reveal">
+      <div class="wb-head">Ways people actually use it</div>
+      <div class="which-row">
+        <div class="wr-when">Grade between film stocks</div>
+        <div class="wr-do">With PhotoChemist set to <b>Neg Scan</b>, drop an <b>Invert</b> node (ITF: PhotoChemist) to get a gradeable log curve, then a <b>Forward</b> closing node before the Print side set to Print Only. You're grading after your negative stock and under your print stock, like a real photochemical system.</div>
+      </div>
+      <div class="which-row">
+        <div class="wr-when">A film sandwich on anything</div>
+        <div class="wr-do">No PhotoChemist needed. Run a <b>Forward / Invert</b> sandwich on any log curve, grade in the middle, and come back out clean. The world's your oyster.</div>
+      </div>
+      <div class="which-row">
+        <div class="wr-when">A quick one-node move</div>
+        <div class="wr-do">Reach for <b>Animal Style</b> when you want the in-and-out in a single node, with the printer-light controls baked in and contextual to the middle.</div>
+      </div>
+      <div class="which-row">
+        <div class="wr-when">Change how your tools respond</div>
+        <div class="wr-do">Because it talks to pretty much every log curve, you can remap into a novel space where your curves, qualifiers and saturation tools <b>react and respond differently</b> than they do in your usual one.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PARAMETERS ============ -->
+<section class="params" id="params" data-screen-label="Parameters">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Every control</p>
+      <h2>The full parameter set.</h2>
+      <p>The CST exposes the negative characteristic and printer balance, plus a built-in block of gamut-compressor controls for the CMY roll-off. It's all one parameter set on one node.</p>
+    </div>
+
+    <div class="ptable-wrap">
+      <div class="ptable-block reveal">
+        <div class="pt-cap">
+          <span class="sw" style="background:var(--cyan)"></span>
+          <h3>Negative characteristic &amp; printer lights</h3>
+          <span class="pill">Core controls</span>
+        </div>
+        <table class="ptable">
+          <thead>
+            <tr><th style="width:24%">Parameter</th><th style="width:54%">What it does</th><th style="width:22%">Range / default</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="pname">Mid Grey In</td>
+              <td>The input pivot. Set it to match the linear mid grey of your input transfer function — DaVinci Intermediate sits at 0.18.</td>
+              <td class="prange">0.01–1.0 · 0.18</td>
+            </tr>
+            <tr>
+              <td class="pname">Mid Grey Out</td>
+              <td>Where that pivot lands on the way out. Leave it at 0.18 to hold mid grey, or lift it (many like ~0.42) to brighten the midtones.</td>
+              <td class="prange">0.01–1.0 · 0.18</td>
+            </tr>
+            <tr>
+              <td class="pname">Contrast Above</td>
+              <td>Power applied above the pivot. Over 1.0 expands the highlights; under 1.0 compresses them, the way a negative rolls off.</td>
+              <td class="prange">0.1–3.0 · 1.0</td>
+            </tr>
+            <tr>
+              <td class="pname">Contrast Below</td>
+              <td>Power applied below the pivot. Over 1.0 deepens the shadows; under 1.0 opens up shadow gradation.</td>
+              <td class="prange">0.1–3.0 · 1.0</td>
+            </tr>
+            <tr>
+              <td class="pname">Printer R</td>
+              <td>Red printer balance in log-density space. Each point equals 0.025 density units. Mimics photochemical printer-light timing.</td>
+              <td class="prange">0–50 · 25 neutral</td>
+            </tr>
+            <tr>
+              <td class="pname">Printer G</td>
+              <td>Green printer balance in log-density space. Each point equals 0.025 density units.</td>
+              <td class="prange">0–50 · 25 neutral</td>
+            </tr>
+            <tr>
+              <td class="pname">Printer B</td>
+              <td>Blue printer balance in log-density space. Each point equals 0.025 density units.</td>
+              <td class="prange">0–50 · 25 neutral</td>
+            </tr>
+            <tr>
+              <td class="pname">Blend Width</td>
+              <td>Smoothstep blend across the pivot so the above and below segments meet without a kink. 0 is a hard join.</td>
+              <td class="prange">0.0–0.5 · 0.0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ptable-block reveal">
+        <div class="pt-cap">
+          <span class="sw" style="background:var(--magenta)"></span>
+          <h3>Gamut compressor</h3>
+          <span class="pill">Built in · GC prefix</span>
+        </div>
+        <table class="ptable">
+          <thead>
+            <tr><th style="width:24%">Parameter</th><th style="width:54%">What it does</th><th style="width:22%">Range / default</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="pname">GC Gamut Control</td>
+              <td>Enables or disables gamut compression. Uncheck it to compare before and after within the same node.</td>
+              <td class="prange">checkbox</td>
+            </tr>
+            <tr>
+              <td class="pname">GC Cyan Limit</td>
+              <td>How far cyan can extend before compression begins. 0.2 means 20% beyond achromatic before the roll-off starts.</td>
+              <td class="prange">0.0–1.0 · 0.2</td>
+            </tr>
+            <tr>
+              <td class="pname">GC Magenta Limit</td>
+              <td>How far magenta can extend before compression begins, measured from achromatic.</td>
+              <td class="prange">0.0–1.0 · 0.2</td>
+            </tr>
+            <tr>
+              <td class="pname">GC Yellow Limit</td>
+              <td>How far yellow can extend before compression begins, measured from achromatic.</td>
+              <td class="prange">0.0–1.0 · 0.2</td>
+            </tr>
+            <tr>
+              <td class="pname">GC Length</td>
+              <td>Sets the toe of the compression curve. Lower starts compression earlier; higher stays linear longer before compressing.</td>
+              <td class="prange">0.0–3.0 · 0.5</td>
+            </tr>
+            <tr>
+              <td class="pname">GC Strength</td>
+              <td>Controls the curvature of the roll-off. Higher values give more aggressive compression with a sharper knee.</td>
+              <td class="prange">0.5–5.0 · 1.2</td>
+            </tr>
+            <tr>
+              <td class="pname">GC Diagnostic</td>
+              <td>Off for normal output · Curve Overlay draws the compression curve on-screen in RGB per channel · Out of Gamut greys in-gamut pixels and shows out-of-gamut areas in their original color.</td>
+              <td class="prange">Off / Curve / OOG</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GET IT (free) ============ -->
+<section class="getit" id="getit" data-screen-label="Get it free">
+  <div class="wrap">
+    <div class="getit-grid">
+      <div class="getit-copy reveal">
+        <p class="eyebrow">Free in the Tool Box</p>
+        <h2>It's free. Grab it and start playing.</h2>
+        <p>Film Negative Space CST is part of the free set in the Tool Box, with the gamut compressor built right in. Install it with the Tool Box Manager, no membership required.</p>
+        <div class="pc-note">
+          <div class="k">Built to feed PhotoChemist</div>
+          <p>Use PhotoChemist Print Prep mode just upstream of a PhotoChemist stock node and the print stage receives properly inverted density. The two are designed to chain together.</p>
+        </div>
+      </div>
+
+      <div class="free-card reveal">
+        <div class="plan">Free tool</div>
+        <div class="amt"><b>$0</b><span>· no membership</span></div>
+        <p class="note">The whole tool, every mode and the full parameter set, gamut safety included. Yours to keep, free.</p>
+        <ul class="free-list">
+          <li>Film Negative Space CST, all four modes</li>
+          <li>Built-in CMY gamut compressor</li>
+          <li>11 log formats in and out</li>
+          <li>Chains straight into PhotoChemist</li>
+          <li>Installs &amp; updates with the Tool Box Manager</li>
+        </ul>
+        <a class="btn primary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
+        <div class="free-foot">Free · macOS · Windows · Linux</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="install" id="install" data-screen-label="Install">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Getting started</p>
+      <h2>Install in a couple of clicks.</h2>
+      <p>The Tool Box Manager installs Film Negative Space CST, keeps it organized, and updates it for you alongside the rest of the kit. Works on <strong>macOS, Windows and Linux</strong>, no manual file-copying.</p>
+    </div>
+
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Open the Tool Box Manager</b><p>Grab the latest release from <a class="inline" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">GitHub</a> and open it. It's your home base for every Dec. 18 tool.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Find Film Negative Space in the list</b><p>Browse the catalog and select <b>Film Negative Space CST</b>.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Click Install</b><p>The Manager drops the DCTL into the right place for you, no digging through system folders.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Restart DaVinci Resolve</b><p>Relaunch Resolve so it picks up the new DCTL.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Apply it on a node</b><p>Add a node, apply the tool as a <code>DCTL</code>, pick your input log format and a processing mode, and you're in negative space.</p></div>
+        </div>
+      </div>
+
+      <aside class="install-aside">
+        <div class="manager-card reveal">
+          <span class="badge">Recommended</span>
+          <h4>The Tool Box Manager</h4>
+          <p>Install, organize and auto-update Film Negative Space and every other Dec. 18 tool from one app. New stuff lands here first.</p>
+          <a class="btn primary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
+        </div>
+
+        <div class="note-card reveal">
+          <div class="k">Heads up · match your log format</div>
+          <p>Set the input log to whatever your timeline is actually in, since the CST linearises from it before doing anything. Forward and Invert are exact inverses, so an Invert node fully undoes a Forward. Stuck? Email <a class="inline" href="mailto:create@dec18studios.com" style="color:var(--cyan)">create@dec18studios.com</a> and I'll help.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../">Color Grading Tools</a>
+        <a href="../photochemist/">Photo Chemist</a>
+        <a href="../skin-tone-mastery/">Skin Tone Mastery</a>
+        <a href="https://dec18studios.com/color-grading-tools/technicolordrt">Technicolor DRT</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============ NEGATIVE RESPONSE — interactive visualizer ============ */
+  (function () {
+    var svg = document.getElementById("curveSvg");
+    if (!svg) return;
+    var W = 400, H = 400;
+    var SVGNS = "http://www.w3.org/2000/svg";
+
+    // Illustrative response model for this visualizer only.
+    // It shows how the pivot and the two contrast controls reshape tone
+    // around mid grey; it is a simplified approximation, not the production
+    // transform that ships in the DCTL.
+    function blendW(n, bw) {
+      if (bw <= 0) return n <= 1 ? 0 : 1;
+      var t = (n - (1 - bw)) / (2 * bw);
+      t = t < 0 ? 0 : (t > 1 ? 1 : t);
+      return t * t * (3 - 2 * t);
+    }
+    function shape(x, pin, pout, cb, ca, bw) {
+      if (x <= 0) return 0;
+      var n = x / pin;
+      var lo = Math.pow(n, cb), hi = Math.pow(n, ca), w = blendW(n, bw);
+      return (lo * (1 - w) + hi * w) * pout;
+    }
+    function shapeInv(y, pin, pout, cb, ca, bw) {
+      if (y <= 0) return 0;
+      var n = y / pout;
+      var lo = Math.pow(n, 1 / cb), hi = Math.pow(n, 1 / ca), w = blendW(n, bw);
+      return (lo * (1 - w) + hi * w) * pin;
+    }
+
+    var mx = function (x) { return x * W; };
+    var my = function (y) { return (1 - y) * H; };
+
+    // ---- static grid ----
+    var gridG = document.getElementById("gridG");
+    for (var i = 0; i <= 10; i++) {
+      var p = i / 10, major = (i % 5 === 0);
+      var vx = mx(p), hy = my(p);
+      var v = document.createElementNS(SVGNS, "line");
+      v.setAttribute("x1", vx); v.setAttribute("y1", 0); v.setAttribute("x2", vx); v.setAttribute("y2", H);
+      v.setAttribute("stroke", major ? "oklch(0.32 0.013 264)" : "oklch(0.27 0.012 264)");
+      v.setAttribute("stroke-width", major ? 1.1 : 0.7);
+      v.setAttribute("vector-effect", "non-scaling-stroke"); v.setAttribute("opacity", major ? 0.9 : 0.6);
+      gridG.appendChild(v);
+      var h = document.createElementNS(SVGNS, "line");
+      h.setAttribute("x1", 0); h.setAttribute("y1", hy); h.setAttribute("x2", W); h.setAttribute("y2", hy);
+      h.setAttribute("stroke", major ? "oklch(0.32 0.013 264)" : "oklch(0.27 0.012 264)");
+      h.setAttribute("stroke-width", major ? 1.1 : 0.7);
+      h.setAttribute("vector-effect", "non-scaling-stroke"); h.setAttribute("opacity", major ? 0.9 : 0.6);
+      gridG.appendChild(h);
+    }
+
+    var curvePath = document.getElementById("curvePath");
+    var areaPath = document.getElementById("areaPath");
+    var pivotDot = document.getElementById("pivotDot");
+    var pivotVx = document.getElementById("pivotVx");
+    var pivotHz = document.getElementById("pivotHz");
+    var foot = document.getElementById("graphFoot");
+    var seg = document.getElementById("gseg");
+    var buttons = Array.prototype.slice.call(seg.querySelectorAll("button"));
+    var resetBtn = document.getElementById("resetBtn");
+
+    var DEFAULTS = { c_in: 0.18, c_out: 0.18, c_below: 1, c_above: 1, c_blend: 0 };
+    var inputs = {
+      c_in: document.getElementById("c_in"),
+      c_out: document.getElementById("c_out"),
+      c_below: document.getElementById("c_below"),
+      c_above: document.getElementById("c_above"),
+      c_blend: document.getElementById("c_blend")
+    };
+    var outs = {
+      c_in: document.getElementById("o_in"),
+      c_out: document.getElementById("o_out"),
+      c_below: document.getElementById("o_below"),
+      c_above: document.getElementById("o_above"),
+      c_blend: document.getElementById("o_blend")
+    };
+    var dec = { c_in: 3, c_out: 3, c_below: 2, c_above: 2, c_blend: 2 };
+    var mode = "forward";
+
+    function render() {
+      var pin = +inputs.c_in.value, pout = +inputs.c_out.value;
+      var cb = +inputs.c_below.value, ca = +inputs.c_above.value, bw = +inputs.c_blend.value;
+      Object.keys(outs).forEach(function (k) { outs[k].textContent = (+inputs[k].value).toFixed(dec[k]); });
+
+      var f;
+      if (mode === "forward") f = function (x) { return shape(x, pin, pout, cb, ca, bw); };
+      else if (mode === "invert") f = function (x) { return shapeInv(x, pin, pout, cb, ca, bw); };
+      else f = function (x) { return shapeInv(shape(x, pin, pout, cb, ca, bw), pin, pout, cb, ca, bw); };
+
+      var N = 160, d = "";
+      for (var i = 0; i <= N; i++) {
+        var x = i / N, y = f(x);
+        if (!isFinite(y)) y = 0;
+        d += (i === 0 ? "M" : "L") + mx(x).toFixed(2) + " " + my(y).toFixed(2) + " ";
+      }
+      curvePath.setAttribute("d", d.trim());
+      areaPath.setAttribute("d", (d + "L" + W + " " + H + " L0 " + H + " Z").trim());
+
+      // pivot marker: where the input pivot lands
+      var px, py;
+      if (mode === "forward") { px = pin; py = pout; }
+      else if (mode === "invert") { px = pout; py = pin; }
+      else { px = pin; py = pin; }
+      pivotDot.setAttribute("cx", mx(px)); pivotDot.setAttribute("cy", my(py));
+      pivotVx.setAttribute("x1", mx(px)); pivotVx.setAttribute("y1", H); pivotVx.setAttribute("x2", mx(px)); pivotVx.setAttribute("y2", my(py));
+      pivotHz.setAttribute("x1", 0); pivotHz.setAttribute("y1", my(py)); pivotHz.setAttribute("x2", mx(px)); pivotHz.setAttribute("y2", my(py));
+
+      var lift = pout > pin + 0.0005 ? "lifts" : (pout < pin - 0.0005 ? "drops" : "holds");
+      var label = { forward: "Forward · Digital → Neg", invert: "Invert · Neg → Digital", animal: "Animal · in and out, one node" }[mode];
+      var tail;
+      if (mode === "animal") tail = "forward then inverse — lands back on the diagonal, fully reversible.";
+      else tail = "mid grey " + pin.toFixed(3) + " → " + pout.toFixed(3) + " (" + lift + "), shadows γ " + cb.toFixed(2) + ", highlights γ " + ca.toFixed(2) + ".";
+      foot.innerHTML = "<b>" + label + "</b> — " + tail;
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        mode = b.dataset.m;
+        buttons.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        render();
+      });
+    });
+    Object.keys(inputs).forEach(function (k) { inputs[k].addEventListener("input", render); });
+    resetBtn.addEventListener("click", function () {
+      Object.keys(DEFAULTS).forEach(function (k) { inputs[k].value = DEFAULTS[k]; });
+      render();
+    });
+    render();
+  })();
+
+  /* ============ SCROLL REVEAL ============ */
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    function showAll() { els.forEach(function (e) { e.style.transition = 'none'; e.classList.add('in'); }); }
+    if (reduce || !('IntersectionObserver' in window)) { showAll(); return; }
+    var revealed = 0;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); revealed++; io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+    setTimeout(function () { if (revealed === 0) showAll(); }, 1400);
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#3fb7d6" />
+        <stop offset="0.5" stop-color="#5b78d6" />
+        <stop offset="1" stop-color="#b154c9" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <g fill="#fff">
+      <rect x="30" y="30" width="40" height="9" rx="3" opacity="0.95" />
+      <rect x="30" y="45" width="40" height="9" rx="3" opacity="0.78" />
+      <rect x="30" y="60" width="40" height="9" rx="3" opacity="0.6" />
+    </g>
+  </svg>
+</template>
+
+</body>
+</html>
