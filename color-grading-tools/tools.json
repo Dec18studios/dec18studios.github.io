@@ -1,11 +1,12 @@
 {
-  "updated": "2026-06-02",
+  "updated": "2026-06-04",
   "tools": [
     {
       "name": "Photo Chemist",
       "slug": "photochemist",
       "tier": "pro",
       "color": "red",
+      "url": "photochemist/",
       "desc": "Spectral film-stock emulation — design and develop your own stocks.",
       "type": "OFX",
       "category": "Film Emulation",
@@ -67,7 +68,7 @@
       "version": ""
     },
     {
-      "name": "Color Slice O'matic",
+      "name": "Color Slicer",
       "slug": "colorslice",
       "tier": "pro",
       "color": "blue",
@@ -90,6 +91,34 @@
       "platform": "",
       "status": "available",
       "repo": "X-Grade-OFX",
+      "version": ""
+    },
+    {
+      "name": "Hue Tools",
+      "slug": "hue-tools",
+      "tier": "pro",
+      "color": "yellow",
+      "url": "hue-tools/",
+      "desc": "Six hue vectors, total control. Grade each primary and secondary independently with clean tetrahedral math.",
+      "type": "DCTL",
+      "category": "Color Grading",
+      "platform": "",
+      "status": "available",
+      "repo": "",
+      "version": ""
+    },
+    {
+      "name": "Skin Tone Mastery",
+      "slug": "skin-tone-mastery",
+      "tier": "pro",
+      "color": "magenta",
+      "url": "skin-tone-mastery/",
+      "desc": "Four-way diagnostic that splits one frame into source, exposure, saturation and hue views.",
+      "type": "DCTL",
+      "category": "Diagnostic",
+      "platform": "",
+      "status": "available",
+      "repo": "",
       "version": ""
     },
     {
@@ -123,6 +152,7 @@
       "slug": "film-negative-space-cst",
       "tier": "free",
       "color": "cyan",
+      "url": "film-negative-space-cst/",
       "desc": "A color-space transform into a film-negative working space.",
       "type": "DCTL",
       "category": "Film Emulation",
