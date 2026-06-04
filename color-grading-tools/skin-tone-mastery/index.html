@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skin Tone Mastery — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.64 0.205 25 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
+            mask: url("assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(48px, 7vw, 92px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -18%; right: -14%; width: 780px; height: 780px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(140px); opacity: 0.13; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 5vw, 60px); align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 6.2vw, 76px); line-height: 0.98; letter-spacing: -0.02em; margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--yellow) 26%, var(--green) 52%, var(--cyan) 74%, var(--magenta));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 50ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ OUTPUT VIEWER (hero right) ============ */
+  .viewer {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line-soft); border-radius: 18px; padding: 16px; overflow: hidden;
+    box-shadow: 0 40px 90px -52px oklch(0 0 0 / 0.9);
+  }
+  .viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 6px 14px; }
+  .viewer-head .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .viewer-head .live { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--red);
+    border: 1px solid oklch(0.64 0.205 25 / 0.45); border-radius: 5px; padding: 3px 8px; }
+  .stage {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
+    background: var(--bg); border: 1px solid var(--line-soft);
+  }
+  .stage img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    opacity: 1; transition: opacity 0.32s ease; -webkit-user-drag: none; user-select: none;
+  }
+  .stage.swapping img { opacity: 0; }
+  .stage .badge {
+    position: absolute; left: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .stage .badge .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--red); }
+  .stage .quad {
+    position: absolute; z-index: 2; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: oklch(1 0 0 / 0.9); padding: 4px 7px; border-radius: 5px;
+    background: oklch(0 0 0 / 0.42); backdrop-filter: blur(3px); pointer-events: none;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .stage.show-quad .quad { opacity: 1; }
+  .stage.show-quad .badge { opacity: 0; }
+  .stage .quad.tl { left: 10px; top: 10px; }
+  .stage .quad.tr { right: 10px; top: 10px; }
+  .stage .quad.bl { left: 10px; bottom: 10px; }
+  .stage .quad.br { right: 10px; bottom: 10px; }
+
+  .mode-seg { margin-top: 14px; display: flex; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+  .mode-seg button {
+    flex: 1; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-dim);
+    background: var(--bg-2); border: none; border-right: 1px solid var(--line-soft); padding: 11px 8px;
+    cursor: pointer; transition: background 0.16s, color 0.16s; white-space: nowrap;
+  }
+  .mode-seg button:last-child { border-right: none; }
+  .mode-seg button:hover { background: var(--bg-3); color: var(--ink); }
+  .mode-seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); font-weight: 600; }
+  .mode-desc { margin: 12px 6px 2px; font-size: 14px; color: var(--ink-dim); min-height: 3em; text-wrap: pretty; }
+  .mode-note { margin: 0 6px; font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--ink-faint); text-wrap: pretty; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(52px, 7vw, 100px); position: relative; }
+  .sec-head { max-width: 64ch; margin-bottom: clamp(34px, 5vw, 54px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+
+  /* ============ STORY : the problem ============ */
+  .story { border-top: 1px solid var(--line-soft); }
+  .story-grid { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
+  @media (max-width: 880px) { .story-grid { grid-template-columns: 1fr; } }
+  .story-copy h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 46px);
+    letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px;
+  }
+  .story-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.7vw, 18px); text-wrap: pretty; }
+  .story-copy p strong { color: var(--ink); font-weight: 600; }
+  .compare-card {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: clamp(22px, 3vw, 30px);
+  }
+  .compare-card .ch { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px; }
+  .vs-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; }
+  .vs-col { background: var(--bg); border: 1px solid var(--line-soft); border-radius: 13px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .vs-col.old { opacity: 0.92; }
+  .vs-col .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .vs-col.old .tag { color: var(--ink-faint); }
+  .vs-col.new .tag { color: var(--red); }
+  .vs-col ul { list-style: none; display: grid; gap: 9px; }
+  .vs-col li { font-size: 13.5px; color: var(--ink-dim); display: flex; gap: 9px; align-items: flex-start; line-height: 1.45; text-wrap: pretty; }
+  .vs-col.old li::before { content: "×"; color: var(--ink-faint); font-family: var(--mono); flex: none; }
+  .vs-col.new li::before { content: "✓"; color: var(--green); font-family: var(--mono); font-weight: 700; flex: none; }
+  .vs-col.new { border-color: oklch(0.64 0.205 25 / 0.35); background: linear-gradient(180deg, var(--red-d), transparent 80%); }
+  .vs-arrow { display: grid; place-items: center; color: var(--ink-faint); font-family: var(--mono); font-size: 18px; }
+  @media (max-width: 560px) { .vs-row { grid-template-columns: 1fr; } .vs-arrow { transform: rotate(90deg); padding: 4px 0; } }
+
+  /* ============ FOUR PANELS ============ */
+  .panels { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .panel-map {
+    position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-soft);
+    box-shadow: 0 30px 80px -46px oklch(0 0 0 / 0.85); margin-bottom: clamp(28px, 4vw, 44px);
+  }
+  .panel-map img { width: 100%; height: auto; display: block; -webkit-user-drag: none; user-select: none; }
+  .panel-map .cross-v, .panel-map .cross-h { position: absolute; background: oklch(1 0 0 / 0.28); z-index: 2; }
+  .panel-map .cross-v { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-0.5px); }
+  .panel-map .cross-h { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-0.5px); }
+  .panel-map .qlabel {
+    position: absolute; z-index: 3; font-family: var(--mono); font-size: clamp(9px, 1.1vw, 12px);
+    letter-spacing: 0.06em; text-transform: uppercase; color: #fff; padding: 5px 9px; border-radius: 6px;
+    background: oklch(0 0 0 / 0.55); backdrop-filter: blur(4px); display: inline-flex; align-items: center; gap: 7px;
+  }
+  .panel-map .qlabel .n { color: var(--ink-faint); }
+  .panel-map .qlabel.tl { left: 12px; top: 12px; }
+  .panel-map .qlabel.tr { right: 12px; top: 12px; }
+  .panel-map .qlabel.bl { left: 12px; bottom: 12px; }
+  .panel-map .qlabel.br { right: 12px; bottom: 12px; }
+  .panel-map .qlabel .sw { width: 8px; height: 8px; border-radius: 2px; }
+
+  .stages { display: grid; gap: 16px; }
+  .stage-card {
+    --accent: var(--red); --accent-d: var(--red-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+    display: grid; grid-template-columns: 0.34fr 0.66fr; transition: border-color 0.18s, transform 0.18s;
+  }
+  .stage-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  @media (max-width: 760px) { .stage-card { grid-template-columns: 1fr; } }
+  .stage-side {
+    padding: clamp(22px, 3vw, 30px); border-right: 1px solid var(--line-soft); position: relative;
+    background: linear-gradient(180deg, var(--accent-d), transparent 70%);
+  }
+  @media (max-width: 760px) { .stage-side { border-right: none; border-bottom: 1px solid var(--line-soft); } }
+  .stage-side .num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--accent); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px; }
+  .stage-side .num::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+  .stage-side h3 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -0.015em; line-height: 1.05; margin-top: 14px; }
+  .stage-side .tag { margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); text-wrap: pretty; }
+  .stage-body { padding: clamp(22px, 3vw, 30px); }
+  .stage-body > p { color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .stage-body > p strong { color: var(--ink); font-weight: 600; }
+  .stage-body .why {
+    margin-top: 18px; border-radius: 12px; padding: 14px 16px; background: var(--accent-d);
+    position: relative; overflow: hidden;
+  }
+  .stage-body .why::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .stage-body .why .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .stage-body .why p { margin-top: 6px; font-size: 14px; color: var(--ink); line-height: 1.5; text-wrap: pretty; }
+
+  /* ============ MODES ============ */
+  .modes { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .mode-feature { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 44px); align-items: center; margin-bottom: clamp(40px, 6vw, 68px); }
+  .mode-feature:last-of-type { margin-bottom: 0; }
+  .mode-feature.flip .mode-fig { order: 2; }
+  @media (max-width: 880px) { .mode-feature, .mode-feature.flip { grid-template-columns: 1fr; } .mode-feature.flip .mode-fig { order: 0; } }
+  .mode-fig {
+    position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line-soft);
+    box-shadow: 0 26px 70px -46px oklch(0 0 0 / 0.85);
+  }
+  .mode-fig img { width: 100%; height: auto; display: block; -webkit-user-drag: none; user-select: none; }
+  .mode-fig .cap {
+    position: absolute; left: 12px; bottom: 12px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 5px 10px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+  }
+  .mode-copy .kick { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent, var(--red));
+    display: inline-flex; align-items: center; gap: 12px; }
+  .mode-copy .kick::before { content: ""; width: 26px; height: 2px; background: var(--accent, var(--red)); }
+  .mode-copy h3 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.4vw, 40px); letter-spacing: -0.02em; line-height: 1.04; margin: 16px 0 0; }
+  .mode-copy p { margin-top: 16px; color: var(--ink-dim); font-size: 16px; text-wrap: pretty; }
+  .mode-copy p strong { color: var(--ink); font-weight: 600; }
+  .toggle-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .chip { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-dim);
+    border: 1px solid var(--line); border-radius: 99px; padding: 7px 13px; background: var(--bg-1); }
+  .chip b { color: var(--ink); font-weight: 600; }
+
+  /* ============ CONTROLS ============ */
+  .controls { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .ctrl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .ctrl-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .ctrl-grid { grid-template-columns: 1fr; } }
+  .ctrl {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; gap: 9px; transition: border-color 0.16s, transform 0.16s;
+  }
+  .ctrl:hover { border-color: var(--line); transform: translateY(-2px); }
+  .ctrl .ck { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .ctrl .ck .kind { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint);
+    border: 1px solid var(--line); border-radius: 99px; padding: 3px 8px; }
+  .ctrl .ck .sw { width: 10px; height: 10px; border-radius: 3px; box-shadow: 0 0 0 1px oklch(1 0 0 / 0.12); }
+  .ctrl h4 { font-family: var(--display); font-weight: 600; font-size: 17.5px; letter-spacing: -0.01em; line-height: 1.15; }
+  .ctrl p { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .ctrl .val { font-family: var(--mono); font-size: 11.5px; color: var(--cyan); }
+
+  /* ============ MEMBERSHIP ============ */
+  .sub { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .sub-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .sub-grid { grid-template-columns: 1fr; } }
+  .sub-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
+  .sub-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
+  .sub-copy p strong { color: var(--ink); font-weight: 600; }
+  .sub-copy .free-note { margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--cyan-d); position: relative; overflow: hidden; }
+  .sub-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan); }
+  .sub-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .sub-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); }
+  .price-card { position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden; }
+  .price-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta)); }
+  .price-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); }
+  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 72px); line-height: 1; letter-spacing: -0.03em; }
+  .price-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
+  .price-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .price-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .price-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+  .price-list li::before { content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px; }
+  .price-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
+  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  /* ============ INSTALL ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start;
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px;
+  }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--green);
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.74 0.165 148 / 0.4); background: var(--green-d);
+    display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--cyan); }
+  .step .st a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
+  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
+  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
+  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
+  .note-card { background: var(--yellow-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--yellow); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    .btn, nav.toplinks a.cta, .mode-seg button { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">All tools</a>
+      <a href="#panels">The panels</a>
+      <a href="#controls">Controls</a>
+      <a href="#install">Install</a>
+      <a href="#subscribe" class="cta">Get it · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Four-way skin &amp; tone diagnostic · DCTL · DaVinci Resolve</p>
+        <h1 class="hero-title">See the skin<br />before you<br /><em>qualify it.</em></h1>
+        <p class="hero-sub">Skin Tone Mastery splits one frame into four live views: source, exposure, saturation and hue. It's calibrated for skin out of the box and pivots to any hue you want to inspect, so you can read a tone the moment you drop it on a node, no guesswork in the qualifier.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#subscribe">Get Skin Tone Mastery →</a>
+          <a class="btn" href="#panels">See the four views</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>4</b><span>views, one frame</span></div>
+          <div class="m"><b>7</b><span>hue vectors</span></div>
+          <div class="m"><b>18.7°</b><span>skin-calibrated</span></div>
+        </div>
+      </div>
+
+      <!-- Output viewer: swaps between the three real exported modes -->
+      <div class="viewer reveal">
+        <div class="viewer-head">
+          <span class="lbl">Tool output</span>
+          <span class="live" id="liveTag">Real export</span>
+        </div>
+        <div class="stage show-quad" id="stage">
+          <img id="outImg" src="assets/output-normal.jpg" alt="Skin Tone Mastery four-quadrant output" data-comment-anchor="md-hero-img" />
+          <span class="quad tl">Source</span>
+          <span class="quad tr">Exposure</span>
+          <span class="quad bl">Saturation</span>
+          <span class="quad br">Hue</span>
+          <div class="badge"><span class="dot" id="modeDot"></span><span id="modeBadge">All Four</span></div>
+        </div>
+        <div class="mode-seg" id="modeSeg" role="group" aria-label="Output mode">
+          <button type="button" data-i="0" aria-pressed="true">All Four</button>
+          <button type="button" data-i="1" aria-pressed="false">Gray Non-Selected</button>
+          <button type="button" data-i="2" aria-pressed="false">Vectorscope</button>
+        </div>
+        <p class="mode-desc" id="modeDesc"></p>
+        <p class="mode-note">Real exports from the tool on a single skin-tone frame. The hue vector here is set to Skin (18.7°).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORY : the problem ============ -->
+<section class="story" data-screen-label="The problem">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-copy reveal">
+        <p class="eyebrow">Why it exists</p>
+        <h2>Stop guessing in the qualifier.</h2>
+        <p>Qualifying a skin tone in Resolve's built-in qualifier is iterative tweaking with no way to see the whole picture. You pick at the hue, then the saturation, then the luminance, one at a time, and you never see how the three relate on the same frame.</p>
+        <p>Skin Tone Mastery puts all three diagnostics plus the raw source <strong>in one frame</strong>. Hue, saturation and exposure, side by side, updating together. You read the tone, then go qualify it knowing exactly where it sits.</p>
+      </div>
+
+      <div class="compare-card reveal">
+        <div class="ch">The usual way vs. one frame</div>
+        <div class="vs-row">
+          <div class="vs-col old">
+            <span class="tag">Qualifier alone</span>
+            <ul>
+              <li>One channel at a time</li>
+              <li>No view of hue, sat and exposure together</li>
+              <li>Tweak, check a scope, tweak again</li>
+              <li>Easy to miss skin that has gone neutral</li>
+            </ul>
+          </div>
+          <div class="vs-arrow">→</div>
+          <div class="vs-col new">
+            <span class="tag">Skin Tone Mastery</span>
+            <ul>
+              <li>Four views of the same frame at once</li>
+              <li>Hue, saturation and exposure read together</li>
+              <li>Drop it on a node and read it instantly</li>
+              <li>Neutral skin flagged in bright green</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOUR PANELS ============ -->
+<section class="panels" id="panels" data-screen-label="The four panels">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">One frame · four lenses</p>
+      <h2>Four views of the same frame.</h2>
+      <p>Every panel analyses the same image through a different lens, so you can isolate, qualify and evaluate a tone without leaving the node. Set the Primary View dropdown to any single panel to blow it up to the full frame.</p>
+    </div>
+
+    <div class="panel-map reveal" data-comment-anchor="md-panelmap">
+      <img src="assets/output-normal.jpg" alt="The four panels: source, exposure heatmap, saturation heatmap and hue indicator" loading="lazy" />
+      <span class="cross-v"></span>
+      <span class="cross-h"></span>
+      <span class="qlabel tl"><span class="sw" style="background:var(--ink)"></span><span class="n">01</span> Source</span>
+      <span class="qlabel tr"><span class="sw" style="background:var(--blue)"></span><span class="n">02</span> Exposure</span>
+      <span class="qlabel bl"><span class="sw" style="background:var(--green)"></span><span class="n">03</span> Saturation</span>
+      <span class="qlabel br"><span class="sw" style="background:var(--red)"></span><span class="n">04</span> Hue Indicator</span>
+    </div>
+
+    <div class="stages">
+      <article class="stage-card reveal" style="--accent: var(--ink); --accent-d: oklch(0.95 0.006 264 / 0.08);">
+        <div class="stage-side">
+          <span class="num">Top-left · 01</span>
+          <h3>Source</h3>
+          <p class="tag">The unprocessed input, for reference.</p>
+        </div>
+        <div class="stage-body">
+          <p>Your frame, untouched, so you always have ground truth next to the analysis. In <strong>Monochrome</strong> mode it shows luminance only, which is handy when you want to read exposure without color pulling your eye.</p>
+          <div class="why"><div class="k">Read it for</div><p>A constant reference point. Everything in the other three panels is this same frame, seen differently.</p></div>
+        </div>
+      </article>
+
+      <article class="stage-card reveal" style="--accent: var(--blue); --accent-d: var(--blue-d);">
+        <div class="stage-side">
+          <span class="num">Top-right · 02</span>
+          <h3>Exposure heatmap</h3>
+          <p class="tag">False color by luminance zone.</p>
+        </div>
+        <div class="stage-body">
+          <p>A false-color ramp maps dark blues through greens into yellows and oranges, up to clipped reds. The <strong>Target Exposure</strong> slider shifts where the neutral grey band sits, so you can park it on the tone you care about. <strong>Gray Non-Selected</strong> shows only pixels within ±0.05 luminance of the target in their true source color and greys the rest.</p>
+          <div class="why"><div class="k">Read it for</div><p>Where your skin sits on the exposure scale, and whether it is landing where you want it before you touch a wheel.</p></div>
+        </div>
+      </article>
+
+      <article class="stage-card reveal" style="--accent: var(--green); --accent-d: var(--green-d);">
+        <div class="stage-side">
+          <span class="num">Bottom-left · 03</span>
+          <h3>Saturation heatmap</h3>
+          <p class="tag">False color by perceptual saturation.</p>
+        </div>
+        <div class="stage-body">
+          <p>A false-color ramp maps low saturation (blue) through mid (green and yellow) up to high (orange and red), using HSV saturation times value so it tracks what you actually perceive. <strong>Target Saturation</strong> sets the neutral band, and <strong>Gray Non-Selected</strong> isolates only the pixels inside the target saturation window.</p>
+          <div class="why"><div class="k">Read it for</div><p>Overcooked or flat skin at a glance, and whether your saturation is even across the face.</p></div>
+        </div>
+      </article>
+
+      <article class="stage-card reveal" style="--accent: var(--red); --accent-d: var(--red-d);">
+        <div class="stage-side">
+          <span class="num">Bottom-right · 04</span>
+          <h3>Hue indicator</h3>
+          <p class="tag">The primary selection display.</p>
+        </div>
+        <div class="stage-body">
+          <p>Pixels inside the <strong>Matched Hue Range</strong> are painted yellow. Pixels in the <strong>Indicator Range</strong> but on the green side of target go green; the magenta side goes magenta. Everything outside both ranges passes through unchanged, or greys out if Gray Non-Selected is on. <strong>Highlight Neutral</strong> paints near-neutral pixels bright green so you can catch skin that has desaturated to grey.</p>
+          <div class="why"><div class="k">Read it for</div><p>Exactly which way your skin is leaning, green or magenta, off the target hue, and how wide the spread is across the frame.</p></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODES ============ -->
+<section class="modes" id="modes" data-screen-label="Diagnostic modes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Diagnostic modes</p>
+      <h2>Switch how the frame reads.</h2>
+      <p>A handful of toggles change what survives to screen, so you can go from a broad overview to a single isolated cluster ready to feed Resolve's scopes.</p>
+    </div>
+
+    <div class="mode-feature reveal" style="--accent: var(--cyan);">
+      <div class="mode-fig">
+        <img src="assets/output-grey-non-selected.jpg" alt="Gray Non-Selected mode: only the qualifying pixels keep their true color" loading="lazy" />
+        <span class="cap">Gray Non-Selected</span>
+      </div>
+      <div class="mode-copy">
+        <span class="kick">Gray Non-Selected</span>
+        <h3>Only the pixels that qualify.</h3>
+        <p>In the exposure and saturation panels, everything outside the target window drops to grey, leaving just the qualifying pixels in true color. The hue indicator does the same around your selection. It is the fastest way to confirm <strong>exactly which pixels</strong> fall inside your window before you commit to a key.</p>
+        <div class="toggle-row">
+          <span class="chip">Exposure: <b>±0.05 window</b></span>
+          <span class="chip">Saturation: <b>target window</b></span>
+          <span class="chip">Hue: <b>matched range</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-feature flip reveal" style="--accent: var(--red);">
+      <div class="mode-fig">
+        <img src="assets/output-vectorscope.jpg" alt="Vectorscope Mode: all four panels grey down to just the selected hue cluster" loading="lazy" />
+        <span class="cap">Vectorscope Mode</span>
+      </div>
+      <div class="mode-copy">
+        <span class="kick">Vectorscope Mode</span>
+        <h3>Feed the cluster straight to your scopes.</h3>
+        <p>All four quadrants grey down based on the hue selection, so only the selected hue cluster passes through. Point this node at Resolve's <strong>vectorscope or parade</strong> and you can confirm where your skin cluster actually sits, without leaving the grade or building a separate key.</p>
+        <div class="toggle-row">
+          <span class="chip">Isolates the <b>selected hue</b></span>
+          <span class="chip">Built to drive <b>internal scopes</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTROLS ============ -->
+<section class="controls" id="controls" data-screen-label="Controls">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Every control</p>
+      <h2>Dial it in.</h2>
+      <p>The defaults land on skin, so most shots need nothing but a glance. When you want to push further, here is the whole panel.</p>
+    </div>
+
+    <div class="ctrl-grid">
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Dropdown</span><span class="sw" style="background:var(--red)"></span></div>
+        <h4>Hue Vector</h4>
+        <p>Starts on skin, switches to inspect any vector you want: Skin, Red, Yellow, Green, Cyan, Blue or Magenta.</p>
+        <span class="val">default · Skin (18.7°)</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Slider</span><span class="sw" style="background:var(--yellow)"></span></div>
+        <h4>Matched Hue Range</h4>
+        <p>Width of the primary yellow selection zone. Scaled to one skin-tone step, so the slider is perceptually calibrated for skin work.</p>
+        <span class="val">unit · 18.7° steps</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Slider</span><span class="sw" style="background:var(--green)"></span></div>
+        <h4>Indicator Range</h4>
+        <p>Width of the green and magenta deviation bands that sit just outside the core selection.</p>
+        <span class="val">green / magenta bands</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Slider</span><span class="sw" style="background:var(--magenta)"></span></div>
+        <h4>Target Angle Adj</h4>
+        <p>Fine-tune the hue centre up to ±60° from the selected vector without changing the dropdown.</p>
+        <span class="val">range · ±60°</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Slider</span><span class="sw" style="background:var(--blue)"></span></div>
+        <h4>Target Exposure</h4>
+        <p>Sets the centre of the exposure window for the exposure heatmap panel.</p>
+        <span class="val">neutral grey band</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Slider</span><span class="sw" style="background:var(--cyan)"></span></div>
+        <h4>Target Saturation</h4>
+        <p>Sets the centre of the saturation window for the saturation heatmap panel.</p>
+        <span class="val">neutral sat band</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Dropdown</span><span class="sw" style="background:var(--ink)"></span></div>
+        <h4>Primary View</h4>
+        <p>All Four by default, or collapse to Hue Indicator, Saturation or Exposure to fill the frame with one panel.</p>
+        <span class="val">All Four / single panel</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Toggle</span><span class="sw" style="background:var(--cyan)"></span></div>
+        <h4>Gray Non-Selected</h4>
+        <p>Greys everything outside the target window in the exposure and saturation panels, leaving only qualifying pixels in true color.</p>
+        <span class="val">off by default</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Toggle</span><span class="sw" style="background:var(--red)"></span></div>
+        <h4>Vectorscope Mode</h4>
+        <p>Greys all four quadrants by the hue selection so only the chosen cluster passes to Resolve's scopes.</p>
+        <span class="val">scope feed</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Toggle</span><span class="sw" style="background:var(--green)"></span></div>
+        <h4>Highlight Neutral</h4>
+        <p>Paints near-neutral grey pixels bright green in the hue indicator, flagging skin that has desaturated.</p>
+        <span class="val">neutral catcher</span>
+      </div>
+      <div class="ctrl reveal">
+        <div class="ck"><span class="kind">Toggle</span><span class="sw" style="background:var(--ink)"></span></div>
+        <h4>Monochrome</h4>
+        <p>Converts all panels to luminance for exposure-focused analysis without color in the way.</p>
+        <span class="val">luma only</span>
+      </div>
+      <div class="ctrl reveal" style="background: linear-gradient(180deg, var(--red-d), transparent 80%); border-color: oklch(0.64 0.205 25 / 0.3);">
+        <div class="ck"><span class="kind">Tip</span><span class="sw" style="background:var(--red)"></span></div>
+        <h4>Close-up exposure</h4>
+        <p>Set Primary View to a single panel for precise exposure targeting on tight shots, where one full-resolution diagnostic beats four small ones.</p>
+        <span class="val">workflow</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBERSHIP ============ -->
+<section class="sub" id="subscribe" data-screen-label="Membership">
+  <div class="wrap">
+    <div class="sub-grid">
+      <div class="sub-copy reveal">
+        <p class="eyebrow">The membership</p>
+        <h2>Get Skin Tone Mastery, and everything else.</h2>
+        <p>Skin Tone Mastery comes with the whole Tool Box. Become a <strong>Happy Little Noder</strong> and unlock every premium tool on the channel, plus every update and new release. One low annual fee that will <em>never</em> be raised, so lock it in once and you're set.</p>
+        <div class="free-note">
+          <div class="k">Plenty is free, forever</div>
+          <p>A whole set of the Tool Box is free, always. Grab the Tool Box Manager and start playing today, then unlock the premium kit whenever you're ready.</p>
+        </div>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="plan">Happy Little Noders</div>
+        <div class="amt"><b>$47.34</b><span>/ year</span></div>
+        <p class="note">Everything you see on YouTube, plus every update, for one annual fee that's never been raised.</p>
+        <ul class="price-list">
+          <li>Skin Tone Mastery, all four panels and every mode</li>
+          <li>Every premium DCTL &amp; OFX plugin in the Tool Box</li>
+          <li>All future tools &amp; updates included</li>
+          <li>Photo Chemist, Technicolor DRT, Color Slice O'matic &amp; more</li>
+          <li>Price locked, never raised</li>
+        </ul>
+        <a class="btn primary" href="https://dec18studios.com/checkout/subscribe?cartToken=kptC8qvTRVDiZHvOBtMQb4sftOOnbvA7HK3XutIz" data-comment-anchor="md-member-cta">Become a member →</a>
+        <div class="price-foot">Billed annually · cancel anytime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="install" id="install" data-screen-label="Install">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Getting started</p>
+      <h2>Install in a couple of clicks.</h2>
+      <p>The Tool Box Manager installs Skin Tone Mastery, keeps it organized, and updates it for you alongside the rest of the kit. Works on <strong>macOS, Windows and Linux</strong>, no manual file-copying required.</p>
+    </div>
+
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Open the Tool Box Manager</b><p>Grab the latest release from <a class="inline" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">GitHub</a> and open it. It's your home base for every Dec. 18 tool.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Find Skin Tone Mastery in the list</b><p>Browse the catalog inside the Manager and select <b>Skin Tone Mastery</b>, right alongside the rest of the kit.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Click Install</b><p>The Manager drops the DCTL into the right place for you, no digging through system folders.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Restart DaVinci Resolve</b><p>Relaunch Resolve so it picks up the new DCTL.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Apply it on a diagnostic node</b><p>Add a node, apply Skin Tone Mastery as a <code>DCTL</code>, and read the frame. It's a diagnostic, so bypass or remove the node before you render.</p></div>
+        </div>
+      </div>
+
+      <aside class="install-aside">
+        <div class="manager-card reveal">
+          <span class="badge">Recommended</span>
+          <h4>The Tool Box Manager</h4>
+          <p>Install, organize and auto-update Skin Tone Mastery and every other Dec. 18 tool from one app. New stuff lands here first.</p>
+          <a class="btn primary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
+        </div>
+
+        <div class="note-card reveal">
+          <div class="k">Heads up · read it on its own node</div>
+          <p>Skin Tone Mastery rewrites the picture so you can read it, it does not grade it. Keep it on a dedicated node you can toggle, and turn it off before you export. Stuck? Email <a class="inline" href="mailto:create@dec18studios.com" style="color:var(--cyan)">create@dec18studios.com</a> and I'll help.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../">Color Grading Tools</a>
+        <a href="../photochemist/">Photo Chemist</a>
+        <a href="https://dec18studios.com/color-grading-tools/technicolordrt">Technicolor DRT</a>
+        <a href="https://dec18studios.com/joy-of-colourgrading">Happy Little Node Trees</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============ OUTPUT VIEWER ============
+     Swaps between the three real exported modes. Drop new exports into assets/
+     and update the src below to refresh them. */
+  (function () {
+    var MODES = [
+      { name: "All Four", color: "var(--red)", src: "assets/output-normal.jpg", quad: true,
+        desc: "The default split: source top-left, exposure heatmap top-right, saturation heatmap bottom-left, hue indicator bottom-right." },
+      { name: "Gray Non-Selected", color: "var(--cyan)", src: "assets/output-grey-non-selected.jpg", quad: false,
+        desc: "Everything outside the target windows drops to grey, leaving only the qualifying pixels in their true source color." },
+      { name: "Vectorscope", color: "var(--red)", src: "assets/output-vectorscope.jpg", quad: false,
+        desc: "All four quadrants grey down to just the selected hue cluster, ready to feed Resolve's vectorscope or parade." }
+    ];
+
+    var stage = document.getElementById("stage");
+    var img = document.getElementById("outImg");
+    var seg = document.getElementById("modeSeg");
+    var badge = document.getElementById("modeBadge");
+    var dot = document.getElementById("modeDot");
+    var desc = document.getElementById("modeDesc");
+    var liveTag = document.getElementById("liveTag");
+    if (!stage || !img || !seg) return;
+
+    var buttons = Array.prototype.slice.call(seg.querySelectorAll("button"));
+    var current = -1;
+    var swapTimer = null;
+
+    function apply(i, instant) {
+      if (i === current) return;
+      var m = MODES[i];
+      current = i;
+      buttons.forEach(function (b) { b.setAttribute("aria-pressed", parseInt(b.dataset.i, 10) === i ? "true" : "false"); });
+      badge.textContent = m.name;
+      dot.style.background = m.color;
+      desc.textContent = m.desc;
+      stage.classList.toggle("show-quad", !!m.quad);
+
+      if (instant) { img.src = m.src; return; }
+      clearTimeout(swapTimer);
+      stage.classList.add("swapping");
+      swapTimer = setTimeout(function () {
+        img.src = m.src;
+        // reveal once the new frame is ready
+        if (img.complete) { stage.classList.remove("swapping"); }
+        else { img.onload = function () { stage.classList.remove("swapping"); }; }
+      }, 200);
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () { apply(parseInt(b.dataset.i, 10)); });
+    });
+
+    apply(0, true);
+  })();
+
+  /* ============ SCROLL REVEAL ============ */
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    function showAll() { els.forEach(function (e) { e.style.transition = 'none'; e.classList.add('in'); }); }
+    if (reduce || !('IntersectionObserver' in window)) { showAll(); return; }
+    var revealed = 0;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); revealed++; io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+    // Safety net: if the observer never fires in this environment, just show everything.
+    setTimeout(function () { if (revealed === 0) showAll(); }, 1400);
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d8455f" />
+        <stop offset="0.5" stop-color="#b154c9" />
+        <stop offset="1" stop-color="#5b78d6" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <g fill="#fff">
+      <rect x="30" y="30" width="18" height="18" rx="3" opacity="0.95" />
+      <rect x="52" y="30" width="18" height="18" rx="3" opacity="0.75" />
+      <rect x="30" y="52" width="18" height="18" rx="3" opacity="0.75" />
+      <rect x="52" y="52" width="18" height="18" rx="3" opacity="0.95" />
+    </g>
+  </svg>
+</template>
+
+</body>
+</html>
