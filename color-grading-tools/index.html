@@ -278,6 +278,10 @@
   .tcard p { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; flex: 1; }
   .tcard .go { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); transition: color 0.16s; }
   .tcard:hover .go { color: var(--ink); }
+  div.tcard { cursor: pointer; text-decoration: none; color: inherit; }
+  .tcard .go-row { display: flex; align-items: center; gap: 18px; }
+  .tcard .go-row .dl { font-family: var(--mono); font-size: 12px; color: oklch(0.74 0.165 148 / 0.7); transition: color 0.16s; text-decoration: none; }
+  .tcard:hover .go-row .dl { color: var(--green); }
 
   /* ============ FOOTER ============ */
   footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
@@ -333,6 +337,7 @@
         <p class="hero-sub">A growing kit of DCTLs and OFX plugins for DaVinci Resolve — film emulation, grain, hue tools and diagnostics. A bunch are free. The rest come with one low annual membership.</p>
         <div class="hero-cta">
           <a class="btn primary" href="#subscribe">Get all the tools</a>
+          <a class="btn" href="#free-tools">Browse free tools</a>
           <a class="btn" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" target="_blank" rel="noopener">Download the Tool Box Manager</a>
         </div>
         <div class="hero-meta">
@@ -435,7 +440,7 @@
     <div class="group-label reveal">Premium · included with membership <span class="count" id="proCount"></span></div>
     <div class="tool-grid" id="proGrid"></div>
 
-    <div class="group-label reveal">Free · always <span class="count" id="freeCount"></span></div>
+    <div class="group-label reveal" id="free-tools">Free · always <span class="count" id="freeCount"></span></div>
     <div class="tool-grid" id="freeGrid"></div>
   </div>
 </section>
@@ -496,13 +501,13 @@
       { name: "Hue Tools", slug: "hue-tools", tier: "pro", color: "yellow", url: "hue-tools/", desc: "Six hue vectors, total control. Grade each primary and secondary independently." },
       { name: "Skin Tone Mastery", slug: "skin-tone-mastery", tier: "pro", color: "magenta", url: "skin-tone-mastery/", desc: "Four-way diagnostic that splits one frame into source, exposure, saturation and hue views." },
       { name: "DCTL Manager", slug: "dctl-manager", tier: "pro", color: "magenta", desc: "Install, organize and update your DCTLs right inside Resolve." },
-      { name: "Perfect Exposure Every Time", slug: "perfect-exposure", tier: "free", color: "green", desc: "Nail consistent exposure on every shot." },
-      { name: "Film Negative Space CST", slug: "film-negative-space-cst", tier: "free", color: "cyan", url: "film-negative-space-cst/", desc: "A color-space transform into a film-negative working space." },
-      { name: "Saturation Separator", slug: "saturation-seperator", tier: "free", color: "yellow", desc: "Split saturation from luma for cleaner, more controlled grades." },
-      { name: "Linear Ramp Diagnostic", slug: "linear-ramp", tier: "free", color: "blue", desc: "A diagnostic ramp for checking transforms and response." },
-      { name: "Dolby Vision Spoofer", slug: "dolby-vision", tier: "free", color: "magenta", desc: "Preview a Dolby Vision-style trim without the full pipeline." },
-      { name: "IBKeymaster", slug: "ibkeymaster", tier: "free", color: "red", desc: "A focused keying utility for cleaner selections." },
-      { name: "Resolve Node Toggler", slug: "node-toggle", tier: "free", color: "green", desc: "Toggle nodes on and off fast while you work." }
+      { name: "Perfect Exposure Every Time", slug: "perfect-exposure", tier: "free", color: "green", repo: "Perfect-Exposure-DCTL", desc: "Nail consistent exposure on every shot." },
+      { name: "Film Negative Space CST", slug: "film-negative-space-cst", tier: "free", color: "cyan", url: "film-negative-space-cst/", repo: "Film-Negative-Space-CST-DCTL", desc: "A color-space transform into a film-negative working space." },
+      { name: "Saturation Separator", slug: "saturation-seperator", tier: "free", color: "yellow", repo: "Saturation-Separator-DCTL", desc: "Split saturation from luma for cleaner, more controlled grades." },
+      { name: "Linear Ramp Diagnostic", slug: "linear-ramp", tier: "free", color: "blue", repo: "Linear-Ramp-Diagnostic-DCTL", desc: "A diagnostic ramp for checking transforms and response." },
+      { name: "Dolby Vision Spoofer", slug: "dolby-vision", tier: "free", color: "magenta", repo: "Dolby-Vision-Spoofer-DCTL", desc: "Preview a Dolby Vision-style trim without the full pipeline." },
+      { name: "IBKeymaster", slug: "ibkeymaster", tier: "free", color: "red", repo: "IBKeymaster-OFX", desc: "A focused keying utility for cleaner selections." },
+      { name: "Resolve Node Toggler", slug: "node-toggle", tier: "free", color: "green", repo: "Resolve-Node-Toggler", desc: "Toggle nodes on and off fast while you work." }
     ];
 
     // Tools with a "url" field link to that relative path on tools.dec18studios.com.
@@ -511,17 +516,26 @@
     function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
     function card(t) {
-      var a = document.createElement("a");
-      a.className = "tcard reveal";
-      a.href = t.url || (BASE + t.slug);
       var free = t.tier === "free";
-      a.innerHTML =
+      var dest = t.url || (BASE + t.slug);
+      var dlUrl = (free && t.repo) ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest" : null;
+      var el = document.createElement(dlUrl ? "div" : "a");
+      el.className = "tcard reveal";
+      if (dlUrl) {
+        el.onclick = function() { window.open(dest, "_top"); };
+      } else {
+        el.href = dest;
+      }
+      var goRow = dlUrl
+        ? '<div class="go-row"><span class="go">View →</span><a class="dl" href="' + dlUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Download →</a></div>'
+        : '<span class="go">View →</span>';
+      el.innerHTML =
         '<div class="top"><span class="sw" style="background:var(--' + esc(t.color || "cyan") + ');"></span>' +
         '<span class="pill ' + (free ? "free" : "pro") + '">' + (free ? "Free" : "Premium") + '</span></div>' +
         '<h4>' + esc(t.name) + '</h4>' +
         '<p>' + esc(t.desc) + '</p>' +
-        '<span class="go">View →</span>';
-      return a;
+        goRow;
+      return el;
     }
 
     function render(list) {
