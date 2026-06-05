@@ -70,14 +70,15 @@
     {
       "name": "Color Slicer",
       "slug": "colorslice",
-      "tier": "pro",
+      "tier": "free",
       "color": "blue",
       "desc": "Slice the image into color regions for precise, targeted grading.",
       "type": "DCTL",
       "category": "Color Grading",
       "platform": "",
       "status": "available",
-      "repo": "Color-Slice-Omatic-DCTL",
+      "repo": "Color-Slicer-DCTL",
+      "dlAsset": "Color-Slicer-DCTL-v1.0.0.zip",
       "version": ""
     },
     {
@@ -145,6 +146,7 @@
       "platform": "",
       "status": "available",
       "repo": "Perfect-Exposure-DCTL",
+      "dlAsset": "Perfect-Exposure-v1.0.0.zip",
       "version": ""
     },
     {
@@ -159,12 +161,13 @@
       "platform": "",
       "status": "available",
       "repo": "Film-Negative-Space-CST-DCTL",
+      "dlAsset": "GE.Film.Negative.Space.CST.v2.1.0.zip",
       "version": ""
     },
     {
       "name": "Saturation Separator",
       "slug": "saturation-seperator",
-      "tier": "free",
+      "tier": "pro",
       "color": "yellow",
       "desc": "Split saturation from luma for cleaner, more controlled grades.",
       "type": "DCTL",
@@ -185,6 +188,7 @@
       "platform": "",
       "status": "available",
       "repo": "Linear-Ramp-Diagnostic-DCTL",
+      "dlAsset": "Linear-Ramp-Diagnostic-v1.0.0.zip",
       "version": ""
     },
     {
@@ -198,6 +202,7 @@
       "platform": "",
       "status": "available",
       "repo": "Dolby-Vision-Spoofer-DCTL",
+      "dlAsset": "Dolby-Vision-Spoofer-v1.0.0.zip",
       "version": ""
     },
     {
