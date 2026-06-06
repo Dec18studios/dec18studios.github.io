@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Your Downloads — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.80 0.110 200 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("../assets/logo-full.png") left center / contain no-repeat;
+            mask: url("../assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 26px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; white-space: nowrap; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+
+  /* member chip */
+  .member-chip {
+    display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px;
+    border: 1px solid var(--line); border-radius: 99px; background: var(--bg-1); flex: none;
+  }
+  .member-chip .av {
+    width: 30px; height: 30px; border-radius: 50%; flex: none; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--bg);
+    background: linear-gradient(120deg, var(--cyan), var(--blue));
+  }
+  .member-chip .who { line-height: 1.2; flex: none; white-space: nowrap; }
+  .member-chip .who b { font-size: 13px; font-weight: 600; display: block; white-space: nowrap; }
+  .member-chip .who span { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); display: block; white-space: nowrap; }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks { order: 3; width: 100%; gap: 18px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; scrollbar-width: none; }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { font-size: 13px; }
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px; text-align: left;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+  .btn.sm { padding: 9px 15px; font-size: 14px; border-radius: 9px; }
+  .btn svg { flex: none; }
+
+  .link-mono { font-family: var(--mono); font-size: 12.5px; color: var(--cyan); letter-spacing: 0.02em; transition: opacity 0.16s; }
+  .link-mono:hover { opacity: 0.78; }
+
+  /* ============ WELCOME STRIP ============ */
+  .welcome { padding-top: clamp(30px, 4vw, 48px); padding-bottom: 8px; }
+  .welcome .wrap { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .welcome h1 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 46px);
+    letter-spacing: -0.02em; line-height: 1.0; margin-top: 12px;
+  }
+  .welcome h1 em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 55%, var(--cyan) 78%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .status-card {
+    display: grid; grid-auto-flow: column; gap: 0; align-items: stretch;
+    border: 1px solid var(--line-soft); border-radius: 14px; background: var(--bg-1); overflow: hidden;
+  }
+  .status-card .cell { padding: 13px 20px; border-right: 1px solid var(--line-soft); }
+  .status-card .cell:last-child { border-right: none; }
+  .status-card .k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .status-card .v { font-size: 14.5px; font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 7px; }
+  .status-card .v .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px oklch(0.74 0.165 148 / 0.2); }
+  .status-card .v.muted { color: var(--ink-dim); font-weight: 500; }
+  .status-card .cell.manage { display: flex; align-items: center; background: var(--bg-2); }
+  /* account license key inside status card */
+  .status-card .keyline { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+  .status-card .keyline code { font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; color: var(--ink); white-space: nowrap; }
+  .status-card .keymini { font-family: var(--mono); font-size: 11px; color: var(--cyan); background: transparent; border: none; cursor: pointer; padding: 2px 2px; letter-spacing: 0.02em; }
+  .status-card .keymini:hover { opacity: 0.75; }
+  @media (max-width: 620px) {
+    .status-card { grid-auto-flow: row; width: 100%; }
+    .status-card .cell { border-right: none; border-bottom: 1px solid var(--line-soft); }
+    .status-card .cell:last-child { border-bottom: none; }
+  }
+
+  /* ============ MANAGER HERO ============ */
+  .manager { padding-top: clamp(26px, 3.5vw, 40px); padding-bottom: clamp(40px, 6vw, 72px); }
+  /* highlight banner pointing to direct downloads */
+  .dl-highlight {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 16px; padding: 13px 18px; border-radius: 12px;
+    background: oklch(0.80 0.110 200 / 0.09); border: 1px solid oklch(0.80 0.110 200 / 0.28);
+    transition: background 0.16s, border-color 0.16s;
+  }
+  .dl-highlight:hover { background: oklch(0.80 0.110 200 / 0.14); border-color: oklch(0.80 0.110 200 / 0.45); }
+  .dl-hl-badge {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--bg); background: var(--cyan); padding: 4px 9px; border-radius: 99px; font-weight: 600; flex: none; white-space: nowrap;
+  }
+  .dl-hl-text { font-size: 14.5px; color: var(--ink); flex: 1; min-width: 200px; text-wrap: pretty; }
+  .dl-hl-go { font-family: var(--mono); font-size: 12.5px; color: var(--cyan); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .dl-highlight:hover .dl-hl-go { text-decoration: underline; }
+  .mgr-card {
+    position: relative; border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+  }
+  .mgr-card::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; z-index: 2;
+    background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta));
+  }
+  .mgr-grid { display: grid; grid-template-columns: 1.06fr 0.94fr; }
+  @media (max-width: 900px) { .mgr-grid { grid-template-columns: 1fr; } }
+  .mgr-copy { padding: clamp(28px, 4vw, 46px); }
+  .mgr-kick { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 600; display: inline-flex; align-items: center; gap: 10px; }
+  .mgr-kick::before { content: ""; width: 22px; height: 2px; background: var(--cyan); }
+  .mgr-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 3.8vw, 44px); letter-spacing: -0.02em; line-height: 1.0; margin: 16px 0 0; }
+  .mgr-copy .lede { margin-top: 16px; color: var(--ink-dim); font-size: 16.5px; text-wrap: pretty; max-width: 46ch; }
+  .mgr-copy .lede strong { color: var(--ink); font-weight: 600; }
+  .mgr-points { list-style: none; margin: 22px 0 0; display: grid; gap: 10px; }
+  .mgr-points li { display: flex; gap: 11px; align-items: flex-start; font-size: 14.5px; color: var(--ink); }
+  .mgr-points li svg { flex: none; margin-top: 2px; color: var(--green); }
+
+  .os-row { margin-top: 26px; }
+  .os-row .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+  .dl-main { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .dl-alt { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .dl-alt a { font-family: var(--mono); font-size: 12.5px; color: var(--ink-dim); display: inline-flex; align-items: center; gap: 6px; transition: color 0.16s; }
+  .dl-alt a:hover { color: var(--ink); }
+  .dl-alt a .os-ico { width: 13px; height: 13px; }
+  .mgr-foot { margin-top: 20px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); }
+  .mgr-foot a { color: var(--cyan); }
+
+  .mgr-shot { position: relative; border-left: 1px solid var(--line-soft); min-height: 100%; background: var(--bg); }
+  @media (max-width: 900px) { .mgr-shot { border-left: none; border-top: 1px solid var(--line-soft); } }
+  .mgr-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mgr-shot .tag {
+    position: absolute; left: 14px; bottom: 14px; font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 11px; border-radius: 6px;
+    background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+  }
+
+  /* ============ DOWNLOADS ============ */
+  .downloads { border-top: 1px solid var(--line-soft); padding-block: clamp(44px, 6vw, 84px); scroll-margin-top: 80px; }
+  .dl-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(26px, 4vw, 40px); }
+  .dl-head .htext { max-width: 56ch; }
+  .dl-head h2 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4vw, 46px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 12px; }
+  .dl-head p { margin-top: 14px; color: var(--ink-dim); font-size: clamp(15px, 1.7vw, 18px); text-wrap: pretty; }
+
+  /* OS segmented control */
+  .seg { display: inline-flex; padding: 4px; gap: 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-1); }
+  .seg button {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; color: var(--ink-dim);
+    background: transparent; border: none; cursor: pointer; padding: 8px 13px; border-radius: 9px;
+    display: inline-flex; align-items: center; gap: 7px; transition: all 0.16s; min-height: 38px;
+  }
+  .seg button .os-ico { width: 14px; height: 14px; opacity: 0.8; }
+  .seg button:hover { color: var(--ink); }
+  .seg button[aria-pressed="true"] { background: var(--bg-3); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+
+  .group-label {
+    display: flex; align-items: center; gap: 14px; margin: clamp(26px,3.5vw,40px) 0 16px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim);
+  }
+  .group-label::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+  .group-label .count { color: var(--ink-faint); white-space: nowrap; }
+
+  .dlist { display: grid; gap: 10px; }
+  .drow {
+    border: 1px solid var(--line-soft); border-radius: 14px; background: var(--bg-1);
+    transition: border-color 0.16s, background 0.16s;
+  }
+  .drow:hover { background: var(--bg-2); border-color: var(--line); }
+  .drow-main { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; padding: 16px 20px; }
+  .drow .sw { width: 12px; height: 12px; border-radius: 3px; flex: none; box-shadow: 0 0 0 1px oklch(1 0 0 / 0.12); }
+  .dinfo { min-width: 0; }
+  .dname-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .dinfo h4 { font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: -0.01em; line-height: 1.1; white-space: nowrap; }
+  .ttag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-dim); white-space: nowrap; }
+  .ttag.cat { color: var(--ink-faint); }
+  .ttag.lic { color: var(--yellow); border-color: oklch(0.84 0.150 92 / 0.4); display: inline-flex; align-items: center; gap: 5px; }
+  .ttag.lic svg { width: 10px; height: 10px; }
+  .ttag.unlocked { color: var(--green); border-color: oklch(0.74 0.165 148 / 0.4); background: oklch(0.74 0.165 148 / 0.1); display: inline-flex; align-items: center; gap: 5px; }
+  .ttag.unlocked svg { width: 11px; height: 11px; }
+  .ttag.free { color: var(--ink-faint); border-color: var(--line); }
+  .dinfo p { font-size: 13.5px; color: var(--ink-dim); margin-top: 5px; text-wrap: pretty; }
+
+  .dact { display: flex; align-items: center; gap: 14px; justify-content: flex-end; }
+  .ver { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+  .keybtn {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim); background: transparent;
+    border: 1px solid var(--line-soft); border-radius: 9px; padding: 9px 12px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 7px; transition: all 0.16s; min-height: 38px; white-space: nowrap;
+  }
+  .keybtn:hover { color: var(--ink); border-color: var(--line); background: var(--bg-3); }
+  .keybtn svg { width: 13px; height: 13px; }
+
+  @media (max-width: 720px) {
+    .drow-main { grid-template-columns: auto 1fr; row-gap: 14px; }
+    .dact { grid-column: 1 / -1; justify-content: flex-start; flex-wrap: wrap; }
+  }
+
+  /* license panel */
+  .lic-panel { display: none; padding: 0 20px 18px 50px; }
+  .lic-panel.open { display: block; }
+  .lic-inner {
+    border: 1px solid var(--line-soft); border-radius: 12px; background: var(--bg); padding: 16px 18px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .lic-inner .lk { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .keyfield {
+    display: flex; align-items: center; gap: 10px; background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 9px; padding: 9px 12px; font-family: var(--mono); font-size: 13.5px; letter-spacing: 0.06em; color: var(--ink);
+  }
+  .keyfield code { letter-spacing: 0.12em; }
+  .keyfield .copy { background: transparent; border: none; color: var(--cyan); cursor: pointer; font-family: var(--mono); font-size: 12px; padding: 2px 4px; }
+  .keyfield .copy:hover { opacity: 0.78; }
+  .lic-note { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  .lic-note a { color: var(--cyan); }
+
+  /* scaffolding marker for the dev handoff */
+  .scaffold-note {
+    margin-top: clamp(30px, 4vw, 48px); border: 1px dashed var(--line); border-radius: 14px;
+    background: oklch(0.62 0.165 262 / 0.07); padding: 18px 22px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .scaffold-note svg { flex: none; color: var(--blue); margin-top: 2px; }
+  .scaffold-note .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 600; }
+  .scaffold-note p { margin-top: 6px; font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; max-width: 76ch; }
+  .scaffold-note code { font-family: var(--mono); font-size: 12px; color: var(--ink); background: var(--bg-2); padding: 1px 6px; border-radius: 5px; }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 48px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 26px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(24px, 3.6vw, 36px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 14.5px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  /* toast */
+  #toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); z-index: 99;
+    background: var(--bg-3); border: 1px solid var(--line); color: var(--ink); font-size: 14px;
+    padding: 11px 18px; border-radius: 10px; box-shadow: 0 18px 40px -20px oklch(0 0 0 / 0.8);
+    opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; display: flex; align-items: center; gap: 9px;
+  }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+  #toast .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal-failsafe .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) { .btn, .keybtn, .seg button { min-height: 44px; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" target="_top" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../" target="_top">Tools home</a>
+      <a href="#downloads">Downloads</a>
+      <a href="https://www.youtube.com/@dec.18Studios" target="_top" target="_blank" rel="noopener">Tutorials</a>
+      <div class="member-chip" title="You're signed in">
+        <span class="av" id="avatar">HN</span>
+        <span class="who"><b id="memberName">Member</b><span>Active</span></span>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ WELCOME ============ -->
+<section class="welcome">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Members · download portal</p>
+      <h1>Everything's <em>unlocked.</em></h1>
+    </div>
+    <div class="status-card reveal">
+      <div class="cell">
+        <div class="k">Membership</div>
+        <div class="v"><span class="dot"></span>Happy Little Noder</div>
+      </div>
+      <div class="cell keycell">
+        <div class="k">License key</div>
+        <div class="v keyline">
+          <code id="acctKey" data-key="D18-7K4Q-9F2M-X8RW" data-license-slot="account">D18-••••-••••-••••</code>
+          <button class="keymini" id="acctKeyReveal" type="button" aria-label="Reveal license key">Reveal</button>
+          <button class="keymini" id="acctKeyCopy" type="button" aria-label="Copy license key">Copy</button>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="k">Renews</div>
+        <div class="v muted" id="renewDate">Jun 4, 2027</div>
+      </div>
+      <div class="cell manage">
+        <a class="link-mono" href="https://dec18studios.com/account" target="_top">Manage subscription →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MANAGER HERO ============ -->
+<section class="manager">
+  <div class="wrap">
+    <a class="dl-highlight reveal" href="#downloads">
+      <span class="dl-hl-badge">Heads up</span>
+      <span class="dl-hl-text">Direct downloads are available below — grab any tool by hand without the Manager.</span>
+      <span class="dl-hl-go">Jump to downloads <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+    </a>
+    <div class="mgr-card reveal">
+      <div class="mgr-grid">
+        <div class="mgr-copy">
+          <span class="mgr-kick">Recommended</span>
+          <h2>Get the Tool Box Manager</h2>
+          <p class="lede">One small app that installs, licenses and updates <strong>every tool</strong> right inside DaVinci Resolve. Open it, sign in, and your whole kit is one click away. No hunting through folders.</p>
+          <ul class="mgr-points">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Installs DCTLs &amp; OFX plugins to the right place automatically</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Keeps everything up to date as new versions ship</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Your membership unlocks the premium tools on sign-in</li>
+          </ul>
+          <div class="os-row">
+            <div class="lbl">Download for your system</div>
+            <div class="dl-main">
+              <a class="btn primary" id="mgrPrimary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span id="mgrPrimaryLabel">Download the Manager</span>
+              </a>
+            </div>
+            <div class="dl-alt" id="mgrAlt"></div>
+          </div>
+          <div class="mgr-foot">New here? <a href="../#tools" target="_top">See what's in the box</a> · A setup guide is on the way.</div>
+        </div>
+        <div class="mgr-shot">
+          <img src="../assets/plugin-manager.jpg" alt="Dec 18 Studios Tool Box Manager app" loading="lazy" />
+          <span class="tag">Tool Box Manager</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIRECT DOWNLOADS ============ -->
+<section class="downloads" id="downloads">
+  <div class="wrap">
+    <div class="dl-head">
+      <div class="htext reveal">
+        <p class="eyebrow">Direct downloads</p>
+        <h2>Grab tools by hand.</h2>
+        <p>Prefer to install yourself? Download any tool directly. Your membership covers every one of them. The Manager is still the easiest path, but the files are right here.</p>
+      </div>
+      <div class="seg reveal" id="osSeg" role="group" aria-label="Choose your platform">
+        <button data-os="mac" aria-pressed="true">macOS</button>
+        <button data-os="win" aria-pressed="false">Windows</button>
+        <button data-os="linux" aria-pressed="false">Linux</button>
+      </div>
+    </div>
+
+    <div id="groups"></div>
+
+    <div class="scaffold-note reveal">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg>
+      <div>
+        <div class="k">Build note · licensing hookup</div>
+        <p>Entitlement is account-level — members don't enter a key per tool. Each unlocked button carries <code>data-slug</code>, <code>data-repo</code> and <code>data-os</code> and routes through <code>requestLicensedDownload()</code>; swap that one function for the signed-URL / entitlement call and the UI is done. The single account key (for the Manager / proxy worker) reads from <code>data-license-slot="account"</code> on <code>#acctKey</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Your account</div>
+        <a href="https://dec18studios.com/account" target="_top">Manage subscription</a>
+        <a href="../" target="_top">Tools home</a>
+        <a href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" target="_blank" rel="noopener">Tool Box Manager</a>
+        <a href="#downloads">Direct downloads</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Help</div>
+        <a href="/cdn-cgi/l/email-protection#2546574044514065414046141d565150414c4a560b464a48"><span class="__cf_email__" data-cfemail="2142534440554461454442101952555445484e520f424e4c">[email&#160;protected]</span></a>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_top" target="_blank" rel="noopener">Tutorials on YouTube</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_top" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"><span class="dot"></span><span id="toastMsg">Copied</span></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ---- tiny icon set (inline so it stays self-contained) ----
+  var ICON = {
+    dl: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>',
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+    key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l2 2M14 9l2 2"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+  };
+</script>
+
+<script>
+  (function () {
+    var MANIFEST_URL = "../tools.json";
+    var ORG = "https://github.com/Dec18studios/";
+
+    var TOOLS = [
+      { name: "Photo Chemist", slug: "photochemist", tier: "pro", color: "red", type: "OFX", category: "Film Emulation", repo: "PhotoChemist-OFX" },
+      { name: "Technically Technicolor DRT", slug: "technicolordrt", tier: "pro", color: "magenta", type: "OFX", category: "Color Grading", repo: "Technically-Technicolor-DRT" },
+      { name: "Hue Contrast Compressor", slug: "hue-contrast-compressor", tier: "pro", color: "yellow", type: "OFX", category: "Color Grading", repo: "Hue-Contrast-Compressor-OFX" },
+      { name: "X-Grade", slug: "x-grade", tier: "pro", color: "red", type: "OFX", category: "Workflow", repo: "X-Grade-OFX" },
+      { name: "IBKeymaster", slug: "ibkeymaster", tier: "free", color: "red", type: "OFX", category: "Workflow", repo: "IBKeymaster-OFX" },
+      { name: "Volume Curve", slug: "volume-curve", tier: "pro", color: "cyan", type: "DCTL", category: "Color Grading", repo: "Volume-Curve-DCTL" },
+      { name: "Grain By Greg", slug: "grain", tier: "pro", color: "green", type: "DCTL", category: "Film Emulation", repo: "Grain-By-Greg-DCTL" },
+      { name: "Hue Tools", slug: "hue-tools", tier: "pro", color: "yellow", type: "DCTL", category: "Color Grading", url: "../hue-tools/" },
+      { name: "Skin Tone Mastery", slug: "skin-tone-mastery", tier: "pro", color: "magenta", type: "DCTL", category: "Diagnostic", url: "../skin-tone-mastery/" },
+      { name: "Saturation Separator", slug: "saturation-seperator", tier: "pro", color: "yellow", type: "DCTL", category: "Color Grading", repo: "Saturation-Separator-DCTL" },
+      { name: "Color Slicer", slug: "colorslice", tier: "free", color: "blue", type: "DCTL", category: "Color Grading", repo: "Color-Slicer-DCTL", dlAsset: "Color-Slicer-DCTL-v1.0.0.zip" },
+      { name: "Perfect Exposure Every Time", slug: "perfect-exposure", tier: "free", color: "green", type: "DCTL", category: "Diagnostic", repo: "Perfect-Exposure-DCTL", dlAsset: "Perfect-Exposure-v1.0.0.zip" },
+      { name: "Film Negative Space CST", slug: "film-negative-space-cst", tier: "free", color: "cyan", type: "DCTL", category: "Film Emulation", url: "../film-negative-space-cst/", repo: "Film-Negative-Space-CST-DCTL", dlAsset: "GE.Film.Negative.Space.CST.v2.1.0.zip" },
+      { name: "Linear Ramp Diagnostic", slug: "linear-ramp", tier: "free", color: "blue", type: "DCTL", category: "Diagnostic", repo: "Linear-Ramp-Diagnostic-DCTL", dlAsset: "Linear-Ramp-Diagnostic-v1.0.0.zip" },
+      { name: "Dolby Vision Spoofer", slug: "dolby-vision", tier: "free", color: "magenta", type: "DCTL", category: "Workflow", repo: "Dolby-Vision-Spoofer-DCTL", dlAsset: "Dolby-Vision-Spoofer-v1.0.0.zip" },
+      { name: "DCTL Manager", slug: "dctl-manager", tier: "pro", color: "magenta", type: "App", category: "Workflow", repo: "DCTL-Manager" },
+      { name: "Resolve Node Toggler", slug: "node-toggle", tier: "free", color: "green", type: "App", category: "Workflow", repo: "Resolve-Node-Toggler" }
+    ];
+
+    var GROUPS = [
+      { key: "OFX", label: "OFX Plugins" },
+      { key: "DCTL", label: "DCTLs" },
+      { key: "App", label: "Apps & Utilities" }
+    ];
+
+    var currentOS = "mac";
+
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+    function ver(t) { return (t.version && String(t.version).trim()) ? ("v" + String(t.version).replace(/^v/, "")) : "latest"; }
+
+    // download destination for FREE / public tools
+    function publicDl(t) {
+      if (t.repo && t.dlAsset) return ORG + t.repo + "/releases/latest/download/" + t.dlAsset;
+      if (t.repo) return ORG + t.repo + "/releases/latest";
+      return null;
+    }
+
+    function row(t) {
+      var free = t.tier === "free";
+      var el = document.createElement("div");
+      el.className = "drow reveal";
+
+      var tags =
+        '<span class="ttag">' + esc(t.type) + '</span>' +
+        '<span class="ttag cat">' + esc(t.category) + '</span>' +
+        (free
+          ? '<span class="ttag free">Free</span>'
+          : '<span class="ttag unlocked">' + ICON.check + 'Unlocked</span>');
+
+      // action area — members are entitled, so no per-tool key entry.
+      // Free tools hit their public release; premium routes through the
+      // account entitlement check in requestLicensedDownload().
+      var act = '<span class="ver">' + esc(ver(t)) + '</span>';
+      if (free) {
+        var url = publicDl(t);
+        act += '<a class="btn sm" href="' + (url || "#") + '" target="_blank" rel="noopener" data-os="' + currentOS + '" data-type="' + esc(t.type) + '">' + ICON.dl + 'Download</a>';
+      } else {
+        act += '<button class="btn sm primary licdl" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo || "") + '" data-os="' + currentOS + '" data-type="' + esc(t.type) + '">' + ICON.dl + 'Download</button>';
+      }
+
+      el.innerHTML =
+        '<div class="drow-main">' +
+          '<span class="sw" style="background:var(--' + esc(t.color || "cyan") + ');"></span>' +
+          '<div class="dinfo">' +
+            '<div class="dname-row"><h4>' + esc(t.name) + '</h4>' + tags + '</div>' +
+            '<p>' + esc(t.desc || "") + '</p>' +
+          '</div>' +
+          '<div class="dact">' + act + '</div>' +
+        '</div>';
+      return el;
+    }
+
+    function render(list) {
+      var host = document.getElementById("groups");
+      if (!host) return;
+      host.innerHTML = "";
+      GROUPS.forEach(function (g) {
+        var items = list.filter(function (t) { return (t.type || "DCTL") === g.key; });
+        if (!items.length) return;
+        var lbl = document.createElement("div");
+        lbl.className = "group-label reveal";
+        lbl.innerHTML = esc(g.label) + ' <span class="count">' + items.length + " tool" + (items.length === 1 ? "" : "s") + "</span>";
+        host.appendChild(lbl);
+        var listEl = document.createElement("div");
+        listEl.className = "dlist";
+        items.forEach(function (t) { listEl.appendChild(row(t)); });
+        host.appendChild(listEl);
+      });
+      wireRows();
+      revealAll();
+    }
+
+    function revealAll() {
+      document.querySelectorAll("#groups .reveal").forEach(function (e) { e.classList.add("in"); });
+    }
+
+    function wireRows() {
+      // licensed downloads (scaffolded) — account-level entitlement, no key entry
+      document.querySelectorAll(".licdl").forEach(function (b) {
+        b.addEventListener("click", function () {
+          requestLicensedDownload({
+            slug: b.getAttribute("data-slug"),
+            repo: b.getAttribute("data-repo"),
+            os: b.getAttribute("data-os"),
+            type: b.getAttribute("data-type")
+          });
+        });
+      });
+    }
+
+    // === HANDOFF POINT ===
+    // Members are entitled at the account level, so there is no per-tool key entry.
+    // The integration replaces this with the real entitlement / signed-URL call
+    // (the account license key lives on the member profile / proxy worker).
+    window.requestLicensedDownload = function (info) {
+      toast("Unlocked download — entitlement check wires up here");
+      // Example of where the real flow lands once licensing is connected:
+      // var url = await api.signDownload(info.slug, info.os); // verified via account
+      // window.location.href = url;
+      console.log("[requestLicensedDownload]", info);
+    };
+
+    function setOS(os) {
+      currentOS = os;
+      document.querySelectorAll("#osSeg button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-os") === os ? "true" : "false");
+      });
+      document.querySelectorAll("[data-os]").forEach(function (el) { if (!el.closest("#osSeg")) el.setAttribute("data-os", os); });
+    }
+
+    document.getElementById("osSeg").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-os]");
+      if (b) setOS(b.getAttribute("data-os"));
+    });
+
+    // auto-detect OS for the segmented control + manager hero
+    var detected = (function () {
+      var p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent || "";
+      p = p.toLowerCase();
+      if (p.indexOf("win") > -1) return "win";
+      if (p.indexOf("linux") > -1 && p.indexOf("android") < 0) return "linux";
+      return "mac";
+    })();
+    setOS(detected);
+
+    // manager hero: highlight detected OS, list the other two as alt links
+    (function () {
+      var REL = "https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest";
+      var names = { mac: "macOS", win: "Windows", linux: "Linux" };
+      var label = document.getElementById("mgrPrimaryLabel");
+      if (label) label.textContent = "Download for " + names[detected];
+      var alt = document.getElementById("mgrAlt");
+      if (alt) {
+        ["mac", "win", "linux"].filter(function (o) { return o !== detected; }).forEach(function (o) {
+          var a = document.createElement("a");
+          a.href = REL; a.target = "_blank"; a.rel = "noopener";
+          a.textContent = "Also for " + names[o];
+          alt.appendChild(a);
+        });
+      }
+    })();
+
+    // render now, then try to sync from tools.json
+    render(TOOLS);
+    if (MANIFEST_URL) {
+      fetch(MANIFEST_URL, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          var list = Array.isArray(data) ? data : (data && data.tools);
+          if (Array.isArray(list) && list.length) render(list);
+        })
+        .catch(function () {});
+    }
+
+    var toastT;
+    window.toast = function (msg) {
+      var t = document.getElementById("toast");
+      document.getElementById("toastMsg").textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toastT);
+      toastT = setTimeout(function () { t.classList.remove("show"); }, 1900);
+    };
+
+    // member greeting + avatar initials (placeholder until auth is wired)
+    (function () {
+      var name = "Happy Little Noder";
+      var initials = name.split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
+      var av = document.getElementById("avatar"); if (av) av.textContent = initials;
+    })();
+
+    // account license key — reveal / copy (placeholder value until auth is wired).
+    // This single key is the one members hand to the Manager / proxy worker;
+    // tools unlock from the account entitlement, not per-tool keys.
+    (function () {
+      var codeEl = document.getElementById("acctKey");
+      if (!codeEl) return;
+      var realKey = codeEl.getAttribute("data-key") || "";
+      var masked = codeEl.textContent;
+      var shown = false;
+      var revealBtn = document.getElementById("acctKeyReveal");
+      var copyBtn = document.getElementById("acctKeyCopy");
+      if (revealBtn) revealBtn.addEventListener("click", function () {
+        shown = !shown;
+        codeEl.textContent = shown ? realKey : masked;
+        revealBtn.textContent = shown ? "Hide" : "Reveal";
+      });
+      if (copyBtn) copyBtn.addEventListener("click", function () {
+        if (navigator.clipboard) navigator.clipboard.writeText(realKey).then(function () { toast("License key copied"); }, function () { toast("Copy failed — reveal and copy manually"); });
+        else toast("Reveal and copy manually");
+      });
+    })();
+  })();
+
+  // scroll reveal — IO drives the entrance animation in normal browsers.
+  // Some embed contexts render the iframe "non-visible", which freezes both IO
+  // and CSS transitions (content would stay at opacity:0). We detect that and
+  // snap everything visible so content NEVER gets stuck hidden.
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function snap() { document.documentElement.classList.add('reveal-failsafe'); }
+    if (reduce || !('IntersectionObserver' in window)) { snap(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+    function observe() { document.querySelectorAll('.reveal:not(.in)').forEach(function (e) { io.observe(e); }); }
+    observe();
+    setTimeout(observe, 300);
+    // health check: if an above-the-fold reveal hasn't actually become visible,
+    // the environment froze the animation — force everything on.
+    function check() {
+      var probe = document.querySelector('.status-card.reveal') || document.querySelector('.reveal');
+      if (!probe) return;
+      if (parseFloat(getComputedStyle(probe).opacity) < 0.5) snap();
+    }
+    setTimeout(check, 1100);
+    window.addEventListener('load', function () { setTimeout(check, 600); });
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d8455f" />
+        <stop offset="0.5" stop-color="#b154c9" />
+        <stop offset="1" stop-color="#5b78d6" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">D18</text>
+  </svg>
+</template>
+
+</body>
+</html>
