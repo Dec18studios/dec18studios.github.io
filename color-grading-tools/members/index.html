@@ -141,11 +141,6 @@
   .status-card .v .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px oklch(0.74 0.165 148 / 0.2); }
   .status-card .v.muted { color: var(--ink-dim); font-weight: 500; }
   .status-card .cell.manage { display: flex; align-items: center; background: var(--bg-2); }
-  /* account license key inside status card */
-  .status-card .keyline { display: flex; align-items: center; gap: 8px; font-weight: 500; }
-  .status-card .keyline code { font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; color: var(--ink); white-space: nowrap; }
-  .status-card .keymini { font-family: var(--mono); font-size: 11px; color: var(--cyan); background: transparent; border: none; cursor: pointer; padding: 2px 2px; letter-spacing: 0.02em; }
-  .status-card .keymini:hover { opacity: 0.75; }
   @media (max-width: 620px) {
     .status-card { grid-auto-flow: row; width: 100%; }
     .status-card .cell { border-right: none; border-bottom: 1px solid var(--line-soft); }
@@ -286,16 +281,6 @@
   .lic-note { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
   .lic-note a { color: var(--cyan); }
 
-  /* scaffolding marker for the dev handoff */
-  .scaffold-note {
-    margin-top: clamp(30px, 4vw, 48px); border: 1px dashed var(--line); border-radius: 14px;
-    background: oklch(0.62 0.165 262 / 0.07); padding: 18px 22px;
-    display: flex; gap: 14px; align-items: flex-start;
-  }
-  .scaffold-note svg { flex: none; color: var(--blue); margin-top: 2px; }
-  .scaffold-note .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 600; }
-  .scaffold-note p { margin-top: 6px; font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; max-width: 76ch; }
-  .scaffold-note code { font-family: var(--mono); font-size: 12px; color: var(--ink); background: var(--bg-2); padding: 1px 6px; border-radius: 5px; }
 
   /* ============ FOOTER ============ */
   footer { border-top: 1px solid var(--line-soft); padding-block: 48px; color: var(--ink-faint); }
@@ -309,6 +294,17 @@
   footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
   footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   footer .legal a.link { color: var(--cyan); }
+
+  /* version selector */
+  .ver-sel {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; cursor: pointer; max-width: 120px; min-height: 38px;
+    appearance: none; -webkit-appearance: none;
+  }
+  .ver-sel:hover { border-color: oklch(0.42 0.013 264); color: var(--ink); }
+  .ver-sel:disabled { opacity: 0.5; cursor: default; }
+  .ver-sel option { background: var(--bg-2); color: var(--ink); }
 
   /* toast */
   #toast {
@@ -359,17 +355,9 @@
         <div class="k">Membership</div>
         <div class="v"><span class="dot"></span>Happy Little Noder</div>
       </div>
-      <div class="cell keycell">
-        <div class="k">License key</div>
-        <div class="v keyline">
-          <code id="acctKey" data-key="D18-7K4Q-9F2M-X8RW" data-license-slot="account">D18-••••-••••-••••</code>
-          <button class="keymini" id="acctKeyReveal" type="button" aria-label="Reveal license key">Reveal</button>
-          <button class="keymini" id="acctKeyCopy" type="button" aria-label="Copy license key">Copy</button>
-        </div>
-      </div>
       <div class="cell">
         <div class="k">Renews</div>
-        <div class="v muted" id="renewDate">Jun 4, 2027</div>
+        <div class="v muted" id="renewDate">—</div>
       </div>
       <div class="cell manage">
         <a class="link-mono" href="https://dec18studios.com/account" target="_top">Manage subscription →</a>
@@ -435,13 +423,6 @@
 
     <div id="groups"></div>
 
-    <div class="scaffold-note reveal">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg>
-      <div>
-        <div class="k">Build note · licensing hookup</div>
-        <p>Entitlement is account-level — members don't enter a key per tool. Each unlocked button carries <code>data-slug</code>, <code>data-repo</code> and <code>data-os</code> and routes through <code>requestLicensedDownload()</code>; swap that one function for the signed-URL / entitlement call and the UI is done. The single account key (for the Manager / proxy worker) reads from <code>data-license-slot="account"</code> on <code>#acctKey</code>.</p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -552,25 +533,34 @@
           ? '<span class="ttag free">Free</span>'
           : '<span class="ttag unlocked">' + ICON.check + 'Unlocked</span>');
 
-      // action area — members are entitled, so no per-tool key entry.
-      // Free tools hit their public release; premium routes through the
-      // account entitlement check in requestLicensedDownload().
-      var act = '<span class="ver">' + esc(ver(t)) + '</span>';
+      // Version selector — lazy-loads release list on first open
+      var verSel = t.repo
+        ? '<select class="ver-sel" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo) + '" data-free="' + (free ? '1' : '0') + '" aria-label="Version"><option value="latest">Latest</option></select>'
+        : '';
+
+      // Download button — free tools use direct GitHub link; premium routes through proxy
+      var dlBtn;
       if (free) {
         var url = publicDl(t);
-        act += '<a class="btn sm" href="' + (url || "#") + '" target="_blank" rel="noopener" data-os="' + currentOS + '" data-type="' + esc(t.type) + '">' + ICON.dl + 'Download</a>';
+        dlBtn = '<a class="btn sm primary freedl" href="' + (url || '#') + '" target="_blank" rel="noopener"'
+          + ' data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo || '') + '"'
+          + ' data-os="' + currentOS + '" data-type="' + esc(t.type) + '">'
+          + ICON.dl + 'Download</a>';
       } else {
-        act += '<button class="btn sm primary licdl" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo || "") + '" data-os="' + currentOS + '" data-type="' + esc(t.type) + '">' + ICON.dl + 'Download</button>';
+        dlBtn = '<button class="btn sm primary licdl"'
+          + ' data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo || '') + '"'
+          + ' data-os="' + currentOS + '" data-type="' + esc(t.type) + '" data-version="latest">'
+          + ICON.dl + 'Download</button>';
       }
 
       el.innerHTML =
         '<div class="drow-main">' +
-          '<span class="sw" style="background:var(--' + esc(t.color || "cyan") + ');"></span>' +
+          '<span class="sw" style="background:var(--' + esc(t.color || 'cyan') + ');"></span>' +
           '<div class="dinfo">' +
             '<div class="dname-row"><h4>' + esc(t.name) + '</h4>' + tags + '</div>' +
-            '<p>' + esc(t.desc || "") + '</p>' +
+            '<p>' + esc(t.desc || '') + '</p>' +
           '</div>' +
-          '<div class="dact">' + act + '</div>' +
+          '<div class="dact">' + verSel + dlBtn + '</div>' +
         '</div>';
       return el;
     }
@@ -599,15 +589,78 @@
       document.querySelectorAll("#groups .reveal").forEach(function (e) { e.classList.add("in"); });
     }
 
+    var _loadedVersions = {};
+
+    function loadVersions(sel) {
+      var slug = sel.getAttribute("data-slug");
+      var repo = sel.getAttribute("data-repo");
+      var isFree = sel.getAttribute("data-free") === "1";
+      if (_loadedVersions[slug]) return;
+      _loadedVersions[slug] = true;
+      sel.disabled = true;
+
+      var url;
+      if (isFree) {
+        // public repos: hit GitHub API directly (no auth needed)
+        url = "https://api.github.com/repos/Dec18studios/" + encodeURIComponent(repo) + "/releases";
+      } else {
+        var token = window.MEMBER_TOKEN;
+        if (!token) { sel.disabled = false; return; }
+        url = (window.PROXY_URL || "https://dec18-download-proxy.dec18studios.workers.dev")
+          + "/v1/Dec18studios/" + encodeURIComponent(repo) + "/releases?token=" + encodeURIComponent(token);
+      }
+
+      fetch(url)
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!Array.isArray(data) || !data.length) { sel.disabled = false; return; }
+          // GitHub API returns full objects (tag_name); proxy returns {tag}
+          var opts = '<option value="latest">Latest</option>';
+          data.forEach(function (r) {
+            var tag = r.tag || r.tag_name;
+            if (tag) opts += '<option value="' + esc(tag) + '">' + esc(tag) + '</option>';
+          });
+          sel.innerHTML = opts;
+          sel.disabled = false;
+        })
+        .catch(function () { sel.disabled = false; });
+    }
+
     function wireRows() {
-      // licensed downloads (scaffolded) — account-level entitlement, no key entry
+      // Version selects — lazy-load on first open, update download target on change
+      document.querySelectorAll(".ver-sel").forEach(function (sel) {
+        sel.addEventListener("mousedown", function () { loadVersions(sel); }, { once: true });
+        sel.addEventListener("change", function () {
+          var version = sel.value;
+          var drow = sel.closest(".drow");
+          if (!drow) return;
+          // Premium: stamp version onto the download button
+          var btn = drow.querySelector(".licdl");
+          if (btn) btn.setAttribute("data-version", version);
+          // Free: update the anchor href
+          var a = drow.querySelector(".freedl");
+          if (a) {
+            var repo = sel.getAttribute("data-repo");
+            if (version === "latest") {
+              var tool = TOOLS.find(function (t) { return t.slug === sel.getAttribute("data-slug"); });
+              a.href = (tool && publicDl(tool)) || "#";
+            } else {
+              // Link to the tagged release page so the user can pick the right asset
+              a.href = "https://github.com/Dec18studios/" + encodeURIComponent(repo) + "/releases/tag/" + encodeURIComponent(version);
+            }
+          }
+        });
+      });
+
+      // Licensed download buttons (premium)
       document.querySelectorAll(".licdl").forEach(function (b) {
         b.addEventListener("click", function () {
           requestLicensedDownload({
             slug: b.getAttribute("data-slug"),
             repo: b.getAttribute("data-repo"),
             os: b.getAttribute("data-os"),
-            type: b.getAttribute("data-type")
+            type: b.getAttribute("data-type"),
+            version: b.getAttribute("data-version") || "latest"
           });
         });
       });
@@ -637,8 +690,9 @@
           ? (tool.proxyAsset[info.os] || "*")
           : tool.proxyAsset;
       }
+      var version = info.version || "latest";
       var url = proxy + "/v1/Dec18studios/" + encodeURIComponent(info.repo)
-        + "/releases/download/latest/" + encodeURIComponent(assetPattern)
+        + "/releases/download/" + encodeURIComponent(version) + "/" + encodeURIComponent(assetPattern)
         + "?token=" + encodeURIComponent(token);
       toast("Starting download…");
       window.location.href = url;
@@ -712,27 +766,6 @@
       var av = document.getElementById("avatar"); if (av) av.textContent = initials;
     })();
 
-    // account license key — reveal / copy (placeholder value until auth is wired).
-    // This single key is the one members hand to the Manager / proxy worker;
-    // tools unlock from the account entitlement, not per-tool keys.
-    (function () {
-      var codeEl = document.getElementById("acctKey");
-      if (!codeEl) return;
-      var realKey = codeEl.getAttribute("data-key") || "";
-      var masked = codeEl.textContent;
-      var shown = false;
-      var revealBtn = document.getElementById("acctKeyReveal");
-      var copyBtn = document.getElementById("acctKeyCopy");
-      if (revealBtn) revealBtn.addEventListener("click", function () {
-        shown = !shown;
-        codeEl.textContent = shown ? realKey : masked;
-        revealBtn.textContent = shown ? "Hide" : "Reveal";
-      });
-      if (copyBtn) copyBtn.addEventListener("click", function () {
-        if (navigator.clipboard) navigator.clipboard.writeText(realKey).then(function () { toast("License key copied"); }, function () { toast("Copy failed — reveal and copy manually"); });
-        else toast("Reveal and copy manually");
-      });
-    })();
   })();
 
   // scroll reveal — IO drives the entrance animation in normal browsers.
