@@ -295,16 +295,35 @@
   footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   footer .legal a.link { color: var(--cyan); }
 
-  /* version selector */
-  .ver-sel {
+  /* version dropdown */
+  .ver-dd { position: relative; display: inline-block; }
+  .ver-btn {
     font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
     background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px;
-    padding: 8px 10px; cursor: pointer; max-width: 120px; min-height: 38px;
-    appearance: none; -webkit-appearance: none;
+    padding: 8px 10px; cursor: pointer; min-height: 38px;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.16s; white-space: nowrap;
   }
-  .ver-sel:hover { border-color: oklch(0.42 0.013 264); color: var(--ink); }
-  .ver-sel:disabled { opacity: 0.5; cursor: default; }
-  .ver-sel option { background: var(--bg-2); color: var(--ink); }
+  .ver-btn:hover { border-color: oklch(0.42 0.013 264); color: var(--ink); }
+  .ver-btn[aria-expanded="true"] { border-color: oklch(0.42 0.013 264); color: var(--ink); }
+  .ver-chev { width: 12px; height: 12px; flex: none; transition: transform 0.16s; }
+  .ver-btn[aria-expanded="true"] .ver-chev { transform: rotate(180deg); }
+  .ver-list {
+    display: none; position: absolute; right: 0; top: calc(100% + 5px); z-index: 50;
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+    list-style: none; min-width: 130px; max-height: 220px; overflow-y: auto;
+    box-shadow: 0 14px 36px -8px oklch(0 0 0 / 0.65);
+  }
+  .ver-list.open { display: block; }
+  .ver-list li {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    padding: 9px 14px; cursor: pointer; transition: background 0.1s, color 0.1s;
+  }
+  .ver-list li:first-child { border-radius: 9px 9px 0 0; }
+  .ver-list li:last-child { border-radius: 0 0 9px 9px; }
+  .ver-list li:hover { background: var(--bg-3); color: var(--ink); }
+  .ver-list li.sel { color: var(--cyan); }
+  .ver-list .ver-loading { color: var(--ink-faint); cursor: default; }
 
   /* toast */
   #toast {
@@ -354,10 +373,6 @@
       <div class="cell">
         <div class="k">Membership</div>
         <div class="v"><span class="dot"></span>Happy Little Noder</div>
-      </div>
-      <div class="cell">
-        <div class="k">Renews</div>
-        <div class="v muted" id="renewDate">—</div>
       </div>
       <div class="cell manage">
         <a class="link-mono" href="https://dec18studios.com/account" target="_top">Manage subscription →</a>
@@ -533,9 +548,13 @@
           ? '<span class="ttag free">Free</span>'
           : '<span class="ttag unlocked">' + ICON.check + 'Unlocked</span>');
 
-      // Version selector — lazy-loads release list on first open
+      // Version dropdown — lazy-loads release list on first open
+      var CHEV = '<svg class="ver-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
       var verSel = t.repo
-        ? '<select class="ver-sel" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo) + '" data-free="' + (free ? '1' : '0') + '" aria-label="Version"><option value="latest">Latest</option></select>'
+        ? '<div class="ver-dd" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo) + '" data-free="' + (free ? '1' : '0') + '">'
+          + '<button class="ver-btn" type="button" aria-expanded="false" aria-haspopup="listbox">'
+          + '<span class="ver-label">Latest</span>' + CHEV + '</button>'
+          + '<ul class="ver-list" role="listbox"></ul></div>'
         : '';
 
       // Download button — free tools use direct GitHub link; premium routes through proxy
@@ -591,21 +610,21 @@
 
     var _loadedVersions = {};
 
-    function loadVersions(sel) {
-      var slug = sel.getAttribute("data-slug");
-      var repo = sel.getAttribute("data-repo");
-      var isFree = sel.getAttribute("data-free") === "1";
-      if (_loadedVersions[slug]) return;
-      _loadedVersions[slug] = true;
-      sel.disabled = true;
+    function fetchVersions(dd, onDone) {
+      var slug = dd.getAttribute("data-slug");
+      var repo = dd.getAttribute("data-repo");
+      var isFree = dd.getAttribute("data-free") === "1";
+      var list = dd.querySelector(".ver-list");
+
+      if (_loadedVersions[slug]) { onDone(); return; }
+      list.innerHTML = '<li class="ver-loading">Loading…</li>';
 
       var url;
       if (isFree) {
-        // public repos: hit GitHub API directly (no auth needed)
         url = "https://api.github.com/repos/Dec18studios/" + encodeURIComponent(repo) + "/releases";
       } else {
         var token = window.MEMBER_TOKEN;
-        if (!token) { sel.disabled = false; return; }
+        if (!token) { list.innerHTML = '<li class="ver-loading sel">Latest</li>'; onDone(); return; }
         url = (window.PROXY_URL || "https://dec18-download-proxy.dec18studios.workers.dev")
           + "/v1/Dec18studios/" + encodeURIComponent(repo) + "/releases?token=" + encodeURIComponent(token);
       }
@@ -613,44 +632,79 @@
       fetch(url)
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) {
-          if (!Array.isArray(data) || !data.length) { sel.disabled = false; return; }
-          // GitHub API returns full objects (tag_name); proxy returns {tag}
-          var opts = '<option value="latest">Latest</option>';
-          data.forEach(function (r) {
-            var tag = r.tag || r.tag_name;
-            if (tag) opts += '<option value="' + esc(tag) + '">' + esc(tag) + '</option>';
-          });
-          sel.innerHTML = opts;
-          sel.disabled = false;
+          _loadedVersions[slug] = true;
+          var html = '<li data-version="latest" class="sel">Latest</li>';
+          if (Array.isArray(data)) {
+            data.forEach(function (r) {
+              var tag = r.tag || r.tag_name;
+              if (tag) html += '<li data-version="' + esc(tag) + '">' + esc(tag) + '</li>';
+            });
+          }
+          list.innerHTML = html;
+          onDone();
         })
-        .catch(function () { sel.disabled = false; });
+        .catch(function () {
+          _loadedVersions[slug] = true;
+          list.innerHTML = '<li data-version="latest" class="sel">Latest</li>';
+          onDone();
+        });
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll(".ver-list.open").forEach(function (l) {
+        l.classList.remove("open");
+        l.closest(".ver-dd").querySelector(".ver-btn").setAttribute("aria-expanded", "false");
+      });
     }
 
     function wireRows() {
-      // Version selects — lazy-load on first open, update download target on change
-      document.querySelectorAll(".ver-sel").forEach(function (sel) {
-        sel.addEventListener("mousedown", function () { loadVersions(sel); }, { once: true });
-        sel.addEventListener("change", function () {
-          var version = sel.value;
-          var drow = sel.closest(".drow");
-          if (!drow) return;
-          // Premium: stamp version onto the download button
-          var btn = drow.querySelector(".licdl");
-          if (btn) btn.setAttribute("data-version", version);
-          // Free: update the anchor href
-          var a = drow.querySelector(".freedl");
-          if (a) {
-            var repo = sel.getAttribute("data-repo");
-            if (version === "latest") {
-              var tool = TOOLS.find(function (t) { return t.slug === sel.getAttribute("data-slug"); });
-              a.href = (tool && publicDl(tool)) || "#";
-            } else {
-              // Link to the tagged release page so the user can pick the right asset
-              a.href = "https://github.com/Dec18studios/" + encodeURIComponent(repo) + "/releases/tag/" + encodeURIComponent(version);
-            }
+      // Version dropdowns
+      document.querySelectorAll(".ver-dd").forEach(function (dd) {
+        var btn = dd.querySelector(".ver-btn");
+        var list = dd.querySelector(".ver-list");
+
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var isOpen = list.classList.contains("open");
+          closeAllDropdowns();
+          if (!isOpen) {
+            fetchVersions(dd, function () {
+              list.classList.add("open");
+              btn.setAttribute("aria-expanded", "true");
+            });
           }
         });
+
+        list.addEventListener("click", function (e) {
+          var li = e.target.closest("li[data-version]");
+          if (!li) return;
+          var version = li.getAttribute("data-version");
+          var slug = dd.getAttribute("data-slug");
+          var repo = dd.getAttribute("data-repo");
+
+          list.querySelectorAll("li").forEach(function (l) { l.classList.remove("sel"); });
+          li.classList.add("sel");
+          btn.querySelector(".ver-label").textContent = version === "latest" ? "Latest" : version;
+
+          var drow = dd.closest(".drow");
+          if (drow) {
+            var dlBtn = drow.querySelector(".licdl");
+            if (dlBtn) dlBtn.setAttribute("data-version", version);
+            var a = drow.querySelector(".freedl");
+            if (a) {
+              if (version === "latest") {
+                var tool = TOOLS.find(function (t) { return t.slug === slug; });
+                a.href = (tool && publicDl(tool)) || "#";
+              } else {
+                a.href = "https://github.com/Dec18studios/" + encodeURIComponent(repo) + "/releases/tag/" + encodeURIComponent(version);
+              }
+            }
+          }
+          closeAllDropdowns();
+        });
       });
+
+      document.addEventListener("click", function () { closeAllDropdowns(); });
 
       // Licensed download buttons (premium)
       document.querySelectorAll(".licdl").forEach(function (b) {
