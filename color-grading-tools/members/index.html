@@ -491,17 +491,27 @@
     var MANIFEST_URL = "../tools.json";
     var ORG = "https://github.com/Dec18studios/";
 
+    // proxyAsset: per-OS glob patterns matched against GitHub release asset names.
+    // The download proxy resolves "latest" tag and does a case-insensitive substring
+    // match against the asset list. Single-string = same asset for all OS.
     var TOOLS = [
-      { name: "Photo Chemist", slug: "photochemist", tier: "pro", color: "red", type: "OFX", category: "Film Emulation", repo: "PhotoChemist-OFX" },
-      { name: "Technically Technicolor DRT", slug: "technicolordrt", tier: "pro", color: "magenta", type: "OFX", category: "Color Grading", repo: "Technically-Technicolor-DRT" },
-      { name: "Hue Contrast Compressor", slug: "hue-contrast-compressor", tier: "pro", color: "yellow", type: "OFX", category: "Color Grading", repo: "Hue-Contrast-Compressor-OFX" },
+      { name: "Photo Chemist", slug: "photochemist", tier: "pro", color: "red", type: "OFX", category: "Film Emulation", repo: "PhotoChemist-OFX",
+        proxyAsset: { mac: "*macOS*", win: "*windows*", linux: "*linux*" } },
+      { name: "Technically Technicolor DRT", slug: "technicolordrt", tier: "pro", color: "magenta", type: "OFX", category: "Color Grading", repo: "Technically-Technicolor-DRT",
+        proxyAsset: { mac: "*macOS*", win: "*windows*", linux: "*linux*" } },
+      { name: "Hue Contrast Compressor", slug: "hue-contrast-compressor", tier: "pro", color: "yellow", type: "OFX", category: "Color Grading", repo: "Hue-Contrast-Compressor-OFX",
+        proxyAsset: { mac: "*macOS*", win: "*windows*", linux: "*linux*" } },
       { name: "X-Grade", slug: "x-grade", tier: "pro", color: "red", type: "OFX", category: "Workflow", repo: "X-Grade-OFX" },
-      { name: "IBKeymaster", slug: "ibkeymaster", tier: "free", color: "red", type: "OFX", category: "Workflow", repo: "IBKeymaster-OFX" },
-      { name: "Volume Curve", slug: "volume-curve", tier: "pro", color: "cyan", type: "DCTL", category: "Color Grading", repo: "Volume-Curve-DCTL" },
-      { name: "Grain By Greg", slug: "grain", tier: "pro", color: "green", type: "DCTL", category: "Film Emulation", repo: "Grain-By-Greg-DCTL" },
+      { name: "IBKeymaster", slug: "ibkeymaster", tier: "free", color: "red", type: "OFX", category: "Workflow", repo: "IBKeymaster-OFX",
+        proxyAsset: { mac: "*metal*", win: "*Win64*", linux: "*linux*" } },
+      { name: "Volume Curve", slug: "volume-curve", tier: "pro", color: "cyan", type: "DCTL", category: "Color Grading", repo: "Volume-Curve-DCTL",
+        proxyAsset: "*" },
+      { name: "Grain By Greg", slug: "grain", tier: "pro", color: "green", type: "DCTL", category: "Film Emulation", repo: "Grain-By-Greg-DCTL",
+        proxyAsset: "*" },
       { name: "Hue Tools", slug: "hue-tools", tier: "pro", color: "yellow", type: "DCTL", category: "Color Grading", url: "../hue-tools/" },
       { name: "Skin Tone Mastery", slug: "skin-tone-mastery", tier: "pro", color: "magenta", type: "DCTL", category: "Diagnostic", url: "../skin-tone-mastery/" },
-      { name: "Saturation Separator", slug: "saturation-seperator", tier: "pro", color: "yellow", type: "DCTL", category: "Color Grading", repo: "Saturation-Separator-DCTL" },
+      { name: "Saturation Separator", slug: "saturation-seperator", tier: "pro", color: "yellow", type: "DCTL", category: "Color Grading", repo: "Saturation-Separator-DCTL",
+        proxyAsset: "*" },
       { name: "Color Slicer", slug: "colorslice", tier: "free", color: "blue", type: "DCTL", category: "Color Grading", repo: "Color-Slicer-DCTL", dlAsset: "Color-Slicer-DCTL-v1.0.0.zip" },
       { name: "Perfect Exposure Every Time", slug: "perfect-exposure", tier: "free", color: "green", type: "DCTL", category: "Diagnostic", repo: "Perfect-Exposure-DCTL", dlAsset: "Perfect-Exposure-v1.0.0.zip" },
       { name: "Film Negative Space CST", slug: "film-negative-space-cst", tier: "free", color: "cyan", type: "DCTL", category: "Film Emulation", url: "../film-negative-space-cst/", repo: "Film-Negative-Space-CST-DCTL", dlAsset: "GE.Film.Negative.Space.CST.v2.1.0.zip" },
@@ -604,15 +614,34 @@
     }
 
     // === HANDOFF POINT ===
-    // Members are entitled at the account level, so there is no per-tool key entry.
-    // The integration replaces this with the real entitlement / signed-URL call
-    // (the account license key lives on the member profile / proxy worker).
+    // Squarespace page injection overrides window.MEMBER_TOKEN and window.PROXY_URL
+    // after the d18m:ready event fires, then calls the real implementation below.
+    // The token lives only in Squarespace page code injection — not in this file.
+    window.MEMBER_TOKEN = window.MEMBER_TOKEN || "";
+    window.PROXY_URL = window.PROXY_URL || "https://dec18-download-proxy.dec18studios.workers.dev";
+
     window.requestLicensedDownload = function (info) {
-      toast("Unlocked download — entitlement check wires up here");
-      // Example of where the real flow lands once licensing is connected:
-      // var url = await api.signDownload(info.slug, info.os); // verified via account
-      // window.location.href = url;
-      console.log("[requestLicensedDownload]", info);
+      var token = window.MEMBER_TOKEN;
+      var proxy = window.PROXY_URL;
+      if (!token) {
+        toast("Download not available — please refresh and try again");
+        console.warn("[requestLicensedDownload] No token set. Is the page injection active?");
+        return;
+      }
+      // Resolve the asset pattern for this tool + OS combination.
+      // proxyAsset can be a string (single universal zip) or {mac, win, linux} object.
+      var tool = TOOLS.find(function (t) { return t.slug === info.slug; });
+      var assetPattern = "*";
+      if (tool && tool.proxyAsset) {
+        assetPattern = (typeof tool.proxyAsset === "object")
+          ? (tool.proxyAsset[info.os] || "*")
+          : tool.proxyAsset;
+      }
+      var url = proxy + "/v1/Dec18studios/" + encodeURIComponent(info.repo)
+        + "/releases/download/latest/" + encodeURIComponent(assetPattern)
+        + "?token=" + encodeURIComponent(token);
+      toast("Starting download…");
+      window.location.href = url;
     };
 
     function setOS(os) {
