@@ -902,25 +902,26 @@
      the built-in live color simulation. */
   (function () {
     var BASE_IMG = "assets/frame-web.jpg";
+    var BASE = "looks/OpenDRTphotochemist.jpg";
     var STOCKS = [
-      { name: "Golden Daylight", color: "var(--yellow)", src: "", base: "",
-        desc: "A warm, sunlit daylight negative — gentle contrast, golden highlights, clean skin.",
-        filter: "sepia(0.22) saturate(1.14) contrast(1.05) brightness(1.03) hue-rotate(-8deg)" },
-      { name: "Tungsten Night", color: "var(--blue)", src: "", base: "",
-        desc: "A tungsten-balanced night stock — cool shadows, warm practicals, moody falloff.",
-        filter: "contrast(1.12) saturate(1.06) brightness(0.95) hue-rotate(6deg)" },
-      { name: "Vivid Reversal", color: "var(--red)", src: "", base: "",
-        desc: "A punchy reversal / slide look — deep saturation, snappy contrast, rich blacks.",
-        filter: "saturate(1.5) contrast(1.2) brightness(1.0)" },
-      { name: "Bleach Bypass", color: "var(--cyan)", src: "", base: "",
-        desc: "Silver retained in the print — desaturated, high-contrast, metallic and gritty.",
-        filter: "saturate(0.5) contrast(1.32) brightness(1.06)" },
-      { name: "Cross Process", color: "var(--green)", src: "", base: "",
-        desc: "Developed in the wrong soup on purpose — green-cyan cast, crushed, expressive.",
-        filter: "hue-rotate(-16deg) saturate(1.32) contrast(1.12) brightness(1.02)" },
-      { name: "Faded Archive", color: "var(--magenta)", src: "", base: "",
-        desc: "An aged, lifted-black stock — soft contrast, dusty palette, vintage warmth.",
-        filter: "saturate(0.82) contrast(0.86) brightness(1.1) sepia(0.16)" }
+      { name: "Seneca Everyday", color: "var(--yellow)", src: "looks/Seneca Everyday.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "Seneca Portrait", color: "var(--red)", src: "looks/Seneca Portrait.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "Seneca Cine", color: "var(--cyan)", src: "looks/Seneca Cine.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "Seneca Press", color: "var(--ink)", src: "looks/Seneca Press.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "Seneca Vivid", color: "var(--magenta)", src: "looks/Seneca Vivid.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "Balanced Modern", color: "var(--blue)", src: "looks/Balanced Modern.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "Sakura Natural", color: "var(--green)", src: "looks/Sakura Natural.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "250T Day For Night", color: "var(--blue)", src: "looks/250T Day For Night.jpg", base: BASE,
+        desc: "", filter: "" },
+      { name: "Black and White", color: "var(--dim)", src: "looks/Black and White.jpg", base: BASE,
+        desc: "", filter: "" }
     ];
 
     var img = document.getElementById("stockImg");
