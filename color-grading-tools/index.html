@@ -630,8 +630,7 @@
       <input id="dlEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com" required
         style="width:100%;background:#1a1d24;border:1px solid #2a2d3a;color:#e8eaf0;border-radius:8px;padding:11px 14px;font-size:14px;font-family:inherit;margin-bottom:10px;outline:none;transition:border-color .15s;box-sizing:border-box">
       <div style="display:flex;gap:10px;align-items:center">
-        <button type="submit" style="flex:1;background:#4a8aff;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s">Download</button>
-        <button type="button" id="dlSkip" style="background:transparent;border:none;color:#555;font-size:13px;cursor:pointer;padding:4px 8px;transition:color .15s">Skip</button>
+        <button type="submit" style="width:100%;background:#4a8aff;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s">Download</button>
       </div>
       <p id="dlErr" style="margin:10px 0 0;font-size:12px;color:#e04040;display:none"></p>
     </form>
@@ -695,18 +694,10 @@
     closeModal();
   });
 
-  SKIP.addEventListener('click', function () {
-    if (pending) triggerDownload(pending.url);
-    closeModal();
-  });
-
-  BACKDROP.addEventListener('click', closeModal);
+  BACKDROP.addEventListener('click', function () { INPUT.focus(); });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && MODAL.style.display !== 'none') {
-      if (pending) triggerDownload(pending.url);
-      closeModal();
-    }
+    if (e.key === 'Escape' && MODAL.style.display !== 'none') INPUT.focus();
   });
 
   // Intercept all Download → clicks on free tool cards
