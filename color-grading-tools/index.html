@@ -494,19 +494,21 @@
       { name: "Photo Chemist", slug: "photochemist", tier: "pro", color: "red", url: "photochemist/", desc: "Spectral film-stock emulation — design and develop your own stocks." },
       { name: "Technically Technicolor DRT", slug: "technicolordrt", tier: "pro", color: "magenta", desc: "A three-strip Technicolor look as a display rendering transform." },
       { name: "Hue Contrast Compressor", slug: "hue-contrast-compressor", tier: "pro", color: "yellow", desc: "Tame hue-driven contrast for smoother, more controlled color." },
-      { name: "Volume Curve", slug: "volume-curve", tier: "pro", color: "cyan", desc: "Shape tonal volume and contrast with a custom response curve." },
+      { name: "Volume Curve", slug: "volume-curve", tier: "free", color: "cyan", repo: "Volume-Curve-DCTL", desc: "Shape tonal volume and contrast with a custom response curve." },
       { name: "Grain By Greg", slug: "grain", tier: "pro", color: "green", desc: "Natural, filmic grain that lives in the texture of the image." },
       { name: "Color Slicer", slug: "colorslice", tier: "free", color: "blue", repo: "Color-Slicer-DCTL", dlAsset: "Color-Slicer-DCTL-v1.0.0.zip", desc: "Slice the image into color regions for precise, targeted grading." },
-      { name: "X-Grade", slug: "x-grade", tier: "pro", color: "red", desc: "A creative base-grade toolkit for building looks fast." },
-      { name: "Hue Tools", slug: "hue-tools", tier: "pro", color: "yellow", url: "hue-tools/", desc: "Six hue vectors, total control. Grade each primary and secondary independently." },
-      { name: "Skin Tone Mastery", slug: "skin-tone-mastery", tier: "pro", color: "magenta", url: "skin-tone-mastery/", desc: "Four-way diagnostic that splits one frame into source, exposure, saturation and hue views." },
-      { name: "DCTL Manager", slug: "dctl-manager", tier: "pro", color: "magenta", desc: "Install, organize and update your DCTLs right inside Resolve." },
+      { name: "Contrast Sat Volume", slug: "contrast-sat-volume", tier: "pro", color: "red", desc: "GPU-accelerated OFX — compress hue shifts caused by contrast and saturation moves." },
+      { name: "GradeMatch", slug: "grade-match", tier: "pro", color: "cyan", desc: "Per-channel histogram matching with vectorscope, patch sampler, and perceptual diff heatmap." },
+      { name: "SplitToneX", slug: "split-tone-x", tier: "pro", color: "magenta", desc: "Dual-engine split toning with Film Density curves, SatSelect gating, and diagnostic overlays." },
+      { name: "Trim Top Bottom", slug: "trim-top-bottom", tier: "pro", color: "yellow", desc: "Gently roll off highlights or lift shadows before your DRT." },
       { name: "Perfect Exposure Every Time", slug: "perfect-exposure", tier: "free", color: "green", repo: "Perfect-Exposure-DCTL", dlAsset: "Perfect-Exposure-v1.0.0.zip", desc: "Nail consistent exposure on every shot." },
       { name: "Film Negative Space CST", slug: "film-negative-space-cst", tier: "free", color: "cyan", url: "film-negative-space-cst/", repo: "Film-Negative-Space-CST-DCTL", dlAsset: "GE.Film.Negative.Space.CST.v2.1.0.zip", desc: "A color-space transform into a film-negative working space." },
       { name: "Saturation Separator", slug: "saturation-seperator", tier: "pro", color: "yellow", desc: "Split saturation from luma for cleaner, more controlled grades." },
       { name: "Linear Ramp Diagnostic", slug: "linear-ramp", tier: "free", color: "blue", repo: "Linear-Ramp-Diagnostic-DCTL", dlAsset: "Linear-Ramp-Diagnostic-v1.0.0.zip", desc: "A diagnostic ramp for checking transforms and response." },
+      { name: "Hue Inspector", slug: "hue-inspector", tier: "pro", color: "yellow", url: "skin-tone-mastery/", desc: "Highlights hue vectors to diagnose skin tones and color balance at a glance." },
+      { name: "RGB Chips", slug: "rgb-chips", tier: "free", color: "green", dlUrl: "https://raw.githubusercontent.com/thatcherfreeman/utility-dctls/main/Utilities/RGB%20Chips.dctl", desc: "RGB parade-style chips overlay for exposure and white balance evaluation." },
       { name: "Dolby Vision Spoofer", slug: "dolby-vision", tier: "free", color: "magenta", repo: "Dolby-Vision-Spoofer-DCTL", dlAsset: "Dolby-Vision-Spoofer-v1.0.0.zip", desc: "Preview a Dolby Vision-style trim without the full pipeline." },
-      { name: "IBKeymaster", slug: "ibkeymaster", tier: "free", color: "red", repo: "IBKeymaster-OFX", desc: "A focused keying utility for cleaner selections." },
+      { name: "IBKeymaster", slug: "ibkeymaster", tier: "pro", color: "red", desc: "A focused keying utility for cleaner selections." },
       { name: "Resolve Node Toggler", slug: "node-toggle", tier: "free", color: "green", repo: "Resolve-Node-Toggler", desc: "Toggle nodes on and off fast while you work." }
     ];
 
@@ -518,9 +520,9 @@
     function card(t) {
       var free = t.tier === "free";
       var dest = t.url || (BASE + t.slug);
-      var dlUrl = (free && t.repo && t.dlAsset)
-        ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest/download/" + t.dlAsset
-        : (free && t.repo ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest" : null);
+      var dlUrl = free && (t.dlUrl ||
+        (t.repo && t.dlAsset ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest/download/" + t.dlAsset :
+        (t.repo ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest" : null)));
       var el = document.createElement(dlUrl ? "div" : "a");
       el.className = "tcard reveal";
       el.dataset.slug = t.slug || '';

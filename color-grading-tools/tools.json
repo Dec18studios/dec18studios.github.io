@@ -1,235 +1,153 @@
-{
-  "updated": "2026-06-04",
-  "tools": [
-    {
-      "name": "Photo Chemist",
-      "slug": "photochemist",
-      "tier": "pro",
-      "color": "red",
-      "url": "photochemist/",
-      "desc": "Spectral film-stock emulation — design and develop your own stocks.",
-      "type": "OFX",
-      "category": "Film Emulation",
-      "platform": "macOS · Windows · Linux",
-      "status": "available",
-      "repo": "PhotoChemist-OFX",
-      "version": ""
-    },
-    {
-      "name": "Technically Technicolor DRT",
-      "slug": "technicolordrt",
-      "tier": "pro",
-      "color": "magenta",
-      "desc": "A three-strip Technicolor look as a display rendering transform.",
-      "type": "OFX",
-      "category": "Color Grading",
-      "platform": "",
-      "status": "available",
-      "repo": "Technically-Technicolor-DRT",
-      "version": ""
-    },
-    {
-      "name": "Hue Contrast Compressor",
-      "slug": "hue-contrast-compressor",
-      "tier": "pro",
-      "color": "yellow",
-      "desc": "Tame hue-driven contrast for smoother, more controlled color.",
-      "type": "OFX",
-      "category": "Color Grading",
-      "platform": "",
-      "status": "available",
-      "repo": "Hue-Contrast-Compressor-OFX",
-      "version": ""
-    },
-    {
-      "name": "Volume Curve",
-      "slug": "volume-curve",
-      "tier": "pro",
-      "color": "cyan",
-      "desc": "Shape tonal volume and contrast with a custom response curve.",
-      "type": "DCTL",
-      "category": "Color Grading",
-      "platform": "",
-      "status": "available",
-      "repo": "Volume-Curve-DCTL",
-      "version": ""
-    },
-    {
-      "name": "Grain By Greg",
-      "slug": "grain",
-      "tier": "pro",
-      "color": "green",
-      "desc": "Natural, filmic grain that lives in the texture of the image.",
-      "type": "DCTL",
-      "category": "Film Emulation",
-      "platform": "",
-      "status": "available",
-      "repo": "Grain-By-Greg-DCTL",
-      "version": ""
-    },
-    {
-      "name": "Color Slicer",
-      "slug": "colorslice",
-      "tier": "free",
-      "color": "blue",
-      "desc": "Slice the image into color regions for precise, targeted grading.",
-      "type": "DCTL",
-      "category": "Color Grading",
-      "platform": "",
-      "status": "available",
-      "repo": "Color-Slicer-DCTL",
-      "dlAsset": "Color-Slicer-DCTL-v1.0.0.zip",
-      "version": ""
-    },
-    {
-      "name": "X-Grade",
-      "slug": "x-grade",
-      "tier": "pro",
-      "color": "red",
-      "desc": "A creative base-grade toolkit for building looks fast.",
-      "type": "OFX",
-      "category": "Workflow",
-      "platform": "",
-      "status": "available",
-      "repo": "X-Grade-OFX",
-      "version": ""
-    },
-    {
-      "name": "Hue Tools",
-      "slug": "hue-tools",
-      "tier": "pro",
-      "color": "yellow",
-      "url": "hue-tools/",
-      "desc": "Six hue vectors, total control. Grade each primary and secondary independently with clean tetrahedral math.",
-      "type": "DCTL",
-      "category": "Color Grading",
-      "platform": "",
-      "status": "available",
-      "repo": "",
-      "version": ""
-    },
-    {
-      "name": "Skin Tone Mastery",
-      "slug": "skin-tone-mastery",
-      "tier": "pro",
-      "color": "magenta",
-      "url": "skin-tone-mastery/",
-      "desc": "Four-way diagnostic that splits one frame into source, exposure, saturation and hue views.",
-      "type": "DCTL",
-      "category": "Diagnostic",
-      "platform": "",
-      "status": "available",
-      "repo": "",
-      "version": ""
-    },
-    {
-      "name": "DCTL Manager",
-      "slug": "dctl-manager",
-      "tier": "pro",
-      "color": "magenta",
-      "desc": "Install, organize and update your DCTLs right inside Resolve.",
-      "type": "App",
-      "category": "Workflow",
-      "platform": "",
-      "status": "available",
-      "repo": "DCTL-Manager",
-      "version": ""
-    },
-    {
-      "name": "Perfect Exposure Every Time",
-      "slug": "perfect-exposure",
-      "tier": "free",
-      "color": "green",
-      "desc": "Nail consistent exposure on every shot.",
-      "type": "DCTL",
-      "category": "Diagnostic",
-      "platform": "",
-      "status": "available",
-      "repo": "Perfect-Exposure-DCTL",
-      "dlAsset": "Perfect-Exposure-v1.0.0.zip",
-      "version": ""
-    },
-    {
-      "name": "Film Negative Space CST",
-      "slug": "film-negative-space-cst",
-      "tier": "free",
-      "color": "cyan",
-      "url": "film-negative-space-cst/",
-      "desc": "A color-space transform into a film-negative working space.",
-      "type": "DCTL",
-      "category": "Film Emulation",
-      "platform": "",
-      "status": "available",
-      "repo": "Film-Negative-Space-CST-DCTL",
-      "dlAsset": "GE.Film.Negative.Space.CST.v2.1.0.zip",
-      "version": ""
-    },
-    {
-      "name": "Saturation Separator",
-      "slug": "saturation-seperator",
-      "tier": "pro",
-      "color": "yellow",
-      "desc": "Split saturation from luma for cleaner, more controlled grades.",
-      "type": "DCTL",
-      "category": "Color Grading",
-      "platform": "",
-      "status": "available",
-      "repo": "Saturation-Separator-DCTL",
-      "version": ""
-    },
-    {
-      "name": "Linear Ramp Diagnostic",
-      "slug": "linear-ramp",
-      "tier": "free",
-      "color": "blue",
-      "desc": "A diagnostic ramp for checking transforms and response.",
-      "type": "DCTL",
-      "category": "Diagnostic",
-      "platform": "",
-      "status": "available",
-      "repo": "Linear-Ramp-Diagnostic-DCTL",
-      "dlAsset": "Linear-Ramp-Diagnostic-v1.0.0.zip",
-      "version": ""
-    },
-    {
-      "name": "Dolby Vision Spoofer",
-      "slug": "dolby-vision",
-      "tier": "free",
-      "color": "magenta",
-      "desc": "Preview a Dolby Vision-style trim without the full pipeline.",
-      "type": "DCTL",
-      "category": "Workflow",
-      "platform": "",
-      "status": "available",
-      "repo": "Dolby-Vision-Spoofer-DCTL",
-      "dlAsset": "Dolby-Vision-Spoofer-v1.0.0.zip",
-      "version": ""
-    },
-    {
-      "name": "IBKeymaster",
-      "slug": "ibkeymaster",
-      "tier": "free",
-      "color": "red",
-      "desc": "A focused keying utility for cleaner selections.",
-      "type": "OFX",
-      "category": "Workflow",
-      "platform": "",
-      "status": "available",
-      "repo": "IBKeymaster-OFX",
-      "version": ""
-    },
-    {
-      "name": "Resolve Node Toggler",
-      "slug": "node-toggle",
-      "tier": "free",
-      "color": "green",
-      "desc": "Toggle nodes on and off fast while you work.",
-      "type": "App",
-      "category": "Workflow",
-      "platform": "",
-      "status": "available",
-      "repo": "Resolve-Node-Toggler",
-      "version": ""
-    }
-  ]
-}
+[
+  {
+    "name": "Photo Chemist",
+    "slug": "photochemist",
+    "tier": "pro",
+    "color": "red",
+    "desc": "Spectral film-stock emulation — design and develop your own stocks.",
+    "url": "photochemist/"
+  },
+  {
+    "name": "Technically Technicolor DRT",
+    "slug": "technicolordrt",
+    "tier": "pro",
+    "color": "magenta",
+    "desc": "A three-strip Technicolor look as a display rendering transform."
+  },
+  {
+    "name": "Hue Contrast Compressor",
+    "slug": "hue-contrast-compressor",
+    "tier": "pro",
+    "color": "yellow",
+    "desc": "Tame hue-driven contrast for smoother, more controlled color."
+  },
+  {
+    "name": "Volume Curve",
+    "slug": "volume-curve",
+    "tier": "free",
+    "color": "cyan",
+    "desc": "Shape tonal volume and contrast with a custom response curve.",
+    "repo": "Volume-Curve-DCTL"
+  },
+  {
+    "name": "Grain By Greg",
+    "slug": "grain",
+    "tier": "pro",
+    "color": "green",
+    "desc": "Natural, filmic grain that lives in the texture of the image."
+  },
+  {
+    "name": "Color Slicer",
+    "slug": "colorslice",
+    "tier": "free",
+    "color": "blue",
+    "desc": "Slice the image into color regions for precise, targeted grading.",
+    "repo": "Color-Slicer-DCTL",
+    "dlAsset": "Color-Slicer-DCTL-v1.0.0.zip"
+  },
+  {
+    "name": "Contrast Sat Volume",
+    "slug": "contrast-sat-volume",
+    "tier": "pro",
+    "color": "red",
+    "desc": "GPU-accelerated OFX — compress hue shifts caused by contrast and saturation moves."
+  },
+  {
+    "name": "GradeMatch",
+    "slug": "grade-match",
+    "tier": "pro",
+    "color": "cyan",
+    "desc": "Per-channel histogram matching with vectorscope, patch sampler, and perceptual diff heatmap."
+  },
+  {
+    "name": "SplitToneX",
+    "slug": "split-tone-x",
+    "tier": "pro",
+    "color": "magenta",
+    "desc": "Dual-engine split toning with Film Density curves, SatSelect gating, and diagnostic overlays."
+  },
+  {
+    "name": "Trim Top Bottom",
+    "slug": "trim-top-bottom",
+    "tier": "pro",
+    "color": "yellow",
+    "desc": "Gently roll off highlights or lift shadows before your DRT."
+  },
+  {
+    "name": "Perfect Exposure Every Time",
+    "slug": "perfect-exposure",
+    "tier": "free",
+    "color": "green",
+    "desc": "Nail consistent exposure on every shot.",
+    "repo": "Perfect-Exposure-DCTL",
+    "dlAsset": "Perfect-Exposure-v1.0.0.zip"
+  },
+  {
+    "name": "Film Negative Space CST",
+    "slug": "film-negative-space-cst",
+    "tier": "free",
+    "color": "cyan",
+    "desc": "A color-space transform into a film-negative working space.",
+    "repo": "Film-Negative-Space-CST-DCTL",
+    "dlAsset": "GE.Film.Negative.Space.CST.v2.1.0.zip",
+    "url": "film-negative-space-cst/"
+  },
+  {
+    "name": "Saturation Separator",
+    "slug": "saturation-seperator",
+    "tier": "pro",
+    "color": "yellow",
+    "desc": "Split saturation from luma for cleaner, more controlled grades."
+  },
+  {
+    "name": "Linear Ramp Diagnostic",
+    "slug": "linear-ramp",
+    "tier": "free",
+    "color": "blue",
+    "desc": "A diagnostic ramp for checking transforms and response.",
+    "repo": "Linear-Ramp-Diagnostic-DCTL",
+    "dlAsset": "Linear-Ramp-Diagnostic-v1.0.0.zip"
+  },
+  {
+    "name": "Hue Inspector",
+    "slug": "hue-inspector",
+    "tier": "pro",
+    "color": "yellow",
+    "desc": "Highlights hue vectors to diagnose skin tones and color balance at a glance.",
+    "url": "skin-tone-mastery/"
+  },
+  {
+    "name": "RGB Chips",
+    "slug": "rgb-chips",
+    "tier": "free",
+    "color": "green",
+    "desc": "RGB parade-style chips overlay for exposure and white balance evaluation.",
+    "dlUrl": "https://raw.githubusercontent.com/thatcherfreeman/utility-dctls/main/Utilities/RGB%20Chips.dctl",
+    "url": "https://github.com/thatcherfreeman/utility-dctls"
+  },
+  {
+    "name": "Dolby Vision Spoofer",
+    "slug": "dolby-vision",
+    "tier": "free",
+    "color": "magenta",
+    "desc": "Preview a Dolby Vision-style trim without the full pipeline.",
+    "repo": "Dolby-Vision-Spoofer-DCTL",
+    "dlAsset": "Dolby-Vision-Spoofer-v1.0.0.zip"
+  },
+  {
+    "name": "IBKeymaster",
+    "slug": "ibkeymaster",
+    "tier": "pro",
+    "color": "red",
+    "desc": "A focused keying utility for cleaner selections.",
+    "url": "https://dec18studios.com/ibkeymaster"
+  },
+  {
+    "name": "Resolve Node Toggler",
+    "slug": "node-toggle",
+    "tier": "free",
+    "color": "green",
+    "desc": "Toggle nodes on and off fast while you work.",
+    "repo": "Resolve-Node-Toggler"
+  }
+]
