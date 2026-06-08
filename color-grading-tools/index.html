@@ -523,6 +523,7 @@
         : (free && t.repo ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest" : null);
       var el = document.createElement(dlUrl ? "div" : "a");
       el.className = "tcard reveal";
+      el.dataset.slug = t.slug || '';
       if (dlUrl) {
         el.onclick = function() { window.open(dest, "_top"); };
       } else {
@@ -618,6 +619,118 @@
     <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">D18</text>
   </svg>
 </template>
+
+<!-- ── Download email capture modal ──────────────────────────────────────── -->
+<div id="dlModal" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;padding:20px">
+  <div id="dlBackdrop" style="position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px)"></div>
+  <div style="position:relative;background:#13151c;border:1px solid #2a2d3a;border-radius:14px;padding:36px 32px;max-width:400px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.6)">
+    <h3 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#e8eaf0">One quick thing</h3>
+    <p style="margin:0 0 24px;font-size:14px;color:#888;line-height:1.65">Drop your email and we'll let you know when a new version drops. We don't send many — just release notes when something changes.</p>
+    <form id="dlForm" autocomplete="on">
+      <input id="dlEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com" required
+        style="width:100%;background:#1a1d24;border:1px solid #2a2d3a;color:#e8eaf0;border-radius:8px;padding:11px 14px;font-size:14px;font-family:inherit;margin-bottom:10px;outline:none;transition:border-color .15s;box-sizing:border-box">
+      <div style="display:flex;gap:10px;align-items:center">
+        <button type="submit" style="flex:1;background:#4a8aff;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s">Download</button>
+        <button type="button" id="dlSkip" style="background:transparent;border:none;color:#555;font-size:13px;cursor:pointer;padding:4px 8px;transition:color .15s">Skip</button>
+      </div>
+      <p id="dlErr" style="margin:10px 0 0;font-size:12px;color:#e04040;display:none"></p>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  var LOG_URL = 'https://dec18-download-logger.workers.dev/log';
+  var MODAL   = document.getElementById('dlModal');
+  var FORM    = document.getElementById('dlForm');
+  var INPUT   = document.getElementById('dlEmail');
+  var ERR     = document.getElementById('dlErr');
+  var SKIP    = document.getElementById('dlSkip');
+  var BACKDROP = document.getElementById('dlBackdrop');
+
+  var pending = null; // { url, slug, name }
+
+  function savedEmail() { try { return localStorage.getItem('d18_email') || ''; } catch { return ''; } }
+  function saveEmail(e) { try { localStorage.setItem('d18_email', e); } catch {} }
+
+  function log(email, slug, name) {
+    if (!email || !slug) return;
+    fetch(LOG_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, tool_slug: slug, tool_name: name }),
+    }).catch(function () {});
+  }
+
+  function triggerDownload(url) {
+    var a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { document.body.removeChild(a); }, 100);
+  }
+
+  function closeModal() {
+    MODAL.style.display = 'none';
+    pending = null;
+  }
+
+  function openModal(url, slug, name) {
+    pending = { url: url, slug: slug, name: name };
+    ERR.style.display = 'none';
+    INPUT.value = savedEmail();
+    MODAL.style.display = 'flex';
+    setTimeout(function () { INPUT.focus(); INPUT.select(); }, 50);
+  }
+
+  FORM.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = INPUT.value.trim().toLowerCase();
+    if (!email) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      ERR.textContent = 'Please enter a valid email address.';
+      ERR.style.display = 'block'; return;
+    }
+    saveEmail(email);
+    if (pending) { log(email, pending.slug, pending.name); triggerDownload(pending.url); }
+    closeModal();
+  });
+
+  SKIP.addEventListener('click', function () {
+    if (pending) triggerDownload(pending.url);
+    closeModal();
+  });
+
+  BACKDROP.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && MODAL.style.display !== 'none') {
+      if (pending) triggerDownload(pending.url);
+      closeModal();
+    }
+  });
+
+  // Intercept all Download → clicks on free tool cards
+  document.addEventListener('click', function (e) {
+    var dl = e.target.closest('.dl');
+    if (!dl) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var url  = dl.href;
+    var card = dl.closest('.tcard');
+    var slug = card ? (card.dataset.slug || '') : '';
+    var name = card ? (card.querySelector('h4') || {}).textContent || '' : '';
+
+    var stored = savedEmail();
+    if (stored) {
+      // Already have email — log silently and download immediately
+      log(stored, slug, name);
+      triggerDownload(url);
+    } else {
+      openModal(url, slug, name);
+    }
+  }, true);
+})();
+</script>
 
 </body>
 </html>
