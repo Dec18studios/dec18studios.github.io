@@ -109,8 +109,8 @@
     "dlAsset": "Linear-Ramp-Diagnostic-v1.0.0.zip"
   },
   {
-    "name": "Hue Inspector",
-    "slug": "hue-inspector",
+    "name": "Skin Tone Mastery",
+    "slug": "skin-tone-mastery",
     "tier": "pro",
     "color": "yellow",
     "desc": "Highlights hue vectors to diagnose skin tones and color balance at a glance.",
@@ -137,9 +137,10 @@
   {
     "name": "IBKeymaster",
     "slug": "ibkeymaster",
-    "tier": "pro",
+    "tier": "free",
     "color": "red",
     "desc": "A focused keying utility for cleaner selections.",
+    "repo": "IBKeymaster",
     "url": "https://dec18studios.com/ibkeymaster"
   },
   {
