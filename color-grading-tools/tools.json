@@ -27,7 +27,8 @@
     "tier": "free",
     "color": "cyan",
     "desc": "Shape tonal volume and contrast with a custom response curve.",
-    "repo": "Volume-Curve-DCTL"
+    "repo": "Volume-Curve-DCTL",
+    "dlAsset": "Volume-Curve-v1.0.0.zip"
   },
   {
     "name": "Grain By Greg",
