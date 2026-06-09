@@ -1,2 +1,4 @@
 node_modules/
 package-lock.json
+SESSION.md
+.DS_Store

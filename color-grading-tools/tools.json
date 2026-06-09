@@ -42,6 +42,7 @@
     "tier": "free",
     "color": "blue",
     "desc": "Slice the image into color regions for precise, targeted grading.",
+    "url": "https://dec18studios.com/color-grading-tools/colorslice",
     "repo": "Color-Slicer-DCTL",
     "dlAsset": "Color-Slicer-DCTL-v1.0.0.zip"
   },
