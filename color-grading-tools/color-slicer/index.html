@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Color Slicer — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    /* three rotation engines — consistent everywhere */
+    --oklab:    oklch(0.80 0.115 210);
+    --tetra:    oklch(0.64 0.205 25);
+    --gravity:  oklch(0.81 0.150 80);
+    --oklab-d:   oklch(0.80 0.115 210 / 0.15);
+    --tetra-d:   oklch(0.64 0.205 25 / 0.15);
+    --gravity-d: oklch(0.81 0.150 80 / 0.15);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.80 0.115 210 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block; height: clamp(44px, 5.2vw, 58px); aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
+            mask: url("assets/logo-full.png") left center / contain no-repeat;
+  }
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+      -webkit-mask: linear-gradient(90deg, #000 86%, transparent); mask: linear-gradient(90deg, #000 86%, transparent);
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(48px, 7vw, 96px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -14%; right: -10%; width: 760px; height: 760px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(140px); opacity: 0.14; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 0.93fr 1.07fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  .badge-resolve {
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 4px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-dim); border: 1px solid var(--line); border-radius: 99px; padding: 6px 13px;
+  }
+  .badge-resolve .d { width: 8px; height: 8px; border-radius: 50%; background: var(--oklab); }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(42px, 6vw, 76px); line-height: 0.99; letter-spacing: -0.02em; margin: 20px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--gravity), var(--tetra) 42%, var(--magenta) 66%, var(--oklab));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 48ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px; padding: 12px 20px; border-radius: 10px;
+    border: 1px solid var(--line); color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ WHEEL CARD ============ */
+  .wheel-card { background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line-soft); border-radius: 20px; padding: 26px; }
+  /* hero lab row: live wheel + controls panel side by side, matched heights */
+  .lab-row { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 16px; margin-top: clamp(28px, 3.5vw, 48px); align-items: stretch; }
+  @media (max-width: 940px) { .lab-row { grid-template-columns: 1fr; } }
+  .wheel-card.lab { display: flex; flex-direction: column; justify-content: center; }
+  .wheel-card.lab .wheel-stage { max-width: 272px; }
+  .controls-card { position: relative; border-radius: 20px; border: 1px solid var(--line-soft); overflow: hidden; background: #28282e; display: flex; align-items: center; justify-content: center; }
+  .controls-card img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .wheel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .live-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--oklab); border: 1px solid oklch(0.80 0.115 210 / 0.4); border-radius: 5px; padding: 3px 8px; }
+  .wheel-stage { position: relative; aspect-ratio: 1; max-width: 300px; margin: 0 auto; }
+  .wheel-stage canvas { width: 100%; height: 100%; display: block; border-radius: 50%; }
+  .slice-marker { position: absolute; width: 15px; height: 15px; border-radius: 50%; transform: translate(-50%,-50%); border: 2px solid var(--bg); box-shadow: 0 0 0 1px oklch(1 0 0 / 0.25), 0 3px 8px oklch(0 0 0 / 0.55); pointer-events: none; transition: left 0.25s, top 0.25s; }
+  .wheel-caption { margin-top: 14px; font-family: var(--mono); font-size: 10.5px; line-height: 1.5; color: var(--ink-faint); text-align: center; text-wrap: pretty; }
+
+  .vlegend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 18px; }
+  .vchip { display: flex; align-items: center; gap: 7px; padding: 8px 8px; border-radius: 8px; background: var(--bg-2); border: 1px solid transparent; cursor: pointer; transition: all 0.15s; font-size: 11.5px; font-family: var(--mono); color: var(--ink-dim); }
+  .vchip:hover { border-color: var(--line); color: var(--ink); }
+  .vchip.on { border-color: var(--ink-faint); color: var(--ink); background: var(--bg-3); }
+  .vchip .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+
+  .ctl { margin-top: 18px; }
+  .ctl-label { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em; color: var(--ink-dim); margin-bottom: 8px; }
+  .ctl-label b { color: var(--ink); font-weight: 500; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 99px; background: var(--line); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 17px; height: 17px; border-radius: 50%; background: var(--ink); border: 3px solid var(--bg-1); box-shadow: 0 2px 8px oklch(0 0 0 / 0.5); }
+  input[type=range]::-moz-range-thumb { width: 17px; height: 17px; border-radius: 50%; background: var(--ink); border: 3px solid var(--bg-1); }
+  .ctl-row { display: flex; gap: 10px; align-items: center; margin-top: 18px; }
+  .toggle { font-family: var(--mono); font-size: 12px; padding: 9px 13px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-2); color: var(--ink-dim); cursor: pointer; transition: all 0.16s; }
+  .toggle[aria-pressed="true"] { background: var(--oklab-d); border-color: var(--oklab); color: var(--oklab); }
+  .toggle:hover { color: var(--ink); border-color: oklch(0.42 0.013 264); }
+  .seg { flex: 1; display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+  .seg select { font-family: var(--mono); font-size: 12px; color: var(--ink); background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer; }
+
+  /* ============ PRODUCT SHOTS ============ */
+  .shot-card { background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line-soft); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+  /* align the results card top with the first line of the headline (drops it past the badge) */
+  @media (min-width: 941px) { .shot-card { margin-top: 56px; } }
+  .shot-cap { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); letter-spacing: 0.03em; text-align: center; text-wrap: pretty; }
+  .shot-tag { position: absolute; top: 10px; left: 10px; z-index: 3; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: oklch(0.165 0.012 264 / 0.78); border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; backdrop-filter: blur(6px); }
+  .shot-tag .d { display: inline-block; width: 7px; height: 7px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+  /* before/after compare slider */
+  .compare { position: relative; border-radius: 13px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/9; touch-action: none; user-select: none; cursor: ew-resize; background: var(--bg-2); }
+  .compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .compare .after-wrap { position: absolute; inset: 0; overflow: hidden; width: 50%; will-change: width; }
+  .compare .after-wrap img { width: auto; height: 100%; max-width: none; }
+  .compare .ba-label { position: absolute; bottom: 10px; z-index: 4; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: oklch(0.165 0.012 264 / 0.74); border-radius: 6px; padding: 3px 8px; pointer-events: none; }
+  .compare .ba-label.l { left: 10px; }
+  .compare .ba-label.r { right: 10px; }
+  .compare .handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink); z-index: 5; transform: translateX(-1px); pointer-events: none; box-shadow: 0 0 0 1px oklch(0 0 0 / 0.35); }
+  .compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; background: var(--ink); border: 2px solid var(--bg); box-shadow: 0 3px 12px oklch(0 0 0 / 0.55); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23202430' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 14 L11 20 L17 26'/%3E%3Cpath d='M23 14 L29 20 L23 26'/%3E%3C/g%3E%3C/svg%3E"); }
+
+  /* lower shots: stacked full-width */
+  .shot-stack { display: flex; flex-direction: column; gap: 12px; }
+  .shot { position: relative; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; background: var(--bg-2); }
+  .shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .shot.effected { aspect-ratio: 16/9; }
+  .shot.controls { background: oklch(0.12 0.008 264); }
+  .shot.controls img { object-fit: contain; height: auto; padding: 14px 18px; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(54px, 8vw, 108px); position: relative; }
+  .sec-head { max-width: 60ch; margin-bottom: clamp(34px, 5vw, 58px); }
+  .sec-head h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+  .sec-head.center { margin-inline: auto; text-align: center; }
+  .divider { height: 1px; background: var(--line-soft); }
+  .bordered { border-top: 1px solid var(--line-soft); }
+
+  .callout { margin-top: 26px; border-radius: 14px; padding: 20px 22px; background: var(--bg-2); border: 1px solid transparent; position: relative; overflow: hidden; }
+  .callout::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--oklab); }
+  .callout .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--oklab); font-weight: 600; }
+  .callout p { margin-top: 8px; font-size: 15.5px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  /* ============ PITCH / BEFORE-AFTER ============ */
+  .pitch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 820px) { .pitch-grid { grid-template-columns: 1fr; } }
+  .cmp { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .cmp .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .cmp .tag.bad { color: var(--ink-faint); }
+  .cmp .tag.good { color: var(--oklab); }
+  .cmp .fig { height: 180px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line-soft); overflow: hidden; }
+  .cmp h4 { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.01em; }
+  .cmp p { font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; }
+
+  /* ============ TWO-AXIS FIELD ============ */
+  .axis-wrap { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: clamp(28px, 4vw, 52px); align-items: start; }
+  @media (max-width: 940px) { .axis-wrap { grid-template-columns: 1fr; } }
+  .field-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 22px; }
+  .field-stage { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line-soft); }
+  .field-stage canvas { display: block; width: 100%; height: auto; }
+  .field-axis-x, .field-axis-y { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+  .field-axis-x { text-align: center; margin-top: 10px; }
+  .field-axis-y { position: absolute; left: -6px; top: 50%; transform: rotate(-90deg) translateX(-50%); transform-origin: left; white-space: nowrap; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; margin-top: 22px; }
+  .field-grid .seg { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 12px; }
+  .subpoints { display: grid; gap: 14px; }
+  .subpoint { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 13px; padding: 16px 18px; }
+  .subpoint .ic { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+  .subpoint b { font-size: 15px; }
+  .subpoint p { margin-top: 3px; font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+
+  /* ============ MODE CARDS ============ */
+  .modes-intro { font-family: var(--display); font-weight: 500; font-size: clamp(20px, 2.6vw, 28px); color: var(--ink); letter-spacing: -0.01em; max-width: 32ch; margin-bottom: clamp(30px, 4vw, 48px); text-wrap: pretty; }
+  .modes-intro span { color: var(--ink-faint); }
+  .modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 940px) { .modes-grid { grid-template-columns: 1fr; } }
+  .mode { --accent: var(--oklab); --accent-d: var(--oklab-d); background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; }
+  .mode .mhead { display: flex; align-items: center; gap: 11px; }
+  .mode .mchip { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 9px; padding: 6px 13px; border-radius: 99px; border: 1px solid color-mix(in oklab, var(--accent) 45%, transparent); background: var(--accent-d); }
+  .mode .mchip .d { width: 9px; height: 9px; border-radius: 3px; background: var(--accent); }
+  .mode .verb { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.04em; }
+  .mode h3 { font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: -0.01em; margin: 18px 0 0; }
+  .mode .mlede { margin-top: 10px; font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; min-height: 4.4em; }
+  .mode-fig { position: relative; aspect-ratio: 1; width: 100%; max-width: 300px; margin: 18px auto 4px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line-soft); overflow: hidden; display: grid; place-items: center; }
+  .mode-fig svg { width: 100%; height: 100%; display: block; position: relative; z-index: 2; }
+  .mode .readout { display: flex; align-items: baseline; justify-content: space-between; margin-top: 14px; font-family: var(--mono); }
+  .mode .readout .k { font-size: 11px; letter-spacing: 0.06em; color: var(--ink-faint); }
+  .mode .readout .v { font-size: 18px; color: var(--accent); font-weight: 500; }
+  .mode .mtail { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-soft); font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .mode .mtail b { color: var(--ink); font-weight: 600; }
+
+  /* oklab disc + hue ring helpers */
+  .oklab-disc { position: absolute; inset: 14%; border-radius: 50%; background: conic-gradient(from 0deg, oklch(0.7 0.18 30), oklch(0.82 0.15 95), oklch(0.78 0.16 150), oklch(0.8 0.12 210), oklch(0.64 0.18 280), oklch(0.7 0.2 340), oklch(0.7 0.18 30)); }
+  .oklab-disc::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at center, var(--bg) 0%, transparent 62%); }
+  .hue-ring { position: absolute; inset: 8%; border-radius: 50%; background: conic-gradient(from 0deg, oklch(0.7 0.18 30), oklch(0.82 0.15 95), oklch(0.78 0.16 150), oklch(0.8 0.12 210), oklch(0.64 0.18 280), oklch(0.7 0.2 340), oklch(0.7 0.18 30)); -webkit-mask: radial-gradient(circle at center, transparent 0 56%, #000 57.5% 80%, transparent 81%); mask: radial-gradient(circle at center, transparent 0 56%, #000 57.5% 80%, transparent 81%); }
+  .cube-t { fill: oklch(0.42 0.06 30); stroke: var(--line); stroke-width: 1.5; }
+  .cube-l { fill: oklch(0.30 0.05 30); stroke: var(--line); stroke-width: 1.5; }
+  .cube-r { fill: oklch(0.36 0.055 30); stroke: var(--line); stroke-width: 1.5; }
+
+  /* ============ MENTAL MODEL ============ */
+  .meta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 52px); }
+  @media (max-width: 760px) { .meta-row { grid-template-columns: 1fr; gap: 36px; } }
+  .meta-card { --accent: var(--oklab); display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+  .meta-icon { width: clamp(120px, 16vw, 170px); height: clamp(120px, 16vw, 170px); }
+  .meta-name { font-family: var(--display); font-weight: 700; font-size: 28px; letter-spacing: -0.01em; color: var(--accent); }
+  .meta-verb { font-family: var(--mono); font-size: 14px; letter-spacing: 0.06em; color: var(--ink-dim); }
+
+  /* ============ WHIP / DENSITY ============ */
+  .shape-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(28px, 4vw, 52px); align-items: stretch; }
+  @media (max-width: 940px) { .shape-grid { grid-template-columns: 1fr; } }
+  .plot-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 24px; }
+  .plot-card svg { width: 100%; height: auto; display: block; }
+  .plot-card .axis { stroke: var(--line); stroke-width: 1.5; }
+  .plot-card .grid-l { stroke: var(--line-soft); stroke-width: 1; }
+  .plot-card .tk { font-family: var(--mono); font-size: 13px; fill: var(--ink-faint); }
+  .density-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 16px; }
+  .density-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
+  .density-card p { font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .dye-strip { height: 56px; border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: repeat(6, 1fr); }
+  .dye-strip span { display: block; }
+
+  /* ============ SKIN WORKFLOW ============ */
+  .skin-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(28px, 4vw, 52px); align-items: start; }
+  @media (max-width: 940px) { .skin-grid { grid-template-columns: 1fr; } }
+  .workflow { display: grid; gap: 12px; counter-reset: step; }
+  .wstep { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px; }
+  .wstep .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--gravity); width: 30px; height: 30px; border-radius: 8px; border: 1px solid color-mix(in oklab, var(--gravity) 40%, transparent); background: var(--gravity-d); display: grid; place-items: center; flex: none; }
+  .wstep .n::before { content: counter(step, decimal-leading-zero); }
+  .wstep b { font-size: 15.5px; }
+  .wstep p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .wstep .pill { font-family: var(--mono); font-size: 12px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 1px 7px; color: var(--gravity); }
+  .skin-fig { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 22px; }
+  .skin-fig .field-stage { margin-bottom: 0; }
+  .skin-fig .cap { margin-top: 14px; font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.04em; text-align: center; text-wrap: pretty; }
+
+  /* ============ SHOW EFFECTED ============ */
+  .diag-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 4vw, 52px); align-items: center; }
+  @media (max-width: 820px) { .diag-grid { grid-template-columns: 1fr; } }
+  .checker-fig { aspect-ratio: 16/10; border-radius: 16px; border: 1px solid var(--line-soft); position: relative; overflow: hidden; background: var(--bg); }
+  .checker-fig .ckr { position: absolute; inset: 0; background-image: linear-gradient(45deg, oklch(0.80 0.115 210 / 0.55) 25%, transparent 25%), linear-gradient(-45deg, oklch(0.80 0.115 210 / 0.55) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, oklch(0.80 0.115 210 / 0.55) 75%), linear-gradient(-45deg, transparent 75%, oklch(0.80 0.115 210 / 0.55) 75%); background-size: 26px 26px; background-position: 0 0, 0 13px, 13px -13px, -13px 0; -webkit-mask: radial-gradient(ellipse 38% 54% at 58% 46%, #000 38%, transparent 72%); mask: radial-gradient(ellipse 38% 54% at 58% 46%, #000 38%, transparent 72%); }
+
+  /* ============ FEATURE GRID ============ */
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 880px) { .feat-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px) { .feat-grid { grid-template-columns: 1fr; } }
+  .feat { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 20px; }
+  .feat .ft { display: flex; align-items: center; gap: 10px; }
+  .feat .dot { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+  .feat b { font-size: 15.5px; }
+  .feat p { margin-top: 8px; font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+
+  /* ============ MEMBERSHIP ============ */
+  .sub { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .sub-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .sub-grid { grid-template-columns: 1fr; } }
+  .sub-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
+  .sub-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
+  .sub-copy p strong { color: var(--ink); font-weight: 600; }
+  .sub-copy .free-note { margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--oklab-d); position: relative; overflow: hidden; }
+  .sub-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--oklab); }
+  .sub-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--oklab); font-weight: 600; }
+  .sub-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); max-width: none; }
+  .price-card { position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden; }
+  .price-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta)); }
+  .price-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gravity); }
+  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 72px); line-height: 1; letter-spacing: -0.03em; }
+  .price-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
+  .price-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .price-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .price-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+  .price-list li::before { content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px; }
+  .price-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
+  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  /* ============ INSTALL ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px; }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--green); width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.74 0.165 148 / 0.4); background: var(--green-d); display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--oklab); }
+  .step .st a.inline { color: var(--oklab); border-bottom: 1px solid oklch(0.80 0.115 210 / 0.4); }
+  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
+  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
+  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
+  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
+  .note-card { background: var(--gravity-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gravity); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gravity); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-cta { text-align: center; padding-bottom: 48px; border-bottom: 1px solid var(--line-soft); margin-bottom: 44px; }
+  .foot-cta .big { font-family: var(--display); font-weight: 700; font-size: clamp(32px, 6vw, 64px); letter-spacing: -0.025em; line-height: 1.0; color: var(--ink); }
+  .foot-cta .big em { font-style: normal; background: linear-gradient(96deg, var(--gravity), var(--tetra) 50%, var(--oklab)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .foot-cta p { margin-top: 18px; color: var(--ink-dim); font-size: 17px; }
+  .foot-cta .btn { margin-top: 26px; }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .brandbig { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--oklab); }
+
+  /* ============ REVEAL ============ */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ============ TOUCH HARDENING ============ */
+  @media (pointer: coarse) {
+    input[type=range] { height: 42px; background: linear-gradient(var(--line), var(--line)) center / 100% 6px no-repeat; }
+    input[type=range]::-webkit-slider-thumb { width: 26px; height: 26px; border-width: 4px; }
+    input[type=range]::-moz-range-track { background: transparent; height: 6px; }
+    input[type=range]::-moz-range-thumb { width: 26px; height: 26px; border-width: 4px; }
+    .toggle, .seg select, .btn, nav.toplinks a.cta { min-height: 44px; }
+    .vchip { padding: 12px 8px; }
+    nav.toplinks a { padding-block: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">All tools</a>
+      <a href="#modes">Three modes</a>
+      <a href="#features">Features</a>
+      <a href="#getit">Download · Free</a>
+      <a href="https://dec18studios.com/account/digital-products" target="_top">Account</a>
+      <a href="#subscribe" class="cta">Happy Little Noders · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="badge-resolve"><span class="d"></span>For DaVinci Resolve</span>
+        <h1 class="hero-title">Surgical hue control.<br /><em>Three ways to move colour.</em></h1>
+        <p class="hero-sub">Color Slicer isolates exactly one hue, gated by both colour and brightness, then reshapes it three different ways. Pick a vector, slice it out, and grade only what's inside the selection.</p>
+        <div class="hero-cta">
+          <!-- NOTE: confirm the Color Slicer release URL — placeholder repo for now. -->
+          <a class="btn primary" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest" target="_blank" rel="noopener">Download Color Slicer · Free →</a>
+          <a class="btn" href="#modes">See the three modes</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>7</b><span>hue vectors</span></div>
+          <div class="m"><b>2-axis</b><span>hue × luma mask</span></div>
+          <div class="m"><b>3</b><span>rotation engines</span></div>
+        </div>
+      </div>
+
+      <!-- results: real frames from Resolve, before/after + show effected -->
+      <div class="shot-card reveal">
+        <div class="compare" id="baCompare" data-shot="still-original">
+          <span class="shot-tag"><span class="d" style="background:var(--blue)"></span>Color Slicer · Blue</span>
+          <img src="assets/still-before.jpg" alt="Ungraded original frame" />
+          <div class="after-wrap" id="baAfter">
+            <img src="assets/still-graded.jpg" alt="Graded frame with Color Slicer" />
+          </div>
+          <div class="handle" id="baHandle"></div>
+          <span class="ba-label l">Before</span>
+          <span class="ba-label r">After</span>
+        </div>
+        <div class="shot effected" data-shot="still-effected">
+          <span class="shot-tag"><span class="d" style="background:var(--oklab)"></span>Show Effected</span>
+          <img src="assets/show-effected-blue.jpg" alt="Show Effected mode isolating the blue selection against black" />
+        </div>
+        <div class="shot-cap">Real grade: Blue vector, Tetrahedral Remix. Drag the slider to compare; below, the isolated selection in Show Effected.</div>
+      </div>
+    </div>
+
+    <!-- lab: live slice interaction beside the real controls panel -->
+    <div class="lab-row reveal">
+      <div class="wheel-card lab" id="diagnostic" style="scroll-margin-top:90px;">
+        <div class="wheel-head">
+          <p class="eyebrow">Live · Slice one colour out</p>
+          <span class="live-tag">Try it</span>
+        </div>
+        <div class="wheel-stage">
+          <canvas id="sliceWheel"></canvas>
+          <div class="slice-marker" id="sliceMarker"></div>
+        </div>
+        <div class="wheel-caption">Pick a vector, set the width, toggle Show Effected.</div>
+
+        <div class="vlegend" id="wheelVectors"></div>
+
+        <div class="ctl">
+          <div class="ctl-label"><span>Hue Width</span><b id="wheelWidthOut">26°</b></div>
+          <input type="range" id="wheelWidth" min="6" max="80" step="1" value="26" />
+        </div>
+        <div class="ctl-row">
+          <button class="toggle" id="wheelShow" aria-pressed="false">Show Effected</button>
+          <span style="font-family:var(--mono); font-size:11px; color:var(--ink-faint); text-wrap:pretty;">Everything outside the slice drops to black.</span>
+        </div>
+      </div>
+
+      <div class="controls-card">
+        <span class="shot-tag">Controls · Blue / Tetrahedral</span>
+        <img src="assets/controls-panel.png" alt="Color Slicer controls panel targeting Blue with Tetrahedral Remix" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOW EFFECTED section removed: live wheel moved into the hero, real Show Effected still lives in the hero shot-card ============ -->
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ THE PITCH ============ -->
+<section id="pitch" data-screen-label="The pitch">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The problem</p>
+      <h2>Qualifiers are broad. Hue curves are fiddly.</h2>
+      <p>Resolve's built-in qualifiers and hue curves smear across wide bands and take constant babysitting. Color Slicer isolates a single hue, gated by both colour <em>and</em> brightness, so your move lands only where you mean it.</p>
+    </div>
+    <div class="pitch-grid reveal">
+      <div class="cmp">
+        <span class="tag bad">Broad qualifier</span>
+        <div class="fig">
+          <svg viewBox="0 0 360 180" width="100%" height="100%" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="hueband" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="oklch(0.66 0.18 30)"/><stop offset="0.5" stop-color="oklch(0.78 0.15 95)"/><stop offset="1" stop-color="oklch(0.74 0.16 150)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="360" height="180" fill="oklch(0.20 0.01 264)"/>
+            <rect x="40" y="34" width="240" height="112" rx="10" fill="url(#hueband)" opacity="0.5"/>
+            <g fill="oklch(0.95 0 0 / 0.65)">
+              <circle cx="70" cy="60" r="3"/><circle cx="120" cy="120" r="3"/><circle cx="200" cy="50" r="3"/><circle cx="250" cy="130" r="3"/><circle cx="300" cy="70" r="3"/><circle cx="160" cy="150" r="3"/><circle cx="320" cy="120" r="3"/>
+            </g>
+            <text x="180" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="oklch(0.55 0.01 264)">bleeds across neighbours · grabs the wrong tones</text>
+          </svg>
+        </div>
+        <h4>Spills where you don't want it</h4>
+        <p>A wide selection catches skin, wood and warm highlights all at once. You fight it with extra windows and keys.</p>
+      </div>
+      <div class="cmp">
+        <span class="tag good">Color Slicer</span>
+        <div class="fig">
+          <svg viewBox="0 0 360 180" width="100%" height="100%" preserveAspectRatio="none">
+            <rect x="0" y="0" width="360" height="180" fill="oklch(0.20 0.01 264)"/>
+            <ellipse cx="200" cy="86" rx="58" ry="44" fill="oklch(0.66 0.16 35)" opacity="0.42"/>
+            <ellipse cx="200" cy="86" rx="40" ry="30" fill="oklch(0.7 0.18 35)" opacity="0.55"/>
+            <g fill="oklch(0.95 0 0 / 0.5)">
+              <circle cx="70" cy="60" r="3"/><circle cx="120" cy="120" r="3"/><circle cx="300" cy="70" r="3"/><circle cx="320" cy="120" r="3"/>
+            </g>
+            <g fill="oklch(0.92 0.14 60)"><circle cx="190" cy="80" r="3.4"/><circle cx="214" cy="92" r="3.4"/><circle cx="200" cy="100" r="3.4"/></g>
+            <text x="180" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="oklch(0.55 0.01 264)">one hue · gated by light · nothing else moves</text>
+          </svg>
+        </div>
+        <h4>Lands on exactly one tone</h4>
+        <p>A tight two-axis mask holds the selection to a single hue at a chosen brightness. The rest of the frame stays untouched.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE THREE MODES ============ -->
+<section id="modes" class="bordered" data-screen-label="Three modes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The headline feature</p>
+      <h2>Three rotation modes.</h2>
+    </div>
+    <p class="modes-intro reveal">All three move a hue. <span>Each moves it through a different space.</span></p>
+
+    <div class="modes-grid">
+      <!-- OKLAB -->
+      <div class="mode reveal" style="--accent: var(--oklab); --accent-d: var(--oklab-d);">
+        <div class="mhead">
+          <span class="mchip"><span class="d"></span>Oklab</span>
+          <span class="verb">Rotate</span>
+        </div>
+        <h3>A rigid, perceptual turn.</h3>
+        <p class="mlede">Every shade moves by the same angle and lightness is preserved. A plain rotation of the colour plane, in a perceptually-uniform space.</p>
+        <div class="mode-fig" id="okStage">
+          <div class="oklab-disc"></div>
+          <svg viewBox="0 0 260 260">
+            <line x1="30" y1="130" x2="230" y2="130" stroke="oklch(1 0 0 / 0.18)" stroke-width="1.2"/>
+            <line x1="130" y1="30" x2="130" y2="230" stroke="oklch(1 0 0 / 0.18)" stroke-width="1.2"/>
+            <g id="okDots">
+              <circle cx="130" cy="56" r="10" fill="oklch(0.7 0.15 330)" stroke="var(--bg)" stroke-width="2.5"/>
+              <circle cx="196" cy="96" r="10" fill="oklch(0.68 0.17 35)" stroke="var(--bg)" stroke-width="2.5"/>
+              <circle cx="188" cy="180" r="10" fill="oklch(0.78 0.13 95)" stroke="var(--bg)" stroke-width="2.5"/>
+              <circle cx="96" cy="192" r="10" fill="oklch(0.74 0.15 150)" stroke="var(--bg)" stroke-width="2.5"/>
+              <circle cx="60" cy="104" r="10" fill="oklch(0.62 0.16 255)" stroke="var(--bg)" stroke-width="2.5"/>
+            </g>
+            <circle cx="130" cy="130" r="4" fill="var(--ink-faint)"/>
+          </svg>
+        </div>
+        <div class="readout"><span class="k">Hue Rotate θ</span><span class="v" id="okTheta">+0°</span></div>
+        <div class="mtail">Predictable and clinical. <b>Match a target hue by the numbers</b>, with zero lightness shift.</div>
+      </div>
+
+      <!-- TETRAHEDRAL -->
+      <div class="mode reveal" style="--accent: var(--tetra); --accent-d: var(--tetra-d);">
+        <div class="mhead">
+          <span class="mchip"><span class="d"></span>Tetrahedral</span>
+          <span class="verb">Shove</span>
+        </div>
+        <h3>Displace a corner of the cube.</h3>
+        <p class="mlede">Shove a corner of the RGB cube and let the colours inside follow it. Saturation- and value-dependent, so the move feels organic and analog.</p>
+        <div class="mode-fig" id="tetraStage">
+          <svg viewBox="0 0 520 480">
+            <polygon class="cube-t" points="300,80 430,155 300,230 170,155"/>
+            <polygon class="cube-l" points="170,155 300,230 300,380 170,305"/>
+            <polygon class="cube-r" points="300,230 430,155 430,305 300,380"/>
+            <line id="tetraVec" x1="430" y1="305" x2="430" y2="305" stroke="var(--tetra)" stroke-width="3" stroke-dasharray="4 6"/>
+            <circle id="tetraP1" data-w="0.7" data-bx="372" data-by="300" cx="372" cy="300" r="9" fill="oklch(0.6 0.18 30)"/>
+            <circle id="tetraP2" data-w="0.45" data-bx="345" data-by="270" cx="345" cy="270" r="9" fill="oklch(0.62 0.15 40)"/>
+            <circle id="tetraP3" data-w="0.25" data-bx="330" data-by="240" cx="330" cy="240" r="9" fill="oklch(0.64 0.12 48)"/>
+            <circle id="tetraCorner" cx="430" cy="305" r="13" fill="var(--tetra)" stroke="var(--bg)" stroke-width="3"/>
+          </svg>
+        </div>
+        <div class="readout"><span class="k">Red → corner shift</span><span class="v" id="tetraRm">0.00</span></div>
+        <div class="mtail"><b>The default.</b> Richer, less digital hue moves, the way film and analog tools behave.</div>
+      </div>
+
+      <!-- GRAVITY -->
+      <div class="mode reveal" style="--accent: var(--gravity); --accent-d: var(--gravity-d);">
+        <div class="mhead">
+          <span class="mchip"><span class="d"></span>Gravity</span>
+          <span class="verb">Attract</span>
+        </div>
+        <h3>Pull together, or push apart.</h3>
+        <p class="mlede">Pull a scattered hue into one tight tone, or push two colours that blur together back apart. It never rotates, it gathers.</p>
+        <div class="mode-fig" id="gravStage">
+          <div class="hue-ring"></div>
+          <svg viewBox="0 0 260 260" style="overflow:visible;">
+            <circle cx="191.7" cy="56.5" r="9" fill="none" stroke="var(--gravity)" stroke-width="2.4"/>
+            <circle id="gravD0" cx="130" cy="50" r="9" fill="oklch(0.7 0.13 350)" stroke="var(--bg)" stroke-width="2.4"/>
+            <circle id="gravD1" cx="130" cy="50" r="9" fill="oklch(0.68 0.14 20)" stroke="var(--bg)" stroke-width="2.4"/>
+            <circle id="gravD2" cx="130" cy="50" r="9" fill="oklch(0.68 0.13 40)" stroke="var(--bg)" stroke-width="2.4"/>
+            <circle id="gravD3" cx="130" cy="50" r="9" fill="oklch(0.72 0.13 60)" stroke="var(--bg)" stroke-width="2.4"/>
+            <circle id="gravD4" cx="130" cy="50" r="9" fill="oklch(0.78 0.13 85)" stroke="var(--bg)" stroke-width="2.4"/>
+            <circle id="gravD5" cx="130" cy="50" r="9" fill="oklch(0.78 0.14 110)" stroke="var(--bg)" stroke-width="2.4"/>
+            <circle id="gravD6" cx="130" cy="50" r="9" fill="oklch(0.74 0.15 145)" stroke="var(--bg)" stroke-width="2.4"/>
+            <circle id="gravD7" cx="130" cy="50" r="9" fill="oklch(0.72 0.12 175)" stroke="var(--bg)" stroke-width="2.4"/>
+          </svg>
+        </div>
+        <div class="readout"><span class="k">Direction</span><span class="v" id="gravMode">CONSOLIDATE +</span></div>
+        <div class="mtail"><b>Consolidate inconsistent skin tones</b>, or separate colours that merge into each other.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHIP & DENSITY ============ -->
+<section id="shape" class="bordered" data-screen-label="Whip & Density">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Shape the move</p>
+      <h2>Whip &amp; Density.</h2>
+      <p>Two controls shape the rotation itself. <em>Whip</em> sets how your most saturated colours move relative to the low-sat ones, and <em>Density</em> shapes how richly the colour builds as it shifts.</p>
+    </div>
+    <div class="shape-grid">
+      <div class="plot-card reveal">
+        <svg viewBox="0 0 600 300">
+          <line class="grid-l" x1="60" y1="145" x2="560" y2="145" stroke-dasharray="4 6"/>
+          <path id="whipArea" d="" fill="var(--gravity)" opacity="0.12"/>
+          <path id="whipPath" d="" fill="none" stroke="var(--gravity)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="whipHigh" cx="560" cy="145" r="7" fill="var(--gravity)" stroke="var(--bg)" stroke-width="2.5"/>
+          <line class="axis" x1="60" y1="30" x2="60" y2="250"/>
+          <line class="axis" x1="60" y1="250" x2="562" y2="250"/>
+          <text x="70" y="44" class="tk" text-anchor="start" font-size="11">↑ leads (faster)</text>
+          <text x="70" y="240" class="tk" text-anchor="start" font-size="11">↓ lags (slower)</text>
+          <text x="60" y="278" class="tk" text-anchor="middle">low sat</text>
+          <text x="560" y="278" class="tk" text-anchor="end">high sat</text>
+          <text x="310" y="296" class="tk" text-anchor="middle" font-size="11" letter-spacing="0.1em">CHROMA OF PIXEL →</text>
+          <text class="tk" text-anchor="middle" transform="rotate(-90 30 140)" x="30" y="140" font-size="11" letter-spacing="0.1em">ROTATION APPLIED</text>
+        </svg>
+        <div class="ctl">
+          <div class="ctl-label"><span>Whip · <b id="whipBias">uniform rotation</b></span><b id="whipOut">+0.00</b></div>
+          <input type="range" id="whipSlider" min="-1" max="1" step="0.02" value="0" />
+        </div>
+      </div>
+      <div class="density-card reveal">
+        <h4>What Whip does</h4>
+        <p>During a hue rotation, Whip decides how your <em>high-chroma</em> values travel relative to the low-saturated ones. Push it positive and the vivid colours <strong>lead</strong> the rotation, moving further and faster. Pull it negative and they <strong>lag behind</strong>, trailing the pastels. At zero, every saturation rotates by the same angle.</p>
+        <p><strong>Density</strong> shapes how richly the colour builds as it shifts, driving saturation and subtractive-dye density together through a tetrahedral film matrix, so the falloff reads photographic rather than electronic.</p>
+        <div class="dye-strip">
+          <span style="background:oklch(0.82 0.06 35)"></span>
+          <span style="background:oklch(0.72 0.10 35)"></span>
+          <span style="background:oklch(0.62 0.14 33)"></span>
+          <span style="background:oklch(0.52 0.16 31)"></span>
+          <span style="background:oklch(0.42 0.15 29)"></span>
+          <span style="background:oklch(0.32 0.12 27)"></span>
+        </div>
+        <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-faint);">Subtractive density ramp — colour darkens by pulling all three channels, like dye on film.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURE GRID ============ -->
+<section id="features" class="bordered" data-screen-label="Features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Everything in the box</p>
+      <h2>The full capability set.</h2>
+    </div>
+    <div class="feat-grid reveal">
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--red)"></span><b>7 hue vectors</b></div><p>Red, Yellow, Green, Cyan, Blue, Magenta and Skin as selectable starting points.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--tetra)"></span><b>Asymmetric hue flanks</b></div><p>Independent left and right bell-curve widths around the center.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--oklab)"></span><b>Asymmetric luma mask</b></div><p>Separate low and high falloff to gate by brightness on each side.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--gravity)"></span><b>Gaussian / Trapezoid</b></div><p>Soft bell or flat-topped plateau for the luminance shape.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--oklab)"></span><b>Oklab rotation</b></div><p>Rigid, lightness-safe hue turn in perceptual space.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--tetra)"></span><b>Tetrahedral remix</b></div><p>Organic corner-shove hue moves through the RGB cube.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--gravity)"></span><b>Gravity attract / repel</b></div><p>Consolidate a scattered hue, or push two apart.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--yellow)"></span><b>Whip</b></div><p>Bias the effect by chroma toward vivid or pastel pixels.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--red)"></span><b>Density builder</b></div><p>Subtractive-dye density through a tetrahedral film matrix.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--magenta)"></span><b>Saturation boost</b></div><p>Lift or cut saturation only inside the active selection.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--green)"></span><b>Soft clamping</b></div><p>Gentle limiting keeps pushed colours from breaking or banding.</p></div>
+      <div class="feat"><div class="ft"><span class="dot" style="background:var(--cyan)"></span><b>Show Effected</b></div><p>Neutral-checker diagnostic to verify the selection before grading.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GET IT (free) ============ -->
+<section class="sub" id="getit" data-screen-label="Get it free">
+  <div class="wrap">
+    <div class="sub-grid">
+      <div class="sub-copy reveal">
+        <p class="eyebrow">Get it</p>
+        <h2>It's free. Grab it and start slicing.</h2>
+        <p>Color Slicer is a free DCTL. Download it directly, or let the Tool Box Manager install it and keep it updated alongside the rest of the kit. No membership required.</p>
+        <div class="free-note">
+          <div class="k">Works everywhere Resolve does</div>
+          <p>macOS, Windows and Linux. Apply it on a node as a DCTL, pick a vector and a rotation mode, and you're slicing.</p>
+        </div>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="plan" style="color:var(--oklab)">Free DCTL</div>
+        <div class="amt"><b>$0</b><span>· no membership</span></div>
+        <p class="note">The whole tool: 7 vectors, the two-axis mask, all three rotation modes and Show Effected. Yours to keep.</p>
+        <ul class="price-list">
+          <li>Color Slicer, every feature unlocked</li>
+          <li>All three rotation modes</li>
+          <li>Two-axis hue × luma selection</li>
+          <li>Installs &amp; updates with the Tool Box Manager</li>
+        </ul>
+        <!-- NOTE: confirm the Color Slicer release URL — placeholder repo for now. -->
+        <a class="btn primary" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest" target="_blank" rel="noopener">Direct download →</a>
+        <div class="price-foot">Free · macOS · Windows · Linux</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBERSHIP ============ -->
+<section class="sub" id="subscribe" data-screen-label="Membership">
+  <div class="wrap">
+    <div class="sub-grid">
+      <div class="sub-copy reveal">
+        <p class="eyebrow">The membership</p>
+        <h2>Color Slicer is free. The club gets you everything else.</h2>
+        <p>You don't need to pay for Color Slicer. But if it earns a spot in your kit, becoming a <strong>Happy Little Noder</strong> unlocks every premium tool on the channel, plus every update and new release. One low annual fee that will <em>never</em> be raised.</p>
+        <div class="free-note">
+          <div class="k">What you actually get</div>
+          <p>Photo Chemist, the Hue Tools, Technicolor DRT and the whole premium kit, all in one membership. New tools land here first.</p>
+        </div>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="plan">Happy Little Noders</div>
+        <div class="amt"><b>$47.34</b><span>/ year</span></div>
+        <p class="note">Everything you see on YouTube, plus every update, for less than a single film stock LUT pack.</p>
+        <ul class="price-list">
+          <li>Every premium DCTL &amp; OFX plugin in the Tool Box</li>
+          <li>Photo Chemist, the Hue Tools, Technicolor DRT &amp; more</li>
+          <li>All future tools &amp; updates included</li>
+          <li>Plus the free tools like Color Slicer, kept up to date</li>
+          <li>Price locked, never raised</li>
+        </ul>
+        <a class="btn primary" href="https://dec18studios.com/checkout/subscribe?cartToken=kptC8qvTRVDiZHvOBtMQb4sftOOnbvA7HK3XutIz">Become a member →</a>
+        <div class="price-foot">Billed annually · cancel anytime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="install" id="install" data-screen-label="Install">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Getting started</p>
+      <h2>Install in a couple of clicks.</h2>
+      <p>The Tool Box Manager installs Color Slicer, keeps it organized, and updates it for you alongside the rest of the kit. Works on <strong>macOS, Windows and Linux</strong>, no manual file-copying.</p>
+    </div>
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Open the Tool Box Manager</b><p>Grab the latest release from <a class="inline" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">GitHub</a> and open it. It's your home base for every Dec. 18 tool.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Find Color Slicer in the list</b><p>Browse the catalog and select <b>Color Slicer</b>.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Click Install</b><p>The Manager drops the DCTL into the right place for you, no digging through system folders.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Restart DaVinci Resolve</b><p>Relaunch Resolve so it picks up the new DCTL.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Apply it on a node</b><p>Add a node, apply <b>Color Slicer</b> as a <code>DCTL</code>, pick a vector and a rotation mode, and start slicing.</p></div>
+        </div>
+      </div>
+
+      <aside class="install-aside">
+        <div class="manager-card reveal">
+          <span class="badge">Recommended</span>
+          <h4>The Tool Box Manager</h4>
+          <p>Install, organize and auto-update Color Slicer and every other Dec. 18 tool from one app. New stuff lands here first.</p>
+          <a class="btn primary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
+        </div>
+        <div class="note-card reveal">
+          <div class="k">Tip · start with Show Effected</div>
+          <p>Before you grade, flip on Show Effected and tune the two-axis mask first. Get the slice right, then move the hue. Stuck? Email <a class="inline" href="mailto:create@dec18studios.com" style="color:var(--gravity)">create@dec18studios.com</a> and I'll help.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-cta">
+      <div class="big">Surgical hue control.<br /><em>Three ways to move colour.</em></div>
+      <p>Slice one hue out, gated by light, and reshape it your way. Free for DaVinci Resolve.</p>
+      <!-- NOTE: confirm the Color Slicer release URL — placeholder repo for now. -->
+      <a class="btn primary" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest" target="_blank" rel="noopener">Download Color Slicer · Free →</a>
+    </div>
+    <div class="foot-grid">
+      <div>
+        <div class="brandbig">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../">Color Grading Tools</a>
+        <a href="../hue-tools/">Hue Tools</a>
+        <a href="../photochemist/">Photo Chemist</a>
+        <a href="https://dec18studios.com/color-grading-tools/technicolordrt">Technicolor DRT</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script src="color-slicer.js"></script>
+</body>
+</html>
