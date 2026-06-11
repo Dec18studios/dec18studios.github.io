@@ -403,7 +403,7 @@
           <div class="os-row">
             <div class="lbl">Download for your system</div>
             <div class="dl-main">
-              <a class="btn primary" id="mgrPrimary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" target="_blank" rel="noopener">
+              <a class="btn primary dl" data-slug="plugin-manager" data-name="Tool Box Manager" id="mgrPrimary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" target="_blank" rel="noopener">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span id="mgrPrimaryLabel">Download the Manager</span>
               </a>
             </div>
@@ -453,7 +453,7 @@
         <div class="fh">Your account</div>
         <a href="https://dec18studios.com/account" target="_top">Manage subscription</a>
         <a href="../" target="_top">Tools home</a>
-        <a href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" target="_blank" rel="noopener">Tool Box Manager</a>
+        <a class="dl" data-slug="plugin-manager" data-name="Tool Box Manager" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" rel="noopener">Tool Box Manager</a>
         <a href="#downloads">Direct downloads</a>
       </div>
       <div class="fcol">
@@ -786,6 +786,8 @@
         ["mac", "win", "linux"].filter(function (o) { return o !== detected; }).forEach(function (o) {
           var a = document.createElement("a");
           a.href = REL; a.target = "_blank"; a.rel = "noopener";
+          a.className = "dl";
+          a.dataset.slug = "plugin-manager"; a.dataset.name = "Tool Box Manager";
           a.textContent = "Also for " + names[o];
           alt.appendChild(a);
         });
@@ -862,5 +864,6 @@
   </svg>
 </template>
 
+<script src="../assets/dl-gate.js" defer></script>
 </body>
 </html>

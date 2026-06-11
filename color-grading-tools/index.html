@@ -339,7 +339,7 @@
         <div class="hero-cta">
           <a class="btn primary" href="https://dec18studios.com/clients?join=1" target="_top">Get all the tools</a>
           <a class="btn" href="#free-tools">Browse free tools</a>
-          <a class="btn" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" target="_blank" rel="noopener">Download the Tool Box Manager</a>
+          <a class="btn dl" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" data-slug="plugin-manager" data-name="Tool Box Manager" target="_top" rel="noopener">Download the Tool Box Manager</a>
         </div>
         <div class="hero-meta">
           <div class="m"><b>15+</b><span>tools &amp; plugins</span></div>
@@ -712,8 +712,8 @@
     e.stopPropagation();
     var url  = dl.href;
     var card = dl.closest('.tcard');
-    var slug = card ? (card.dataset.slug || '') : '';
-    var name = card ? (card.querySelector('h4') || {}).textContent || '' : '';
+    var slug = (card && card.dataset.slug) || dl.dataset.slug || '';
+    var name = (card && card.querySelector('h4') ? card.querySelector('h4').textContent : '') || dl.dataset.name || '';
 
     var stored = savedEmail();
     if (stored) {
