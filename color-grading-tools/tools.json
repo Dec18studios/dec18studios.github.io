@@ -43,7 +43,7 @@
     "color": "blue",
     "desc": "Slice the image into color regions for precise, targeted grading.",
     "repo": "Color-Slicer-DCTL",
-    "dlAsset": "Color-Slicer-DCTL-v1.0.0.zip"
+    "dlAsset": "Color-Slicer-DCTL-v2.0.zip"
   },
   {
     "name": "Contrast Sat Volume",
