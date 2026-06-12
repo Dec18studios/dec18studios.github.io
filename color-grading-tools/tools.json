@@ -27,8 +27,7 @@
     "tier": "free",
     "color": "cyan",
     "desc": "Shape tonal volume and contrast with a custom response curve.",
-    "repo": "Volume-Curve-DCTL",
-    "dlAsset": "Volume-Curve-v1.0.0.zip"
+    "repo": "Volume-Curve-DCTL"
   },
   {
     "name": "Grain By Greg",
@@ -43,7 +42,6 @@
     "tier": "free",
     "color": "blue",
     "desc": "Slice the image into color regions for precise, targeted grading.",
-    "url": "color-slicer/",
     "repo": "Color-Slicer-DCTL",
     "dlAsset": "Color-Slicer-DCTL-v1.0.0.zip"
   },
@@ -91,7 +89,7 @@
     "color": "cyan",
     "desc": "A color-space transform into a film-negative working space.",
     "repo": "Film-Negative-Space-CST-DCTL",
-    "dlAsset": "GE.Film.Negative.Space.CST.v2.1.0.zip",
+    "dlAsset": "Film-Negative-Space-CST-DCTL-v2.2.zip",
     "url": "film-negative-space-cst/"
   },
   {
