@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Technicolor DRT — Quick Start — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.64 0.205 25 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("../../assets/logo-full.png") left center / contain no-repeat;
+            mask: url("../../assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(48px, 7vw, 92px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -18%; right: -14%; width: 780px; height: 780px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(140px); opacity: 0.13; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: clamp(32px, 5vw, 60px); align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 6.2vw, 76px); line-height: 0.98; letter-spacing: -0.02em; margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 32%, var(--blue) 58%, var(--cyan) 80%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 48ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ STOCK VIEWER (hero right) ============ */
+  .viewer {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line-soft); border-radius: 18px; padding: 16px; overflow: hidden;
+    box-shadow: 0 40px 90px -52px oklch(0 0 0 / 0.9);
+  }
+  .viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 6px 14px; }
+  .viewer-head .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .viewer-head .live { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--red);
+    border: 1px solid oklch(0.64 0.205 25 / 0.45); border-radius: 5px; padding: 3px 8px; }
+  .stage {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
+    background: var(--bg); border: 1px solid var(--line-soft);
+  }
+  .stage img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: filter 0.5s ease, opacity 0.35s ease; -webkit-user-drag: none; user-select: none;
+  }
+  .stage .badge {
+    position: absolute; left: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .stage .badge .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--red); }
+  .stage .compare {
+    position: absolute; right: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 12px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff;
+    border: 1px solid oklch(1 0 0 / 0.25); cursor: pointer; backdrop-filter: blur(4px); user-select: none;
+    transition: background 0.16s;
+  }
+  .stage .compare:hover { background: oklch(0 0 0 / 0.72); }
+  .stage .compare:active, .stage .compare.holding { background: var(--ink); color: var(--bg); }
+
+  .stock-picker { margin-top: 14px; display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .stock-picker label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .stock-picker .selrow { display: flex; gap: 10px; align-items: stretch; }
+  .stock-select {
+    flex: 1; font-family: var(--mono); font-size: 13.5px; color: var(--ink); background: var(--bg-2);
+    border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-dim) 50%), linear-gradient(135deg, var(--ink-dim) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+  }
+  .stock-select:hover { border-color: oklch(0.42 0.013 264); }
+  .swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+  .swatches button {
+    width: 30px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; padding: 0;
+    background-size: cover; background-position: center; transition: transform 0.14s, border-color 0.14s; position: relative;
+  }
+  .swatches button:hover { transform: translateY(-2px); }
+  .swatches button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ink); }
+  .stock-note { margin-top: 11px; font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--ink-faint); text-wrap: pretty; }
+  .stock-desc { margin: 2px 6px 0; font-size: 14px; color: var(--ink-dim); min-height: 2.6em; text-wrap: pretty; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(52px, 7vw, 100px); position: relative; }
+  .sec-head { max-width: 64ch; margin-bottom: clamp(34px, 5vw, 54px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+  .divider { height: 1px; background: var(--line-soft); }
+
+  /* ============ STORY : it's chemistry ============ */
+  .story { border-top: 1px solid var(--line-soft); }
+  .story-grid { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
+  @media (max-width: 880px) { .story-grid { grid-template-columns: 1fr; } }
+  .story-copy h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 46px);
+    letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px;
+  }
+  .story-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.7vw, 18px); text-wrap: pretty; }
+  .story-copy p strong { color: var(--ink); font-weight: 600; }
+  .chem-card {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: clamp(24px, 3vw, 32px);
+  }
+  .chem-flow { display: flex; flex-direction: column; gap: 0; }
+  .chem-step { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start; padding: 4px 0; }
+  .chem-step .ico {
+    width: 34px; height: 34px; border-radius: 9px; flex: none; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--bg);
+  }
+  .chem-step .ct b { font-weight: 600; font-size: 15.5px; display: block; }
+  .chem-step .ct p { margin-top: 2px; font-size: 13.5px; color: var(--ink-dim); line-height: 1.5; }
+  .chem-rail { width: 2px; height: 16px; margin-left: 16px; background: linear-gradient(var(--line), transparent); }
+
+  /* ============ PIPELINE ============ */
+  .pipeline { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .stages { display: grid; gap: 16px; }
+  .stage-card {
+    --accent: var(--red); --accent-d: var(--red-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+    display: grid; grid-template-columns: 0.34fr 0.66fr; transition: border-color 0.18s, transform 0.18s;
+  }
+  .stage-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  @media (max-width: 760px) { .stage-card { grid-template-columns: 1fr; } }
+  .stage-side {
+    padding: clamp(22px, 3vw, 30px); border-right: 1px solid var(--line-soft); position: relative;
+    background: linear-gradient(180deg, var(--accent-d), transparent 70%);
+  }
+  @media (max-width: 760px) { .stage-side { border-right: none; border-bottom: 1px solid var(--line-soft); } }
+  .stage-side .num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--accent); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px; }
+  .stage-side .num::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+  .stage-side h3 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -0.015em; line-height: 1.05; margin-top: 14px; }
+  .stage-side .tag { margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); text-wrap: pretty; }
+  .stage-body { padding: clamp(22px, 3vw, 30px); }
+  .stage-body > p { color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .stage-body > p strong { color: var(--ink); font-weight: 600; }
+  .stage-body .why {
+    margin-top: 18px; border-radius: 12px; padding: 14px 16px; background: var(--accent-d);
+    position: relative; overflow: hidden;
+  }
+  .stage-body .why::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .stage-body .why .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .stage-body .why p { margin-top: 6px; font-size: 14px; color: var(--ink); line-height: 1.5; text-wrap: pretty; }
+
+  /* ============ STOCK LAB (FSE editor + curves) ============ */
+  .lab { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .lab-feature { display: grid; grid-template-columns: 0.96fr 1.04fr; gap: clamp(30px, 5vw, 56px); align-items: center; }
+  @media (max-width: 940px) { .lab-feature { grid-template-columns: 1fr; } }
+  .lab-copy .kick { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta);
+    display: inline-flex; align-items: center; gap: 12px; }
+  .lab-copy .kick::before { content: ""; width: 26px; height: 2px; background: var(--magenta); }
+  .lab-copy h3 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 3.8vw, 44px); letter-spacing: -0.02em; line-height: 1.02; margin: 16px 0 0; }
+  .lab-copy p { margin-top: 18px; color: var(--ink-dim); font-size: 16.5px; text-wrap: pretty; }
+  .lab-copy p strong { color: var(--ink); font-weight: 600; }
+  .lab-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .lab-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; color: var(--ink); text-wrap: pretty; }
+  .lab-list li .b { width: 8px; height: 8px; border-radius: 2px; flex: none; margin-top: 8px; background: var(--magenta); }
+
+  .fse-shot {
+    position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-soft);
+    box-shadow: 0 30px 80px -46px oklch(0 0 0 / 0.85);
+  }
+  .fse-img, .fse-video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block;
+    background: var(--bg); -webkit-user-drag: none; user-select: none;
+  }
+  .fse-video { display: none; }
+  .fse-shot .fse-cap {
+    position: absolute; left: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+  }
+
+  /* ---- Film Stock Editor recreation (animated) ---- */
+  .fx-win { background: #0b0c0f; font-family: var(--mono); color: #cfd2d8; }
+  .fx-titlebar { position: relative; display: flex; align-items: center; justify-content: center;
+    padding: 9px; background: #16181d; border-bottom: 1px solid #000; font-size: 12px; color: var(--ink-dim); letter-spacing: 0.02em; }
+  .fx-lights { position: absolute; left: 12px; display: flex; gap: 7px; }
+  .fx-lights i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .fx-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .fx-h { font-weight: 600; color: var(--ink); font-size: 12.5px; }
+  .fx-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .fx-sel { background: #2b2e36; border: 1px solid #3a3e48; border-radius: 6px; padding: 6px 10px; color: #dfe2e8;
+    font-size: 12px; display: inline-flex; align-items: center; gap: 16px; }
+  .fx-sel::after { content: "⌄"; color: var(--blue); font-size: 13px; margin-top: -3px; }
+  .fx-sel.grow { flex: 1; justify-content: space-between; }
+  .fx-check { display: flex; align-items: center; gap: 7px; color: #dfe2e8; font-size: 12.5px; }
+  .fx-check .bx { width: 16px; height: 16px; border-radius: 4px; background: var(--blue); display: grid; place-items: center; color: #fff; font-size: 11px; }
+  .fx-seg { display: flex; border: 1px solid #3a3e48; border-radius: 7px; overflow: hidden; }
+  .fx-seg span { padding: 6px 13px; font-size: 12px; color: #cfd2d8; }
+  .fx-seg span.on { background: #4a4e58; color: #fff; }
+  .fx-cap2 { font-size: 12px; color: var(--ink-faint); }
+  .fx-plot { background: #000; border-radius: 6px; overflow: hidden; }
+  .fx-plot svg { display: block; width: 100%; height: auto; }
+  .fx-chan { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; color: var(--ink-dim); }
+  .fx-chan b { font-weight: 600; }
+  .fx-amps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .fx-amp .lab { font-size: 11px; color: var(--ink-dim); margin-bottom: 7px; }
+  .fx-track { height: 5px; border-radius: 99px; background: #3a3e48; position: relative; }
+  .fx-track .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: var(--blue); }
+  .fx-track .knob { position: absolute; top: 50%; width: 15px; height: 15px; border-radius: 50%; background: #cfd2d8; transform: translate(-50%, -50%); box-shadow: 0 1px 4px oklch(0 0 0 / 0.6); }
+  .fx-hints { display: flex; flex-wrap: wrap; gap: 16px; font-size: 10.5px; color: var(--ink-faint); }
+  .fx-curve { transform-box: fill-box; transform-origin: 50% 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .fx-a { animation: fxA 6.5s ease-in-out infinite; }
+    .fx-b { animation: fxB 7.8s ease-in-out infinite; }
+    .fx-c { animation: fxC 5.6s ease-in-out infinite; }
+  }
+  @keyframes fxA { 0%, 100% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(-7px) scaleY(1.05); } }
+  @keyframes fxB { 0%, 100% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(8px) scaleY(0.96); } }
+  @keyframes fxC { 0%, 100% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(-5px) scaleY(1.06); } }
+  .ph {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    background-image: repeating-linear-gradient(45deg, oklch(0.22 0.014 264) 0 12px, oklch(0.2 0.013 264) 12px 24px);
+  }
+  .ph .pc { display: flex; flex-direction: column; gap: 8px; align-items: center; padding: 24px; }
+  .ph .pc .mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--ink-dim); text-transform: uppercase; }
+  .ph .pc .sub { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); max-width: 30ch; line-height: 1.5; }
+  .ph .pc .icon { width: 46px; height: 46px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-2); display: grid; place-items: center; }
+  .ph .pc .icon span { width: 18px; height: 18px; border-radius: 4px; background: linear-gradient(135deg, var(--magenta), var(--blue)); }
+
+  .curves-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: clamp(34px, 4vw, 50px); }
+  @media (max-width: 820px) { .curves-grid { grid-template-columns: 1fr; } }
+  .curve-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+  .curve-card .ct { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .curve-card h4 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+  .curve-card p { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .curve-fig { height: 120px; border-radius: 11px; background: var(--bg); border: 1px solid var(--line-soft); overflow: hidden; }
+  .curve-fig svg { width: 100%; height: 100%; display: block; }
+  .curve-fig path { transition: transform 0.55s cubic-bezier(.2,.7,.2,1); transform-box: fill-box; transform-origin: center; }
+  .curve-card:hover .curve-fig path:nth-of-type(1) { transform: translate(-9px, -3px); }
+  .curve-card:hover .curve-fig path:nth-of-type(2) { transform: translate(7px, 2px); }
+  .curve-card:hover .curve-fig path:nth-of-type(3) { transform: translate(-5px, -6px); }
+  @media (prefers-reduced-motion: reduce) {
+    .curve-fig path { transition: none; }
+    .curve-card:hover .curve-fig path { transform: none; }
+  }
+
+  /* ============ MEMBERSHIP ============ */
+  .sub { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .sub-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  @media (max-width: 940px) { .sub-grid { grid-template-columns: 1fr; } }
+  .sub-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
+  .sub-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
+  .sub-copy p strong { color: var(--ink); font-weight: 600; }
+  .sub-copy .free-note { margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--cyan-d); position: relative; overflow: hidden; }
+  .sub-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan); }
+  .sub-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .sub-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); }
+  .price-card { position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden; }
+  .price-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta)); }
+  .price-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); }
+  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 72px); line-height: 1; letter-spacing: -0.03em; }
+  .price-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
+  .price-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .price-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
+  .price-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+  .price-list li::before { content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px; }
+  .price-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
+  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  /* ============ INSTALL ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start;
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px;
+  }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--green);
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.74 0.165 148 / 0.4); background: var(--green-d);
+    display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--cyan); }
+  .step .st a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
+  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
+  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
+  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
+  .note-card { background: var(--yellow-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--yellow); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  details.manual { margin-top: 8px; border: 1px solid var(--line-soft); border-radius: 14px; background: var(--bg-1); overflow: hidden; }
+  details.manual summary { cursor: pointer; padding: 16px 20px; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--ink-dim); list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details.manual summary::-webkit-details-marker { display: none; }
+  details.manual summary::after { content: "+"; font-size: 16px; color: var(--ink-faint); }
+  details.manual[open] summary::after { content: "–"; }
+  details.manual .mbody { padding: 0 20px 18px; }
+  details.manual ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+  details.manual li { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  details.manual code { font-family: var(--mono); font-size: 12px; background: var(--bg-2); border-radius: 5px; padding: 1px 6px; color: var(--cyan); }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    .btn, nav.toplinks a.cta, .stock-select, .compare { min-height: 44px; }
+    .swatches button { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">← Technicolor DRT</a>
+      <a href="#install">Install</a>
+      <a href="#firstlook">First look</a>
+      <a href="#modes">Modes</a>
+      <a href="#tips">Tips</a>
+      <a href="#faq">FAQ</a>
+      <a href="../#subscribe" class="cta">Get it · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO / INTRO ============ -->
+<section class="hero" data-screen-label="Quick Start hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <p class="eyebrow">Quick Start · Technicolor DRT</p>
+    <h1 class="hero-title" style="max-width: 15ch;">From flat scan to <em>dye-transfer print</em> in five steps.</h1>
+    <p class="hero-sub" style="max-width: 62ch;">This guide gets you to a great Technicolor look fast using <strong>Single Stock (Modern)</strong>, the default mode, then shows you when to reach for the classic two-strip and three-strip processes.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#install">Start installing →</a>
+      <a class="btn" href="#firstlook">Jump to the workflow</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1 · INSTALL & APPLY ============ -->
+<section class="install" id="install" data-screen-label="Install & apply">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 1 · Install &amp; apply</p>
+      <h2>Get it onto a node.</h2>
+      <p>Install through the Tool Box Manager, then feed the plugin the right input. Three quick moves.</p>
+    </div>
+    <div class="steps reveal" style="max-width: 840px;">
+      <div class="step">
+        <span class="n"></span>
+        <div class="st"><b>Install via the Tool Box Manager</b><p>Grab the <a class="inline" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Tool Box Manager</a>, pick <b>Technicolor DRT</b>, click Install, then restart Resolve (enable OFX; on macOS choose <b>Allow Anyway</b> in Privacy &amp; Security). Windows &amp; Linux need a Turing-class NVIDIA GPU or newer.</p></div>
+      </div>
+      <div class="step">
+        <span class="n"></span>
+        <div class="st"><b>Apply it to a serial node</b><p>Add a serial node and apply <b>Technicolor DRT</b> from the OFX Effects library. It lives in Resolve's OFX group <b>Dec18studios</b>.</p></div>
+      </div>
+      <div class="step">
+        <span class="n"></span>
+        <div class="st"><b>Feed it the right input</b><p>Set <strong>Input Mode</strong> to <b>DaVinci Intermediate</b> if your timeline is DWG/Intermediate, or <b>Linear</b> if you've already converted. In doubt, add a Color Space Transform to <b>DaVinci Wide Gamut / Intermediate</b> with no tone mapping just before the node.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · FIRST LOOK ============ -->
+<section class="install" id="firstlook" data-screen-label="First look">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 2 · The 60-second workflow</p>
+      <h2>Your first look, in five moves.</h2>
+      <p>Every step here is a real control. Stay in <strong>Single Stock (Modern)</strong> and work top to bottom.</p>
+    </div>
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Leave Processing Method on Single Stock (Modern)</b><p>It's the default, and the most flexible, forgiving Technicolor look. Don't change it yet.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Load a Full Preset</b><p>A <b>Full Preset</b> loads a complete stock (silver sensitivity, dye formation and HD curves) at once. Start with a balanced neutral preset.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Turn on Auto Anchor Registers</b><p>In the <b>Register Extraction</b> group, switch on <b>Auto Anchor Registers</b>. It measures your black and white points from the stock automatically.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Set exposure with the Printer Lights</b><p>Use the lights, not the curves. Lower <b>Printer Light</b> to print brighter, raise it to print denser. Trim <b>Red / Green / Blue Printer Points</b> to balance color (25 = neutral; ±1 ≈ 1/12 stop).</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Pick a Projector Bulb</b><p><b>Carbon Arc</b> for a vintage house look, <b>White Flame</b> for a brighter arc, <b>Xenon</b> for a clean modern source.</p></div>
+        </div>
+      </div>
+      <aside class="install-aside">
+        <div class="note-card reveal">
+          <div class="k">Dial order that works</div>
+          <p>Drop the <b>Register Black Points</b> until scene black just hits full density, set the <b>White Points</b>, set <b>Gel Matrix Gamma</b> for contrast, then use the <b>Printer Lights</b> for exposure and balance only.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · THE MODES ============ -->
+<section class="install" id="modes" data-screen-label="The modes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 3 · The modes in plain language</p>
+      <h2>When to reach for each mode.</h2>
+      <p>Four processing methods sit in one dropdown. Start with the first, and treat the rest as deliberate choices.</p>
+    </div>
+    <div class="stages">
+      <article class="stage-card reveal" style="--accent: var(--yellow); --accent-d: var(--yellow-d);">
+        <div class="stage-side">
+          <span class="num">Start here</span>
+          <h3>Single Stock (Modern)</h3>
+          <p class="tag">The flexible modern Technicolor look.</p>
+        </div>
+        <div class="stage-body">
+          <p>Use it for almost everything. It gives you the dye-transfer richness with clean, controllable registers, and it's the most forgiving way into the tool.</p>
+          <div class="why"><div class="k">When to use</div><p>Almost every shot. This is your default and your starting point.</p></div>
+        </div>
+      </article>
+      <article class="stage-card reveal" style="--accent: var(--red); --accent-d: var(--red-d);">
+        <div class="stage-side">
+          <span class="num">Diagnostic</span>
+          <h3>Neg Scan</h3>
+          <p class="tag">A clean developed-negative view.</p>
+        </div>
+        <div class="stage-body">
+          <p>The developed negative on its own, before any dye-transfer print. Use it to tune the negative stock and texture before you commit to a print look.</p>
+          <div class="why"><div class="k">When to use</div><p>Tuning the stock, or as a clean reference.</p></div>
+        </div>
+      </article>
+      <article class="stage-card reveal" style="--accent: var(--magenta); --accent-d: var(--magenta-d);">
+        <div class="stage-side">
+          <span class="num">2-Strip</span>
+          <h3>Process 3</h3>
+          <p class="tag">The real two-strip look: teal-and-rose, no blue.</p>
+        </div>
+        <div class="stage-body">
+          <p>Reach for it when you want an early-talkies or silent-era period feel. Recommended stock: <b>Double-X 5222</b> as the Neg Sensitivity preset.</p>
+          <div class="why"><div class="k">When to use</div><p>A specific, romantic two-strip period look.</p></div>
+        </div>
+      </article>
+      <article class="stage-card reveal" style="--accent: var(--green); --accent-d: var(--green-d);">
+        <div class="stage-side">
+          <span class="num">3-Strip</span>
+          <h3>Process 4</h3>
+          <p class="tag">Deep, saturated, dimensional: the glory era.</p>
+        </div>
+        <div class="stage-body">
+          <p>The real three-strip look. Use the <b>Gold Mirror Bias</b> slider to balance the prism. It's heavier-duty, so expect to spend more time balancing.</p>
+          <div class="why"><div class="k">When to use</div><p>A full three-strip look, when you have time to balance it. In doubt, return to Single Stock (Modern).</p></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 · TIPS ============ -->
+<section class="install" id="tips" data-screen-label="Tips">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 4 · Get the most out of it</p>
+      <h2>Five habits that pay off.</h2>
+      <p>Small workflow choices that keep the panel predictable and the look authentic.</p>
+    </div>
+    <div class="curves-grid">
+      <div class="curve-card reveal">
+        <span class="ct">Tip 01</span>
+        <h4>Balance with registers, expose with lights</h4>
+        <p>Set black and white points in <b>Register Extraction</b> first, then use <b>Printer Lights</b> purely for exposure and color balance. The two stages do different jobs, so don't fight one with the other.</p>
+      </div>
+      <div class="curve-card reveal">
+        <span class="ct">Tip 02</span>
+        <h4>Use the Gel Matrix masters for global moves</h4>
+        <p><b>Gel Matrix DMin / White / Gamma</b> move all three registers together. Deepen the matrix, clean the whites, or shift contrast there instead of tweaking three registers by hand.</p>
+      </div>
+      <div class="curve-card reveal">
+        <span class="ct">Tip 03</span>
+        <h4>Design the dyes in the Dye Designer</h4>
+        <p>Open <b>Dye Designer…</b> to set the C / M / Y / K dye hues and watch each plate land on its own with live thumbnails. Tune <b>Max Density</b> and <b>Green Flash</b> in the header. Start from the <b>Gentle Pull</b> shaping preset.</p>
+      </div>
+      <div class="curve-card reveal">
+        <span class="ct">Tip 04</span>
+        <h4>Sculpt the stock in the Film Stock Editor</h4>
+        <p>Open <b>Textures Editor…</b> to draw silver sensitivity, dye absorption and HD curves on the 43-band graph, and to set <b>Grain / Halation / MTF</b>. Your hand-drawn curves override the measured and Gaussian fallbacks.</p>
+      </div>
+      <div class="curve-card reveal">
+        <span class="ct">Tip 05</span>
+        <h4>Projector bulbs change the feel for free</h4>
+        <p>Try <b>Carbon Arc</b> vs <b>Xenon</b> before reaching for any other control. The bulb is the cheapest, most authentic mood swing in the panel. (Editing a trim by hand flips the preset to <b>Custom</b>.)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · FAQ ============ -->
+<section class="install" id="faq" data-screen-label="Troubleshooting">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 5 · Troubleshooting</p>
+      <h2>Common snags, fixed fast.</h2>
+      <p>The quick answers to the things that trip people up first.</p>
+    </div>
+    <div class="reveal" style="max-width: 880px;">
+      <details class="manual"><summary>The image looks washed out or low-contrast</summary><div class="mbody"><ol><li>Your registers aren't anchored. Turn on <code>Auto Anchor Registers</code>, or lower the <b>Register Black Points</b> until scene black reaches full density.</li></ol></div></details>
+      <details class="manual"><summary>Colors look off, or there's a cast</summary><div class="mbody"><ol><li>Balance with the <b>Red / Green / Blue Printer Points</b> (25 = neutral), and use <b>Gel Matrix White</b> to clean residual dye out of the whites.</li></ol></div></details>
+      <details class="manual"><summary>It's too dark or too bright</summary><div class="mbody"><ol><li>Adjust <b>Printer Light</b>. Remember the lab convention: more light = denser, darker print, so lower it to print brighter.</li></ol></div></details>
+      <details class="manual"><summary>I picked a bulb preset but it switched to "Custom"</summary><div class="mbody"><ol><li>Editing any projector trim or Power by hand flips the preset to <b>Custom</b>. That's expected. Reselect a bulb to snap back.</li></ol></div></details>
+      <details class="manual"><summary>The Dye Designer or Film Stock Editor won't open on Windows or Linux</summary><div class="mbody"><ol><li>Both panels run on all platforms in v12, but Windows and Linux require a <b>Turing-class NVIDIA GPU or newer</b>. On macOS, make sure Resolve has been allowed in Privacy &amp; Security.</li></ol></div></details>
+      <details class="manual"><summary>Two-strip or three-strip looks wrong</summary><div class="mbody"><ol><li>Process 3 and Process 4 are specialized. For Process 3, use <b>Double-X 5222</b> as the Neg Sensitivity preset. For Process 4, balance the prism with <b>Gold Mirror Bias</b> before judging the look. When in doubt, return to <b>Single Stock (Modern)</b>.</li></ol></div></details>
+      <details class="manual"><summary>Which input should I feed it?</summary><div class="mbody"><ol><li><b>DaVinci Intermediate</b> (DWG/Intermediate timeline) or <b>Linear</b>, set via <b>Input Mode</b>. Add a no-tone-map CST before the node if needed.</li></ol></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../../">Color Grading Tools</a>
+        <a href="../">Technicolor DRT</a>
+        <a href="../../photochemist/">Photo Chemist</a>
+        <a href="https://dec18studios.com/color-grading-tools/colorslice">Color Slice O'matic</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============ STOCK VIEWER ============
+     Add as many stocks as you like — the dropdown + swatches grow to fit (swatches wrap).
+     Each stock can carry two real exports:
+        src  = the developed Photo Chemist (filmic) look   e.g. "assets/golden-filmic.jpg"
+        base = the plain Rec.709 / normal version          e.g. "assets/golden-rec709.jpg"
+     When `src` is set it replaces the simulated frame; when `base` is set the Hold-to-compare
+     button shows that real Rec.709 frame instead of the simulated one. Leave both "" to use
+     the built-in live color simulation. */
+  (function () {
+    var BASE_IMG = "../assets/frame-web.jpg";
+    var STOCKS = [
+      { name: "Single Stock Modern", color: "var(--yellow)", src: "", base: "",
+        desc: "The default modern look: dye-transfer richness with clean, controllable registers. Warm skin, deep blue-green shadows.",
+        filter: "sepia(0.1) saturate(1.32) contrast(1.1) brightness(1.02)" },
+      { name: "Three-Strip Glory", color: "var(--red)", src: "", base: "",
+        desc: "Classic three-strip: saturated, deep and dimensional, the glory-era Technicolor palette.",
+        filter: "saturate(1.55) contrast(1.18) brightness(1.0)" },
+      { name: "Two-Strip Cyan/Red", color: "var(--cyan)", src: "", base: "",
+        desc: "Real two-strip: teal-and-rose, no blue, the romantic look of the early talkies.",
+        filter: "sepia(0.25) saturate(1.18) contrast(1.08) hue-rotate(-20deg)" },
+      { name: "Carbon Arc Print", color: "var(--magenta)", src: "", base: "",
+        desc: "Sampled through a carbon-arc bulb: a warm vintage house-light glow.",
+        filter: "sepia(0.28) saturate(1.1) contrast(1.04) brightness(1.04) hue-rotate(-6deg)" },
+      { name: "Xenon Modern", color: "var(--blue)", src: "", base: "",
+        desc: "Sampled through a xenon bulb: a clean, cool, modern source.",
+        filter: "saturate(1.18) contrast(1.1) brightness(1.0) hue-rotate(6deg)" },
+      { name: "Neg Scan (Diagnostic)", color: "var(--green)", src: "", base: "",
+        desc: "The developed negative, before the dye-transfer print. A clean diagnostic reference.",
+        filter: "saturate(0.92) contrast(0.98) brightness(1.05)" }
+    ];
+
+    var img = document.getElementById("stockImg");
+    var sel = document.getElementById("stockSelect");
+    var sw = document.getElementById("swatches");
+    var badge = document.getElementById("stockBadge");
+    var dot = document.getElementById("stockDot");
+    var desc = document.getElementById("stockDesc");
+    var note = document.getElementById("stockNote");
+    var cmp = document.getElementById("compareBtn");
+    var liveTag = document.getElementById("liveTag");
+    if (!img || !sel) return;
+
+    var current = 0;
+
+    STOCKS.forEach(function (s, i) {
+      var o = document.createElement("option");
+      o.value = i; o.textContent = s.name; sel.appendChild(o);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.title = s.name;
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.style.background = "var(--bg-2)";
+      b.dataset.i = i;
+      b.addEventListener("click", function () { apply(i); });
+      sw.appendChild(b);
+    });
+
+    function paintSwatches() {
+      // render each swatch as a tiny tinted thumbnail of the base frame
+      Array.prototype.forEach.call(sw.children, function (b, i) {
+        b.style.backgroundImage = "url(" + (STOCKS[i].src || BASE_IMG) + ")";
+        b.style.filter = STOCKS[i].src ? "none" : STOCKS[i].filter;
+        b.setAttribute("aria-pressed", i === current ? "true" : "false");
+      });
+    }
+
+    function apply(i) {
+      current = i;
+      var s = STOCKS[i];
+      if (s.src) {
+        img.src = s.src;
+        img.style.filter = "none";
+        if (liveTag) { liveTag.textContent = "Real export"; }
+      } else {
+        img.src = BASE_IMG;
+        img.style.filter = s.filter;
+        if (liveTag) { liveTag.textContent = "Live look sim"; }
+      }
+      badge.textContent = s.name;
+      dot.style.background = s.color;
+      desc.textContent = s.desc;
+      sel.value = i;
+      paintSwatches();
+    }
+
+    sel.addEventListener("change", function () { apply(parseInt(sel.value, 10)); });
+
+    // hold-to-compare: show the Rec.709 / original frame (real export if provided, else simulated)
+    function showOrig(on) {
+      var s = STOCKS[current];
+      if (on) {
+        if (s.base) { img.src = s.base; img.style.filter = "none"; }
+        else { img.src = BASE_IMG; img.style.filter = "saturate(0.4) contrast(0.82) brightness(1.08)"; }
+        cmp.classList.add("holding"); cmp.textContent = "Rec.709";
+      } else {
+        apply(current);
+        cmp.classList.remove("holding"); cmp.textContent = "Hold: Rec.709";
+      }
+    }
+    cmp.addEventListener("pointerdown", function (e) { e.preventDefault(); showOrig(true); });
+    cmp.addEventListener("pointerup", function () { showOrig(false); });
+    cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+    cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+
+    apply(0);
+  })();
+
+  /* ============ SCROLL REVEAL ============ */
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d8455f" />
+        <stop offset="0.5" stop-color="#b154c9" />
+        <stop offset="1" stop-color="#5b78d6" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">TC</text>
+  </svg>
+</template>
+
+</body>
+</html>
