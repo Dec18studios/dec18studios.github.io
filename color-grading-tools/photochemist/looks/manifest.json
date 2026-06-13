@@ -1,56 +1,14 @@
-[
-  {
-    "slug": "golden-daylight",
-    "name": "Golden Daylight",
-    "color": "var(--yellow)",
-    "desc": "A warm, sunlit daylight negative. Gentle contrast, golden highlights, clean skin.",
-    "filter": "sepia(0.22) saturate(1.14) contrast(1.05) brightness(1.03) hue-rotate(-8deg)",
-    "graded": null,
-    "rec709": null
-  },
-  {
-    "slug": "tungsten-night",
-    "name": "Tungsten Night",
-    "color": "var(--blue)",
-    "desc": "A tungsten-balanced night stock. Cool shadows, warm practicals, moody falloff.",
-    "filter": "contrast(1.12) saturate(1.06) brightness(0.95) hue-rotate(6deg)",
-    "graded": null,
-    "rec709": null
-  },
-  {
-    "slug": "vivid-reversal",
-    "name": "Vivid Reversal",
-    "color": "var(--red)",
-    "desc": "A punchy reversal / slide look. Deep saturation, snappy contrast, rich blacks.",
-    "filter": "saturate(1.5) contrast(1.2) brightness(1.0)",
-    "graded": null,
-    "rec709": null
-  },
-  {
-    "slug": "bleach-bypass",
-    "name": "Bleach Bypass",
-    "color": "var(--cyan)",
-    "desc": "Silver retained in the print. Desaturated, high-contrast, metallic and gritty.",
-    "filter": "saturate(0.5) contrast(1.32) brightness(1.06)",
-    "graded": null,
-    "rec709": null
-  },
-  {
-    "slug": "cross-process",
-    "name": "Cross Process",
-    "color": "var(--green)",
-    "desc": "Developed in the wrong soup on purpose. Green-cyan cast, crushed, expressive.",
-    "filter": "hue-rotate(-16deg) saturate(1.32) contrast(1.12) brightness(1.02)",
-    "graded": null,
-    "rec709": null
-  },
-  {
-    "slug": "faded-archive",
-    "name": "Faded Archive",
-    "color": "var(--magenta)",
-    "desc": "An aged, lifted-black stock. Soft contrast, dusty palette, vintage warmth.",
-    "filter": "saturate(0.82) contrast(0.86) brightness(1.1) sepia(0.16)",
-    "graded": null,
-    "rec709": null
-  }
-]
+{
+  "base": "OpenDRTphotochemist.jpg",
+  "looks": [
+    { "name": "Seneca Everyday",    "color": "yellow",  "file": "Seneca Everyday.jpg",    "desc": "" },
+    { "name": "Seneca Portrait",    "color": "red",     "file": "Seneca Portrait.jpg",    "desc": "" },
+    { "name": "Seneca Cine",        "color": "cyan",    "file": "Seneca Cine.jpg",        "desc": "" },
+    { "name": "Seneca Press",       "color": "ink",     "file": "Seneca Press.jpg",       "desc": "" },
+    { "name": "Seneca Vivid",       "color": "magenta", "file": "Seneca Vivid.jpg",       "desc": "" },
+    { "name": "Balanced Modern",    "color": "blue",    "file": "Balanced Modern.jpg",    "desc": "" },
+    { "name": "Sakura Natural",     "color": "green",   "file": "Sakura Natural.jpg",     "desc": "" },
+    { "name": "250T Day For Night", "color": "blue",    "file": "250T Day For Night.jpg", "desc": "" },
+    { "name": "Black and White",    "color": "ink-dim", "file": "Black and White.jpg",    "desc": "" }
+  ]
+}

@@ -893,35 +893,25 @@
 
 <script>
   /* ============ STOCK VIEWER ============
-     Add as many stocks as you like — the dropdown + swatches grow to fit (swatches wrap).
-     Each stock can carry two real exports:
-        src  = the developed Photo Chemist (filmic) look   e.g. "assets/golden-filmic.jpg"
-        base = the plain Rec.709 / normal version          e.g. "assets/golden-rec709.jpg"
-     When `src` is set it replaces the simulated frame; when `base` is set the Hold-to-compare
-     button shows that real Rec.709 frame instead of the simulated one. Leave both "" to use
-     the built-in live color simulation. */
+     Looks are driven by looks/manifest.json — add a new look by uploading the image
+     to the looks/ folder on GitHub and adding one entry to manifest.json:
+       { "name": "My Look", "color": "yellow", "file": "My Look.jpg", "desc": "..." }
+     Color names map to CSS vars: yellow, red, cyan, magenta, blue, green, ink, ink-dim.
+     The base (Rec.709) image is shared across all looks (set "base" at the top of the JSON).
+     The hardcoded STOCKS below are an instant fallback shown before the fetch resolves. */
   (function () {
     var BASE_IMG = "assets/frame-web.jpg";
-    var BASE = "looks/OpenDRTphotochemist.jpg";
+    var FALLBACK_BASE = "looks/OpenDRTphotochemist.jpg";
     var STOCKS = [
-      { name: "Seneca Everyday", color: "var(--yellow)", src: "looks/Seneca Everyday.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "Seneca Portrait", color: "var(--red)", src: "looks/Seneca Portrait.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "Seneca Cine", color: "var(--cyan)", src: "looks/Seneca Cine.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "Seneca Press", color: "var(--ink)", src: "looks/Seneca Press.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "Seneca Vivid", color: "var(--magenta)", src: "looks/Seneca Vivid.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "Balanced Modern", color: "var(--blue)", src: "looks/Balanced Modern.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "Sakura Natural", color: "var(--green)", src: "looks/Sakura Natural.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "250T Day For Night", color: "var(--blue)", src: "looks/250T Day For Night.jpg", base: BASE,
-        desc: "", filter: "" },
-      { name: "Black and White", color: "var(--dim)", src: "looks/Black and White.jpg", base: BASE,
-        desc: "", filter: "" }
+      { name: "Seneca Everyday",    color: "var(--yellow)",  src: "looks/Seneca Everyday.jpg",    base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "Seneca Portrait",    color: "var(--red)",     src: "looks/Seneca Portrait.jpg",    base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "Seneca Cine",        color: "var(--cyan)",    src: "looks/Seneca Cine.jpg",        base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "Seneca Press",       color: "var(--ink)",     src: "looks/Seneca Press.jpg",       base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "Seneca Vivid",       color: "var(--magenta)", src: "looks/Seneca Vivid.jpg",       base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "Balanced Modern",    color: "var(--blue)",    src: "looks/Balanced Modern.jpg",    base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "Sakura Natural",     color: "var(--green)",   src: "looks/Sakura Natural.jpg",     base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "250T Day For Night", color: "var(--blue)",    src: "looks/250T Day For Night.jpg", base: FALLBACK_BASE, desc: "", filter: "" },
+      { name: "Black and White",    color: "var(--ink-dim)", src: "looks/Black and White.jpg",    base: FALLBACK_BASE, desc: "", filter: "" }
     ];
 
     var img = document.getElementById("stockImg");
@@ -937,21 +927,23 @@
 
     var current = 0;
 
-    STOCKS.forEach(function (s, i) {
-      var o = document.createElement("option");
-      o.value = i; o.textContent = s.name; sel.appendChild(o);
-      var b = document.createElement("button");
-      b.type = "button";
-      b.title = s.name;
-      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
-      b.style.background = "var(--bg-2)";
-      b.dataset.i = i;
-      b.addEventListener("click", function () { apply(i); });
-      sw.appendChild(b);
-    });
+    function buildUI(stocks) {
+      while (sel.firstChild) sel.removeChild(sel.firstChild);
+      while (sw.firstChild) sw.removeChild(sw.firstChild);
+      stocks.forEach(function (s, i) {
+        var o = document.createElement("option");
+        o.value = i; o.textContent = s.name; sel.appendChild(o);
+        var b = document.createElement("button");
+        b.type = "button"; b.title = s.name;
+        b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+        b.style.background = "var(--bg-2)";
+        b.dataset.i = i;
+        b.addEventListener("click", function () { apply(i); });
+        sw.appendChild(b);
+      });
+    }
 
     function paintSwatches() {
-      // render each swatch as a tiny tinted thumbnail of the base frame
       Array.prototype.forEach.call(sw.children, function (b, i) {
         b.style.backgroundImage = "url(" + (STOCKS[i].src || BASE_IMG) + ")";
         b.style.filter = STOCKS[i].src ? "none" : STOCKS[i].filter;
@@ -963,12 +955,10 @@
       current = i;
       var s = STOCKS[i];
       if (s.src) {
-        img.src = s.src;
-        img.style.filter = "none";
+        img.src = s.src; img.style.filter = "none";
         if (liveTag) { liveTag.textContent = "Real export"; }
       } else {
-        img.src = BASE_IMG;
-        img.style.filter = s.filter;
+        img.src = BASE_IMG; img.style.filter = s.filter;
         if (liveTag) { liveTag.textContent = "Live look sim"; }
       }
       badge.textContent = s.name;
@@ -980,7 +970,6 @@
 
     sel.addEventListener("change", function () { apply(parseInt(sel.value, 10)); });
 
-    // hold-to-compare: show the Rec.709 / original frame (real export if provided, else simulated)
     function showOrig(on) {
       var s = STOCKS[current];
       if (on) {
@@ -997,7 +986,30 @@
     cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
     cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
 
+    // Render immediately with fallback, then fetch manifest and reinit
+    buildUI(STOCKS);
     apply(0);
+
+    fetch("looks/manifest.json", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data || !Array.isArray(data.looks) || !data.looks.length) return;
+        var base = "looks/" + (data.base || "OpenDRTphotochemist.jpg");
+        STOCKS = data.looks.map(function (l) {
+          return {
+            name: l.name,
+            color: "var(--" + (l.color || "cyan") + ")",
+            src: "looks/" + l.file,
+            base: l.base ? "looks/" + l.base : base,
+            desc: l.desc || "",
+            filter: ""
+          };
+        });
+        current = 0;
+        buildUI(STOCKS);
+        apply(0);
+      })
+      .catch(function () {});
   })();
 
   /* ============ SCROLL REVEAL ============ */
