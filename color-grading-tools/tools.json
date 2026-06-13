@@ -152,5 +152,14 @@
     "color": "green",
     "desc": "Toggle nodes on and off fast while you work.",
     "repo": "Resolve-Node-Toggler"
+  },
+  {
+    "name": "IDT Lut Loaders",
+    "slug": "idt-lut-loaders",
+    "tier": "free",
+    "color": "cyan",
+    "desc": "Load camera decodes to linear or intermediate per-clip in the LUT slot — freeing up Groups for other uses.",
+    "repo": "IDT-Lut-Loaders-DCTL",
+    "dlUrl": "https://github.com/Dec18studios/IDT-Lut-Loaders-DCTL/releases/latest/download/IDT-Lut-Loaders-DCTL.zip"
   }
 ]
