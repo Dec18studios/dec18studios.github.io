@@ -12,7 +12,8 @@
     "slug": "technicolordrt",
     "tier": "pro",
     "color": "magenta",
-    "desc": "A three-strip Technicolor look as a display rendering transform."
+    "desc": "A three-strip Technicolor look as a display rendering transform.",
+    "url": "technicolordrt/"
   },
   {
     "name": "Hue Contrast Compressor",
@@ -27,8 +28,7 @@
     "tier": "free",
     "color": "cyan",
     "desc": "Shape tonal volume and contrast with a custom response curve.",
-    "repo": "Volume-Curve-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/Volume-Curve-DCTL/releases/latest/download/Volume-Curve-v1.0.0.zip"
+    "repo": "Volume-Curve-DCTL"
   },
   {
     "name": "Grain By Greg",
@@ -43,9 +43,8 @@
     "tier": "free",
     "color": "blue",
     "desc": "Slice the image into color regions for precise, targeted grading.",
-    "url": "color-slicer/",
     "repo": "Color-Slicer-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest/download/Color-Slicer-DCTL-v2.0.zip"
+    "dlAsset": "Color-Slicer-DCTL-v1.0.0.zip"
   },
   {
     "name": "Contrast Sat Volume",
@@ -82,7 +81,7 @@
     "color": "green",
     "desc": "Nail consistent exposure on every shot.",
     "repo": "Perfect-Exposure-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/Perfect-Exposure-DCTL/releases/latest/download/Perfect-Exposure-v1.0.0.zip"
+    "dlAsset": "Perfect-Exposure-v1.0.0.zip"
   },
   {
     "name": "Film Negative Space CST",
@@ -90,9 +89,9 @@
     "tier": "free",
     "color": "cyan",
     "desc": "A color-space transform into a film-negative working space.",
-    "url": "film-negative-space-cst/",
     "repo": "Film-Negative-Space-CST-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/Film-Negative-Space-CST-DCTL/releases/latest/download/Film-Negative-Space-CST-DCTL-v2.2.zip"
+    "dlAsset": "Film-Negative-Space-CST-DCTL-v2.2.zip",
+    "url": "film-negative-space-cst/"
   },
   {
     "name": "Saturation Separator",
@@ -108,7 +107,7 @@
     "color": "blue",
     "desc": "A diagnostic ramp for checking transforms and response.",
     "repo": "Linear-Ramp-Diagnostic-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/Linear-Ramp-Diagnostic-DCTL/releases/latest/download/Linear-Ramp-Diagnostic-v1.0.0.zip"
+    "dlAsset": "Linear-Ramp-Diagnostic-v1.0.0.zip"
   },
   {
     "name": "Skin Tone Mastery",
@@ -124,8 +123,8 @@
     "tier": "free",
     "color": "green",
     "desc": "RGB parade-style chips overlay for exposure and white balance evaluation.",
-    "url": "https://github.com/thatcherfreeman/utility-dctls",
-    "dlUrl": "https://raw.githubusercontent.com/thatcherfreeman/utility-dctls/main/Utilities/RGB%20Chips.dctl"
+    "dlUrl": "https://raw.githubusercontent.com/thatcherfreeman/utility-dctls/main/Utilities/RGB%20Chips.dctl",
+    "url": "https://github.com/thatcherfreeman/utility-dctls"
   },
   {
     "name": "Dolby Vision Spoofer",
@@ -134,7 +133,7 @@
     "color": "magenta",
     "desc": "Preview a Dolby Vision-style trim without the full pipeline.",
     "repo": "Dolby-Vision-Spoofer-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/Dolby-Vision-Spoofer-DCTL/releases/latest/download/Dolby-Vision-Spoofer-v1.0.0.zip"
+    "dlAsset": "Dolby-Vision-Spoofer-v1.0.0.zip"
   },
   {
     "name": "IBKeymaster",
@@ -142,8 +141,8 @@
     "tier": "free",
     "color": "red",
     "desc": "A focused keying utility for cleaner selections.",
-    "url": "https://dec18studios.com/ibkeymaster",
-    "repo": "IBKeymaster"
+    "repo": "IBKeymaster",
+    "url": "https://dec18studios.com/ibkeymaster"
   },
   {
     "name": "Resolve Node Toggler",
