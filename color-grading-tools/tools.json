@@ -12,7 +12,8 @@
     "slug": "technicolordrt",
     "tier": "pro",
     "color": "magenta",
-    "desc": "A three-strip Technicolor look as a display rendering transform."
+    "desc": "A three-strip Technicolor look as a display rendering transform.",
+    "url": "technicolordrt/"
   },
   {
     "name": "Look Dev Tools",
