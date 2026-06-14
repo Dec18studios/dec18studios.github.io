@@ -996,18 +996,23 @@
 
     var current = 0;
 
-    STOCKS.forEach(function (s, i) {
-      var o = document.createElement("option");
-      o.value = i; o.textContent = s.name; sel.appendChild(o);
-      var b = document.createElement("button");
-      b.type = "button";
-      b.title = s.name;
-      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
-      b.style.background = "var(--bg-2)";
-      b.dataset.i = i;
-      b.addEventListener("click", function () { apply(i); });
-      sw.appendChild(b);
-    });
+    // Build (or rebuild) the dropdown + swatches from a STOCKS list. Called once with
+    // the built-in fallback, then again if looks/manifest.json provides real exports.
+    function buildUI(list) {
+      sel.innerHTML = ""; sw.innerHTML = "";
+      list.forEach(function (s, i) {
+        var o = document.createElement("option");
+        o.value = i; o.textContent = s.name; sel.appendChild(o);
+        var b = document.createElement("button");
+        b.type = "button";
+        b.title = s.name;
+        b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+        b.style.background = "var(--bg-2)";
+        b.dataset.i = i;
+        b.addEventListener("click", function () { apply(i); });
+        sw.appendChild(b);
+      });
+    }
 
     function paintSwatches() {
       // render each swatch as a tiny tinted thumbnail of the base frame
@@ -1056,7 +1061,32 @@
     cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
     cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
 
+    buildUI(STOCKS);
     apply(0);
+
+    // Real sample exports live in looks/ and are described by looks/manifest.json.
+    // Until that file lists any looks, the built-in CSS-filter sims above stay live.
+    // Drop JPGs into looks/ and add entries to looks/manifest.json to replace them.
+    fetch("looks/manifest.json", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data || !Array.isArray(data.looks) || !data.looks.length) return;
+        var base = data.base ? "looks/" + data.base : BASE_IMG;
+        STOCKS = data.looks.map(function (l) {
+          return {
+            name: l.name,
+            color: "var(--" + (l.color || "cyan") + ")",
+            src: "looks/" + l.file,
+            base: l.base ? "looks/" + l.base : base,
+            desc: l.desc || "",
+            filter: ""
+          };
+        });
+        current = 0;
+        buildUI(STOCKS);
+        apply(0);
+      })
+      .catch(function () {});
   })();
 
   /* ============ SCROLL REVEAL ============ */

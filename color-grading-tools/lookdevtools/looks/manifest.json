@@ -1,0 +1,5 @@
+{
+  "_howto": "Drop sample JPGs into this looks/ folder, then add an entry per look below. Each look: { name, color (yellow|red|cyan|magenta|blue|green), file (graded export, e.g. \"Umbra.jpg\"), base (optional Rec.709/log input for hold-to-compare), desc (optional caption) }. 'base' at the top level is the shared fallback input frame. While 'looks' is empty, the built-in CSS-filter previews on the page stay live.",
+  "base": "",
+  "looks": []
+}
