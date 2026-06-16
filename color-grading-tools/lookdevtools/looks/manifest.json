@@ -1,5 +1,9 @@
 {
-  "_howto": "Drop sample JPGs into this looks/ folder, then add an entry per look below. Each look: { name, color (yellow|red|cyan|magenta|blue|green), file (graded export, e.g. \"Umbra.jpg\"), base (optional Rec.709/log input for hold-to-compare), desc (optional caption) }. 'base' at the top level is the shared fallback input frame. While 'looks' is empty, the built-in CSS-filter previews on the page stay live.",
+  "_howto": "Each look: { name, color (yellow|red|cyan|magenta|blue|green|ink|ink-dim), file (graded export), base (log / ungraded input revealed by the wipe handle), desc (optional caption) }. Each pair is its own shot, so each look carries its OWN base. Top-level 'base' stays empty (only used as a shared fallback when every look uses the same frame). Drop a -graded.jpg + -log.jpg pair into this folder and add an entry below.",
   "base": "",
-  "looks": []
+  "looks": [
+    { "name": "Redrock",       "color": "red",    "file": "redrock-graded.jpg",         "base": "redrock-log.jpg",         "desc": "" },
+    { "name": "Rich & Classy", "color": "yellow", "file": "rich-and-classy-graded.jpg", "base": "rich-and-classy-log.jpg", "desc": "" },
+    { "name": "Subdued",       "color": "blue",   "file": "subdued-graded.jpg",         "base": "subdued-log.jpg",         "desc": "" }
+  ]
 }
