@@ -146,26 +146,45 @@
     position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
     background: var(--bg); border: 1px solid var(--line-soft);
   }
-  .stage img {
+  .stage .layer { position: absolute; inset: 0; }
+  .stage .layer img, .stage img {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
-    transition: filter 0.5s ease, opacity 0.35s ease; -webkit-user-drag: none; user-select: none;
+    transition: filter 0.5s ease; -webkit-user-drag: none; user-select: none; pointer-events: none;
   }
+  .stage .base { z-index: 1; }
+  .stage .graded { z-index: 2; will-change: clip-path; }
   .stage .badge {
-    position: absolute; left: 12px; bottom: 12px; z-index: 3;
+    position: absolute; left: 12px; bottom: 12px; z-index: 5;
     font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
     padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
     display: flex; align-items: center; gap: 8px;
   }
   .stage .badge .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--red); }
-  .stage .compare {
-    position: absolute; right: 12px; bottom: 12px; z-index: 3;
-    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 7px 12px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff;
-    border: 1px solid oklch(1 0 0 / 0.25); cursor: pointer; backdrop-filter: blur(4px); user-select: none;
-    transition: background 0.16s;
+  .stage .wlabel {
+    position: absolute; top: 12px; z-index: 5; pointer-events: none;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 9px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff; backdrop-filter: blur(4px);
   }
-  .stage .compare:hover { background: oklch(0 0 0 / 0.72); }
-  .stage .compare:active, .stage .compare.holding { background: var(--ink); color: var(--bg); }
+  .stage .wlabel-l { left: 12px; }
+  .stage .wlabel-r { right: 12px; }
+  .stage .wipe-handle {
+    position: absolute; top: 0; bottom: 0; left: 55%; width: 44px; transform: translateX(-50%);
+    z-index: 4; cursor: ew-resize; touch-action: none; -webkit-tap-highlight-color: transparent;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stage .wipe-handle .wipe-line {
+    position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-50%);
+    background: #fff; box-shadow: 0 0 6px oklch(0 0 0 / 0.45);
+  }
+  .stage .wipe-handle .wipe-grip {
+    position: relative; width: 34px; height: 34px; border-radius: 50%;
+    background: oklch(0 0 0 / 0.6); color: #fff; backdrop-filter: blur(4px);
+    border: 1px solid oklch(1 0 0 / 0.55); display: flex; align-items: center; justify-content: center;
+    font-size: 13px; line-height: 1; transition: background 0.16s, box-shadow 0.16s;
+  }
+  .stage .wipe-handle:focus-visible { outline: none; }
+  .stage .wipe-handle:focus-visible .wipe-grip,
+  .stage .wipe-handle.drag .wipe-grip { background: var(--ink); box-shadow: 0 0 0 3px var(--accent); }
 
   .stock-picker { margin-top: 14px; display: grid; grid-template-columns: 1fr; gap: 10px; }
   .stock-picker label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
@@ -433,7 +452,8 @@
 
   @media (pointer: coarse) {
     nav.toplinks a { padding-block: 4px; }
-    .btn, nav.toplinks a.cta, .stock-select, .compare { min-height: 44px; }
+    .btn, nav.toplinks a.cta, .stock-select { min-height: 44px; }
+    .stage .wipe-handle { width: 56px; }
     .swatches button { min-height: 44px; }
   }
 </style>
@@ -485,9 +505,19 @@
           <span class="live" id="liveTag">Live look sim</span>
         </div>
         <div class="stage" id="stage">
-          <img id="stockImg" src="../assets/frame-web.jpg" alt="Technicolor DRT dye-transfer look preview" />
+          <img id="baseImg" class="base" src="../assets/frame-web.jpg" alt="Rec.709 reference frame" />
+          <div class="layer graded" id="gradedWrap">
+            <img id="stockImg" src="../assets/frame-web.jpg" alt="Technicolor DRT dye-transfer look preview" />
+          </div>
           <div class="badge"><span class="dot" id="stockDot"></span><span id="stockBadge">Single Stock Modern</span></div>
-          <button class="compare" id="compareBtn" type="button" aria-label="Hold to see the Rec.709 frame">Hold: Rec.709</button>
+          <span class="wlabel wlabel-l">Technicolor</span>
+          <span class="wlabel wlabel-r">Rec.709</span>
+          <div class="wipe-handle" id="wipeHandle" role="slider" tabindex="0"
+               aria-label="Wipe between the Technicolor look and the Rec.709 reference"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="55">
+            <span class="wipe-line"></span>
+            <span class="wipe-grip" aria-hidden="true">⇄</span>
+          </div>
         </div>
         <p class="stock-desc" id="stockDesc"></p>
         <div class="stock-picker">
@@ -768,11 +798,12 @@
      Each stock can carry two real exports:
         src  = the developed Photo Chemist (filmic) look   e.g. "assets/golden-filmic.jpg"
         base = the plain Rec.709 / normal version          e.g. "assets/golden-rec709.jpg"
-     When `src` is set it replaces the simulated frame; when `base` is set the Hold-to-compare
-     button shows that real Rec.709 frame instead of the simulated one. Leave both "" to use
-     the built-in live color simulation. */
+     When `src` is set it replaces the simulated frame; `base` is the Rec.709 frame revealed on
+     the right side of the drag-to-wipe handle. Leave both "" to use the built-in live color
+     simulation (the wipe then compares the look-sim against a neutralized version). */
   (function () {
     var BASE_IMG = "../assets/frame-web.jpg";
+    var REC709_SIM = "saturate(0.4) contrast(0.82) brightness(1.08)";
     var STOCKS = [
       { name: "Single Stock Modern", color: "var(--yellow)", src: "", base: "",
         desc: "The default modern look: dye-transfer richness with clean, controllable registers. Warm skin, deep blue-green shadows.",
@@ -801,7 +832,10 @@
     var dot = document.getElementById("stockDot");
     var desc = document.getElementById("stockDesc");
     var note = document.getElementById("stockNote");
-    var cmp = document.getElementById("compareBtn");
+    var baseImg = document.getElementById("baseImg");
+    var gradedWrap = document.getElementById("gradedWrap");
+    var stage = document.getElementById("stage");
+    var handle = document.getElementById("wipeHandle");
     var liveTag = document.getElementById("liveTag");
     if (!img || !sel) return;
 
@@ -837,6 +871,7 @@
     function apply(i) {
       current = i;
       var s = STOCKS[i];
+      // top (graded) layer — clipped by the wipe
       if (s.src) {
         img.src = s.src;
         img.style.filter = "none";
@@ -845,6 +880,17 @@
         img.src = BASE_IMG;
         img.style.filter = s.filter;
         if (liveTag) { liveTag.textContent = "Live look sim"; }
+      }
+      // bottom (Rec.709) layer — revealed on the right of the wipe. Falls back to the
+      // neutralized house frame if the look's own base export isn't uploaded yet.
+      if (s.base && s.src) {
+        baseImg.onerror = function () { baseImg.onerror = null; baseImg.src = BASE_IMG; baseImg.style.filter = REC709_SIM; };
+        baseImg.src = s.base;
+        baseImg.style.filter = "none";
+      } else {
+        baseImg.onerror = null;
+        baseImg.src = BASE_IMG;
+        baseImg.style.filter = REC709_SIM;
       }
       badge.textContent = s.name;
       dot.style.background = s.color;
@@ -855,22 +901,49 @@
 
     sel.addEventListener("change", function () { apply(parseInt(sel.value, 10)); });
 
-    // hold-to-compare: show the Rec.709 / original frame (real export if provided, else simulated)
-    function showOrig(on) {
-      var s = STOCKS[current];
-      if (on) {
-        if (s.base) { img.src = s.base; img.style.filter = "none"; }
-        else { img.src = BASE_IMG; img.style.filter = "saturate(0.4) contrast(0.82) brightness(1.08)"; }
-        cmp.classList.add("holding"); cmp.textContent = "Rec.709";
-      } else {
-        apply(current);
-        cmp.classList.remove("holding"); cmp.textContent = "Hold: Rec.709";
-      }
+    // ---- wipe-to-compare: drag the handle (or tap the stage) to reveal the Rec.709 layer ----
+    var pos = 55;
+    function setWipe(p) {
+      p = Math.max(0, Math.min(100, p));
+      pos = p;
+      gradedWrap.style.clipPath = "inset(0 " + (100 - p) + "% 0 0)";
+      handle.style.left = p + "%";
+      handle.setAttribute("aria-valuenow", Math.round(p));
     }
-    cmp.addEventListener("pointerdown", function (e) { e.preventDefault(); showOrig(true); });
-    cmp.addEventListener("pointerup", function () { showOrig(false); });
-    cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
-    cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+    function pctFromX(clientX) {
+      var r = stage.getBoundingClientRect();
+      return ((clientX - r.left) / r.width) * 100;
+    }
+    var dragging = false;
+    handle.addEventListener("pointerdown", function (e) {
+      dragging = true; handle.classList.add("drag");
+      try { handle.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    });
+    handle.addEventListener("pointermove", function (e) { if (dragging) setWipe(pctFromX(e.clientX)); });
+    function endDrag() { dragging = false; handle.classList.remove("drag"); }
+    handle.addEventListener("pointerup", endDrag);
+    handle.addEventListener("pointercancel", endDrag);
+    handle.addEventListener("lostpointercapture", endDrag);
+    // tap anywhere on the stage jumps the wipe there; real drags are ignored so mobile scroll still works
+    var downX = null, downY = null;
+    stage.addEventListener("pointerdown", function (e) {
+      if (e.target === handle || handle.contains(e.target)) return;
+      downX = e.clientX; downY = e.clientY;
+    });
+    stage.addEventListener("pointerup", function (e) {
+      if (downX === null) return;
+      if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) < 10) setWipe(pctFromX(e.clientX));
+      downX = null;
+    });
+    handle.addEventListener("keydown", function (e) {
+      var step = e.shiftKey ? 10 : 3;
+      if (e.key === "ArrowLeft") { setWipe(pos - step); e.preventDefault(); }
+      else if (e.key === "ArrowRight") { setWipe(pos + step); e.preventDefault(); }
+      else if (e.key === "Home") { setWipe(0); e.preventDefault(); }
+      else if (e.key === "End") { setWipe(100); e.preventDefault(); }
+    });
+    setWipe(pos);
 
     buildUI(STOCKS);
     apply(0);
