@@ -1,5 +1,10 @@
 {
-  "_howto": "Drop sample JPGs into this looks/ folder, then add an entry per look below. Each look: { name, color (yellow|red|cyan|magenta|blue|green), file (graded export, e.g. \"Three-Strip Glory.jpg\"), base (optional Rec.709 input for hold-to-compare), desc (optional caption) }. 'base' at the top level is the shared fallback input frame. While 'looks' is empty, the built-in CSS-filter previews on the page stay live.",
+  "_howto": "Each look: { name, color (yellow|red|cyan|magenta|blue|green|ink|ink-dim), file (graded export), base (Rec.709 input for hold-to-compare), desc (optional caption) }. These are four DIFFERENT shots, so each look carries its OWN base. Top-level 'base' stays empty (it is only the shared fallback when every look uses the same frame). Drop the matching -rec709.jpg files into this folder to light up hold-to-compare.",
   "base": "",
-  "looks": []
+  "looks": [
+    { "name": "2-Strip Carbon Arc",    "color": "red",     "file": "2-strip-carbon-arc-graded.jpg",   "base": "2-strip-carbon-arc-rec709.jpg",   "desc": "" },
+    { "name": "2-Strip Carbon Arc II",  "color": "magenta", "file": "2-strip-carbon-arc-2-graded.jpg", "base": "2-strip-carbon-arc-2-rec709.jpg", "desc": "" },
+    { "name": "3-Strip Xenon",          "color": "cyan",    "file": "3-strip-xenon-graded.jpg",         "base": "3-strip-xenon-rec709.jpg",        "desc": "" },
+    { "name": "Seneca Modern Carbon",   "color": "blue",    "file": "seneca-modern-carbon-graded.jpg",  "base": "seneca-modern-carbon-rec709.jpg", "desc": "" }
+  ]
 }
