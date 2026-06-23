@@ -5,7 +5,8 @@
     "tier": "pro",
     "color": "red",
     "desc": "Spectral film-stock emulation — design and develop your own stocks.",
-    "url": "photochemist/"
+    "url": "photochemist/",
+    "demo": true
   },
   {
     "name": "Technically Technicolor DRT",
