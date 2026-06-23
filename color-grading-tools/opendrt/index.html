@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenDRT — Free &amp; Open-Source OFX · Dec. 18 Studios</title>
+<meta name="description" content="OpenDRT, Jed Smith's open-source display rendering transform, as a free OFX for Resolve, Fusion and Nuke. Metal + CUDA, 16 input gamuts, full look-dev modules. GPL-3.0." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.62 0.165 262 / 0.38); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("../assets/logo-full.png") left center / contain no-repeat;
+            mask: url("../assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(48px, 7vw, 92px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -18%; right: -14%; width: 780px; height: 780px;
+    background: conic-gradient(from 0deg, var(--blue), var(--cyan), var(--green), var(--blue), var(--magenta), var(--blue));
+    border-radius: 50%; filter: blur(150px); opacity: 0.14; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 0.94fr; gap: clamp(32px, 5vw, 60px); align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  .title-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .pill-free {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; color: var(--green);
+    background: var(--green-d); border: 1px solid oklch(0.74 0.165 148 / 0.4);
+    border-radius: 999px; padding: 6px 13px;
+  }
+  .pill-free .d { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .pill-node {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; color: var(--blue);
+    background: var(--blue-d); border: 1px solid oklch(0.62 0.165 262 / 0.45);
+    border-radius: 999px; padding: 6px 13px;
+  }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(38px, 5.8vw, 70px); line-height: 0.99; letter-spacing: -0.02em; margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--blue), var(--cyan) 55%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 22px; font-size: clamp(17px, 2vw, 21px); color: var(--ink); font-weight: 600; }
+  .hero-lede { margin-top: 14px; font-size: clamp(16px, 1.8vw, 18px); color: var(--ink-dim); max-width: 52ch; text-wrap: pretty; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+  .btn.blue { background: var(--blue); color: oklch(0.99 0 0); border-color: var(--blue); }
+  .btn.blue:hover { background: oklch(0.68 0.165 262); border-color: oklch(0.68 0.165 262); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ HERO SCOPE CARD ============ */
+  .scope {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line-soft); border-radius: 18px; padding: 18px; overflow: hidden;
+    box-shadow: 0 40px 90px -52px oklch(0 0 0 / 0.9);
+  }
+  .scope-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 4px 14px; }
+  .scope-head .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .scope-head .live { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--blue);
+    border: 1px solid oklch(0.62 0.165 262 / 0.5); border-radius: 5px; padding: 3px 8px; }
+  .scope-plot { background: #04050a; border: 1px solid var(--line-soft); border-radius: 12px; overflow: hidden; }
+  .scope-plot svg { display: block; width: 100%; height: auto; }
+  .scope-ramp { height: 26px; border-radius: 8px; margin-top: 12px; overflow: hidden; border: 1px solid var(--line-soft);
+    background: linear-gradient(90deg, #000 0%, #2a2a30 22%, #6a6a72 50%, #b6b6bc 78%, #fff 100%); }
+  .scope-chips { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 10px; }
+  .scope-chips i { height: 22px; border-radius: 6px; display: block; }
+  .scope-cap { margin-top: 12px; font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--ink-faint); text-wrap: pretty; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(52px, 7vw, 100px); position: relative; }
+  .sec-head { max-width: 64ch; margin-bottom: clamp(34px, 5vw, 54px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+
+  /* ============ WHAT IT IS ============ */
+  .what { border-top: 1px solid var(--line-soft); }
+  .what-grid { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
+  @media (max-width: 880px) { .what-grid { grid-template-columns: 1fr; } }
+  .what-copy h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 46px);
+    letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px;
+  }
+  .what-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.7vw, 18px); text-wrap: pretty; }
+  .what-copy p strong { color: var(--ink); font-weight: 600; }
+  .what-copy .credit {
+    margin-top: 22px; font-family: var(--mono); font-size: 12.5px; line-height: 1.65; color: var(--ink-dim);
+    border: 1px dashed var(--line); border-radius: 12px; padding: 16px 18px; text-wrap: pretty;
+  }
+  .what-copy .credit a { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  /* node graph */
+  .ng-card { background: #0b0c0f; border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+    box-shadow: 0 30px 80px -46px oklch(0 0 0 / 0.85); }
+  .nodegraph { font-family: var(--mono); color: #cfd2d8; padding: 20px 22px 22px; display: flex; flex-direction: column; }
+  .ng-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ng-title { color: var(--ink); font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; }
+  .ng-leg { font-size: 10px; letter-spacing: 0.04em; color: var(--ink-faint); }
+  .ng-io { align-self: flex-start; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim);
+    border: 1px dashed var(--line); border-radius: 8px; padding: 8px 12px; }
+  .ng-rail { width: 2px; height: 14px; margin-left: 19px; background: linear-gradient(var(--line), var(--line-soft)); }
+  .ng-node {
+    display: flex; align-items: center; gap: 14px; align-self: stretch;
+    background: #16181d; border: 1px solid #23262d; border-left: 3px solid var(--ng, var(--line));
+    border-radius: 11px; padding: 12px 15px; transition: transform 0.16s, border-color 0.16s;
+  }
+  .ng-node.faded { opacity: 0.5; }
+  .ng-node.last { border-color: var(--blue); border-left-color: var(--blue); background: linear-gradient(100deg, var(--blue-d), #16181d 60%); }
+  .ng-node:hover { transform: translateX(3px); }
+  .ng-badge { font-family: var(--display); font-weight: 700; font-size: 16px; color: var(--bg);
+    background: var(--ng, var(--ink-faint)); border-radius: 8px; width: 38px; height: 32px; display: grid; place-items: center; flex: none; }
+  .ng-meta { display: flex; flex-direction: column; gap: 1px; }
+  .ng-meta b { font-family: var(--sans); font-weight: 600; font-size: 14px; color: var(--ink); }
+  .ng-meta span { font-size: 11px; color: var(--ink-dim); }
+
+  /* ============ DOWNLOADS ============ */
+  .downloads { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .dl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .dl-grid { grid-template-columns: 1fr; } }
+  .dl-card {
+    --accent: var(--blue); --accent-d: var(--blue-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+    display: flex; flex-direction: column; transition: border-color 0.18s, transform 0.18s;
+  }
+  .dl-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .dl-top { padding: 22px 22px 18px; background: linear-gradient(180deg, var(--accent-d), transparent 80%); border-bottom: 1px solid var(--line-soft); }
+  .dl-os { display: flex; align-items: center; gap: 10px; }
+  .dl-os .os-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); flex: none; box-shadow: 0 0 0 4px var(--accent-d); }
+  .dl-os h3 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
+  .dl-top .arch { margin-top: 10px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-dim); }
+  .dl-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .dl-body .btn { width: 100%; justify-content: center; }
+  .dl-path { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); letter-spacing: 0.02em; }
+  .dl-path .k { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: 10px; color: var(--ink-faint); margin-bottom: 6px; }
+  .dl-path code { display: block; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 8px; padding: 9px 11px; color: var(--cyan); font-size: 11.5px; word-break: break-all; }
+  .dl-foot { margin-top: 26px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;
+    border: 1px solid var(--line-soft); border-radius: 14px; padding: 16px 20px; background: var(--bg-1); }
+  .dl-foot p { font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .dl-foot a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  /* ============ INSTALL ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start;
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px;
+  }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--blue);
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.62 0.165 262 / 0.4); background: var(--blue-d);
+    display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--cyan); word-break: break-all; }
+
+  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
+  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); }
+  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
+  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
+  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
+  .note-card { background: var(--yellow-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--yellow); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+
+  /* ============ MODULES ============ */
+  .modules { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .stages { display: grid; gap: 16px; }
+  .stage-card {
+    --accent: var(--blue); --accent-d: var(--blue-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+    display: grid; grid-template-columns: 0.34fr 0.66fr; transition: border-color 0.18s, transform 0.18s;
+  }
+  .stage-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  @media (max-width: 760px) { .stage-card { grid-template-columns: 1fr; } }
+  .stage-side {
+    padding: clamp(22px, 3vw, 30px); border-right: 1px solid var(--line-soft); position: relative;
+    background: linear-gradient(180deg, var(--accent-d), transparent 70%);
+  }
+  @media (max-width: 760px) { .stage-side { border-right: none; border-bottom: 1px solid var(--line-soft); } }
+  .stage-side .num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--accent); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px; }
+  .stage-side .num::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+  .stage-side h3 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -0.015em; line-height: 1.05; margin-top: 14px; }
+  .stage-side .tag { margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); text-wrap: pretty; }
+  .stage-body { padding: clamp(22px, 3vw, 30px); }
+  .stage-body > p { color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
+  .stage-body > p strong { color: var(--ink); font-weight: 600; }
+  .stage-body .why { margin-top: 18px; border-radius: 12px; padding: 14px 16px; background: var(--accent-d); position: relative; overflow: hidden; }
+  .stage-body .why::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .stage-body .why .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .stage-body .why p { margin-top: 6px; font-size: 14px; color: var(--ink); line-height: 1.5; text-wrap: pretty; }
+
+  .controls { margin-top: clamp(30px, 4vw, 44px); }
+  .controls-head { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim);
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .controls-head::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+  .control-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 820px) { .control-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px) { .control-grid { grid-template-columns: 1fr; } }
+  .ctrl { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .ctrl .ico { width: 12px; height: 12px; border-radius: 3px; background: var(--cm, var(--blue)); }
+  .ctrl b { font-weight: 600; font-size: 15px; }
+  .ctrl p { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .lock-note {
+    margin-top: 16px; border-radius: 14px; padding: 18px 20px; background: var(--green-d); position: relative; overflow: hidden;
+  }
+  .lock-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--green); }
+  .lock-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green); font-weight: 600; }
+  .lock-note p { margin-top: 8px; font-size: 14.5px; color: var(--ink); text-wrap: pretty; }
+
+  /* ============ DIAGNOSTICS ============ */
+  .diag { border-top: 1px solid var(--line-soft); }
+  .curves-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .curves-grid { grid-template-columns: 1fr; } }
+  .curve-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+  .curve-card .ct { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .curve-card h4 { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+  .curve-card p { font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .curve-fig { height: 120px; border-radius: 11px; background: #04050a; border: 1px solid var(--line-soft); overflow: hidden; }
+  .curve-fig svg { width: 100%; height: 100%; display: block; }
+  .curve-fig .ramp { width: 100%; height: 100%; display: block; background: linear-gradient(90deg, #000, #fff); }
+  .curve-fig .chips { display: grid; grid-template-columns: repeat(6, 1fr); width: 100%; height: 100%; }
+  .curve-fig .chips i { display: block; }
+
+  /* ============ BETA ============ */
+  .beta { border-top: 1px solid var(--line-soft); }
+  .beta-card {
+    display: grid; grid-template-columns: 1fr 0.5fr; gap: clamp(24px, 4vw, 48px); align-items: center;
+    background: linear-gradient(120deg, var(--magenta-d), transparent 64%), var(--bg-1);
+    border: 1px solid oklch(0.65 0.205 332 / 0.3); border-radius: 20px; padding: clamp(26px, 4vw, 44px); overflow: hidden;
+  }
+  @media (max-width: 820px) { .beta-card { grid-template-columns: 1fr; } }
+  .beta-card .eyebrow { color: var(--magenta); }
+  .beta-card h2 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.6vw, 40px); letter-spacing: -0.02em; line-height: 1.03; margin-top: 12px; }
+  .beta-card .bl > p { margin-top: 16px; color: var(--ink-dim); font-size: clamp(15px, 1.7vw, 18px); max-width: 54ch; text-wrap: pretty; }
+  .beta-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .beta-tags span { font-family: var(--mono); font-size: 12px; color: var(--magenta); border: 1px solid oklch(0.65 0.205 332 / 0.4);
+    background: var(--magenta-d); border-radius: 999px; padding: 6px 13px; }
+  .beta-right { display: grid; place-items: center; min-height: 120px; }
+  .beta-right .glyph { font-family: var(--display); font-weight: 700; font-size: clamp(60px, 10vw, 110px); line-height: 1;
+    background: linear-gradient(150deg, var(--magenta), var(--blue)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  @media (max-width: 820px) { .beta-right { min-height: 0; justify-content: start; } }
+
+  /* ============ SUPPORT ============ */
+  .support { border-top: 1px solid var(--line-soft); }
+  .support-card {
+    display: grid; grid-template-columns: 1fr auto; gap: clamp(20px, 4vw, 40px); align-items: center;
+    background: linear-gradient(120deg, var(--cyan-d), transparent 64%), var(--bg-1);
+    border: 1px solid oklch(0.80 0.110 200 / 0.3); border-radius: 20px; padding: clamp(26px, 4vw, 40px); overflow: hidden;
+  }
+  @media (max-width: 720px) { .support-card { grid-template-columns: 1fr; } }
+  .support-card .eyebrow { color: var(--cyan); }
+  .support-card h2 { font-family: var(--display); font-weight: 700; font-size: clamp(24px, 3.2vw, 38px); letter-spacing: -0.02em; line-height: 1.04; margin-top: 12px; }
+  .support-card p { margin-top: 14px; color: var(--ink-dim); font-size: clamp(15px, 1.6vw, 17px); max-width: 56ch; text-wrap: pretty; }
+
+  /* ============ LICENSE ============ */
+  .license { border-top: 1px solid var(--line-soft); }
+  .license-grid { display: grid; grid-template-columns: 1fr 0.85fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 880px) { .license-grid { grid-template-columns: 1fr; } }
+  .license-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.02em; line-height: 1.03; margin-top: 14px; }
+  .license-copy p { margin-top: 18px; color: var(--ink-dim); font-size: 16px; text-wrap: pretty; }
+  .license-copy p strong { color: var(--ink); font-weight: 600; }
+  .license-copy a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); word-break: break-word; }
+  .attrib { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; display: grid; gap: 16px; }
+  .attrib .row2 { display: grid; gap: 5px; }
+  .attrib .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .attrib .v { font-size: 15px; color: var(--ink); }
+  .attrib .v a { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); word-break: break-word; }
+  .attrib .lic-pill { display: inline-flex; align-items: center; gap: 8px; align-self: start;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--green);
+    background: var(--green-d); border: 1px solid oklch(0.74 0.165 148 / 0.4); border-radius: 999px; padding: 6px 13px; }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    .btn, nav.toplinks a.cta { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">All tools</a>
+      <a href="#what">What it is</a>
+      <a href="#modules">Modules</a>
+      <a href="#install">Install</a>
+      <a href="../lookdevtools/">Look Dev Tools</a>
+      <a href="#download" class="cta">Download · Free</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Open-source display transform · OFX · Resolve · Fusion · Nuke</p>
+        <div class="title-pills">
+          <span class="pill-free"><span class="d"></span>Free · GPL-3.0</span>
+          <span class="pill-node">6A · the display node</span>
+        </div>
+        <h1 class="hero-title">Picture formation of the<br /><em>highest caliber.</em></h1>
+        <p class="hero-sub">No more chalky highlights.</p>
+        <p class="hero-lede">OpenDRT is an open-source picture formation transform, built to make an aesthetically pleasing picture out of raw camera image data. It gives image authors creative control over appearance, through a simple preset system and a deeper set of look-development modules.</p>
+        <div class="hero-cta">
+          <a class="btn blue" href="#download">Download OpenDRT →</a>
+          <a class="btn" href="https://github.com/Dec18studios/Open-DRT-OFX" target="_blank" rel="noopener">View source on GitHub</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>3</b><span>platform builds</span></div>
+          <div class="m"><b>16</b><span>input gamuts</span></div>
+          <div class="m"><b>$0</b><span>free &amp; open-source</span></div>
+        </div>
+      </div>
+
+      <div class="scope reveal">
+        <div class="scope-head">
+          <span class="lbl">Built-in diagnostics</span>
+          <span class="live">Tonescale · scopes</span>
+        </div>
+        <div class="scope-plot">
+          <svg viewBox="0 0 360 200" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="170" x2="360" y2="170" stroke="oklch(0.32 0.013 264)" stroke-width="1" />
+            <line x1="30" y1="0" x2="30" y2="200" stroke="oklch(0.27 0.012 264)" stroke-width="1" />
+            <line x1="0" y1="40" x2="360" y2="40" stroke="oklch(0.24 0.012 264)" stroke-width="1" stroke-dasharray="3 5" />
+            <line x1="195" y1="0" x2="195" y2="200" stroke="oklch(0.24 0.012 264)" stroke-width="1" stroke-dasharray="3 5" />
+            <path d="M30,170 L330,40" fill="none" stroke="oklch(0.4 0.013 264)" stroke-width="1" stroke-dasharray="4 4" />
+            <path d="M30,170 C95,168 150,140 195,96 C245,48 300,40 332,38" fill="none" stroke="var(--blue)" stroke-width="2.6" />
+            <circle cx="195" cy="96" r="3.6" fill="var(--ink)" />
+          </svg>
+        </div>
+        <div class="scope-ramp"></div>
+        <div class="scope-chips">
+          <i style="background:var(--red)"></i>
+          <i style="background:var(--yellow)"></i>
+          <i style="background:var(--green)"></i>
+          <i style="background:var(--cyan)"></i>
+          <i style="background:var(--blue)"></i>
+          <i style="background:var(--magenta)"></i>
+        </div>
+        <p class="scope-cap">Tone-scale curve, grey-scale ramp and RGB chips, the scopes that ship inside OpenDRT so you can see exactly how the transform reshapes your image.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT IT IS ============ -->
+<section class="what" id="what" data-screen-label="What it is">
+  <div class="wrap">
+    <div class="what-grid">
+      <div class="what-copy reveal">
+        <p class="eyebrow">What it is</p>
+        <h2>The last node in your tree, done right.</h2>
+        <p>OpenDRT replaces the last node in your node tree, the one reserved for the default CST that prepares your image for display. It assumes node-based color management as your grading pipeline, so the rest of your grade flows in scene-referred and lands on a calibrated screen.</p>
+        <p>Pick from <strong>16 input gamuts</strong>, drive the look with Look and Tonescale presets, then optionally unlock the deeper look-development modules. It's a modern, neutral, filmic DRT with real per-hue control, and it costs nothing.</p>
+        <div class="credit">
+          Originally built as a DCTL for DaVinci Resolve by <a href="https://github.com/jedypod/open-display-transform" target="_blank" rel="noopener">Jed Smith</a>. This open-source tool has been expanded by Greg Enright into an OFX that leverages the richer OFX UI and adds CUDA / OpenCL builds for Windows and Linux alongside Metal on macOS.
+        </div>
+      </div>
+
+      <div class="ng-card reveal">
+        <div class="nodegraph">
+          <div class="ng-head">
+            <span class="ng-title">Your node graph</span>
+            <span class="ng-leg">OpenDRT = the display node</span>
+          </div>
+          <div class="ng-io">Log / scene-linear in</div>
+          <div class="ng-rail"></div>
+          <div class="ng-node faded" style="--ng:var(--ink-faint)">
+            <span class="ng-badge">01</span>
+            <div class="ng-meta"><b>Your grade</b><span>Balance, primaries, windows</span></div>
+          </div>
+          <div class="ng-rail"></div>
+          <div class="ng-node faded" style="--ng:var(--ink-faint)">
+            <span class="ng-badge">02</span>
+            <div class="ng-meta"><b>Look dev</b><span>Hue, saturation, contrast, tint</span></div>
+          </div>
+          <div class="ng-rail"></div>
+          <div class="ng-node last">
+            <span class="ng-badge" style="background:var(--blue)">6A</span>
+            <div class="ng-meta"><b>OpenDRT</b><span>Display rendering transform</span></div>
+          </div>
+          <div class="ng-rail"></div>
+          <div class="ng-io">Calibrated display out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOWNLOADS ============ -->
+<section class="downloads" id="download" data-screen-label="Downloads">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Download · OpenDRT v2.0.0</p>
+      <h2>Grab your platform build.</h2>
+      <p>Three native builds: Metal on macOS, CUDA on Windows and Linux. Download, unzip into your OFX plugins folder, and restart your host. The effect appears under the <strong>Dec. 18 Studios</strong> group as <strong>OpenDRT</strong>.</p>
+    </div>
+
+    <div class="dl-grid">
+      <article class="dl-card reveal">
+        <div class="dl-top">
+          <div class="dl-os"><span class="os-dot"></span><h3>macOS</h3></div>
+          <p class="arch">Universal · Metal</p>
+        </div>
+        <div class="dl-body">
+          <a class="btn blue dl" href="https://github.com/Dec18studios/Open-DRT-OFX/releases/latest/download/OpenDRT_v2.0.0_macOS_universal.zip" data-slug="opendrt" data-name="OpenDRT — macOS" target="_blank" rel="noopener">Download for macOS →</a>
+          <div class="dl-path"><span class="k">Install into</span><code>/Library/OFX/Plugins</code></div>
+        </div>
+      </article>
+
+      <article class="dl-card reveal">
+        <div class="dl-top">
+          <div class="dl-os"><span class="os-dot"></span><h3>Windows</h3></div>
+          <p class="arch">x86_64 · CUDA</p>
+        </div>
+        <div class="dl-body">
+          <a class="btn blue dl" href="https://github.com/Dec18studios/Open-DRT-OFX/releases/latest/download/OpenDRT_v2.0.0_windows_x86_64_cuda.zip" data-slug="opendrt" data-name="OpenDRT — Windows" target="_blank" rel="noopener">Download for Windows →</a>
+          <div class="dl-path"><span class="k">Install into</span><code>C:\Program Files\Common Files\OFX\Plugins</code></div>
+        </div>
+      </article>
+
+      <article class="dl-card reveal">
+        <div class="dl-top">
+          <div class="dl-os"><span class="os-dot"></span><h3>Linux</h3></div>
+          <p class="arch">x86_64 · CUDA</p>
+        </div>
+        <div class="dl-body">
+          <a class="btn blue dl" href="https://github.com/Dec18studios/Open-DRT-OFX/releases/latest/download/OpenDRT_v2.0.0_linux_x86_64_cuda.tar.gz" data-slug="opendrt" data-name="OpenDRT — Linux" target="_blank" rel="noopener">Download for Linux →</a>
+          <div class="dl-path"><span class="k">Install into</span><code>/usr/OFX/Plugins</code></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="dl-foot reveal">
+      <p>Want an older build or the source? Everything's on the <a class="inline" href="https://github.com/Dec18studios/Open-DRT-OFX/releases" target="_blank" rel="noopener">Releases page</a>. After unzip the layout is e.g. <code style="font-family:var(--mono);font-size:12px;color:var(--cyan)">/Library/OFX/Plugins/OpenDRT.ofx.bundle/…</code></p>
+      <a class="btn" href="https://github.com/Dec18studios/Open-DRT-OFX/releases" target="_blank" rel="noopener">All releases →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="install" id="install" data-screen-label="Install">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Getting started</p>
+      <h2>Install in a couple of steps.</h2>
+      <p>OpenDRT is a standard OFX bundle. Drop it in your host's OFX plugins folder and restart. Or let the <strong>Tool Box Manager</strong> handle it with everything else.</p>
+    </div>
+
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Download your platform build</b><p>Grab the macOS, Windows or Linux build from the <a href="#download" style="color:var(--cyan)">Downloads</a> above, then unzip (Linux is a <code>.tar.gz</code>).</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Move it into your OFX plugins folder</b><p>macOS: <code>/Library/OFX/Plugins</code> · Windows: <code>C:\Program Files\Common Files\OFX\Plugins</code> · Linux: <code>/usr/OFX/Plugins</code>. The final layout is <code>…/OFX/Plugins/OpenDRT.ofx.bundle/</code>.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Restart your host</b><p>Relaunch Resolve, Fusion or Nuke so it picks up the new plugin, and make sure OFX is enabled.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Apply it on your display node</b><p>Find <b>OpenDRT</b> under the <b>Dec. 18 Studios</b> OFX group and drop it on the last node in your tree. Set your input gamut and pick a preset to start.</p></div>
+        </div>
+      </div>
+
+      <aside class="install-aside">
+        <div class="note-card reveal">
+          <div class="k">Heads up · macOS Gatekeeper</div>
+          <p>On macOS, if Apple tells you to delete it, <b>don't</b>. Open <b>System Settings → Privacy &amp; Security</b>, choose <b>Allow Anyway</b> for OpenDRT, then restart Resolve. The plugin is unsigned, not unsafe.</p>
+        </div>
+
+        <div class="manager-card reveal">
+          <span class="badge">Easiest path</span>
+          <h4>The Tool Box Manager</h4>
+          <p>Prefer one-click installs and auto-updates? The Tool Box Manager installs OpenDRT and every other Dec. 18 tool, and keeps them current for you.</p>
+          <a class="btn primary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
+        </div>
+
+        <div class="manager-card reveal">
+          <span class="badge" style="color:var(--blue)">The full suite</span>
+          <h4>OpenDRT is 6A</h4>
+          <p>OpenDRT is the display node of <b>Look Dev Tools</b>, the six-in-one look development suite. Want the other five nodes (hue, saturation, density, contrast, split-tone)?</p>
+          <a class="btn" href="../lookdevtools/">See Look Dev Tools →</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULES ============ -->
+<section class="modules" id="modules" data-screen-label="Modules">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The look-dev modules</p>
+      <h2>Four modules that shape the picture.</h2>
+      <p>Start with a preset, then reach into the modules when you want to go further. Each one targets a different axis of how color renders to display.</p>
+    </div>
+
+    <div class="stages">
+      <article class="stage-card reveal" style="--accent: var(--blue); --accent-d: var(--blue-d);">
+        <div class="stage-side">
+          <span class="num">01 · Tonescale</span>
+          <h3>Tonescale</h3>
+          <p class="tag">Scene-referred linear light → display-referred luminance.</p>
+        </div>
+        <div class="stage-body">
+          <p>Set contrast, rolloff and mid-grey placement: peak luminance for SDR or HDR, middle-grey in nits, toe and shoulder rolloff, contrast shaping above and below grey, and a shadow offset for density.</p>
+          <div class="why"><div class="k">Why it matters</div><p>This is where exposure becomes a picture. Place mid-grey and shape the rolloff so highlights read clean, not chalky.</p></div>
+        </div>
+      </article>
+
+      <article class="stage-card reveal" style="--accent: var(--cyan); --accent-d: var(--cyan-d);">
+        <div class="stage-side">
+          <span class="num">02 · Purity</span>
+          <h3>Purity</h3>
+          <p class="tag">Color intensity relative to luminance.</p>
+        </div>
+        <div class="stage-body">
+          <p>A graceful purity compression that avoids harsh clipping and keeps perceptual smoothness as colors approach the edge of the gamut.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Saturated colors compress smoothly instead of slamming into a hard clip, so bright reds and blues stay believable.</p></div>
+        </div>
+      </article>
+
+      <article class="stage-card reveal" style="--accent: var(--yellow); --accent-d: var(--yellow-d);">
+        <div class="stage-side">
+          <span class="num">03 · Brilliance</span>
+          <h3>Brilliance</h3>
+          <p class="tag">Brightness of saturated colors.</p>
+        </div>
+        <div class="stage-body">
+          <p>Compensates clipping in narrow-band sources like LEDs, and adds soft glow and density variation to saturated highlights.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Practical lights and neon hold their shape and glow instead of blowing out to a flat blob.</p></div>
+        </div>
+      </article>
+
+      <article class="stage-card reveal" style="--accent: var(--magenta); --accent-d: var(--magenta-d);">
+        <div class="stage-side">
+          <span class="num">04 · Hue Shift</span>
+          <h3>Hue Shift</h3>
+          <p class="tag">Guide hue paths across luminance and purity.</p>
+        </div>
+        <div class="stage-body">
+          <p>Guide hue paths along the luminance and purity axes to address the Abney effect, with pleasing hue bends as tones move from dark to bright.</p>
+          <div class="why"><div class="k">Why it matters</div><p>Hues stay where you expect as they brighten, no surprise shifts in skies, skin or saturated highlights.</p></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="controls">
+      <div class="controls-head reveal">Fancy modes · manual + StickShift, combined in the UI</div>
+      <p class="reveal" style="color:var(--ink-dim);font-size:16px;max-width:64ch;margin-bottom:22px;text-wrap:pretty;">In the original DCTL, full control meant the unwieldy "StickShift" build. In the OFX, manual and StickShift modes are combined in the UI and openly accessible, so you can tweak every preset directly.</p>
+      <div class="control-grid">
+        <div class="ctrl reveal"><span class="ico" style="--cm:var(--green)"></span><b>High-end contrast</b><p>Shape contrast in the upper range, above mid-grey.</p></div>
+        <div class="ctrl reveal"><span class="ico" style="--cm:var(--blue)"></span><b>Low-end contrast</b><p>Shape contrast in the shadows, below mid-grey.</p></div>
+        <div class="ctrl reveal"><span class="ico" style="--cm:var(--cyan)"></span><b>Mid purity</b><p>Tune color intensity through the midtones.</p></div>
+        <div class="ctrl reveal"><span class="ico" style="--cm:var(--yellow)"></span><b>Brilliance</b><p>Glow and density on saturated highlights.</p></div>
+        <div class="ctrl reveal"><span class="ico" style="--cm:var(--magenta)"></span><b>Hue shift RGB + CMY</b><p>Independent hue guidance on all six primaries.</p></div>
+        <div class="ctrl reveal"><span class="ico" style="--cm:var(--red)"></span><b>Hue contrast</b><p>Contrast driven by hue for richer separation.</p></div>
+      </div>
+      <div class="lock-note reveal">
+        <div class="k">Persistent-value lock</div>
+        <p>Every module carries a persistent-value lock, so changing presets won't wipe the manual work you've already dialed in. Audition Look and Tonescale presets freely, your tweaks stay put.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIAGNOSTICS ============ -->
+<section class="diag" data-screen-label="Diagnostics">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Built-in scopes</p>
+      <h2>See exactly what the transform did.</h2>
+      <p>OpenDRT ships its own overlays so you're never guessing how the DRT reshaped your image. Toggle them on while you work.</p>
+    </div>
+
+    <div class="curves-grid">
+      <div class="curve-card reveal">
+        <span class="ct">Scope · 01</span>
+        <div class="curve-fig">
+          <div class="ramp"></div>
+        </div>
+        <h4>Grey-scale ramp</h4>
+        <p>Shows how far off a linear line your RGB values are, a fast read on neutrality across the whole range.</p>
+      </div>
+
+      <div class="curve-card reveal">
+        <span class="ct">Scope · 02</span>
+        <div class="curve-fig">
+          <svg viewBox="0 0 240 120" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="100" x2="240" y2="100" stroke="oklch(0.32 0.013 264)" stroke-width="1" />
+            <line x1="20" y1="0" x2="20" y2="100" stroke="oklch(0.27 0.012 264)" stroke-width="1" />
+            <path d="M20,100 L224,8" fill="none" stroke="oklch(0.4 0.013 264)" stroke-width="1" stroke-dasharray="4 4" />
+            <path d="M20,98 C70,96 96,80 130,50 C160,24 196,16 224,14" fill="none" stroke="var(--blue)" stroke-width="2.5" />
+            <circle cx="130" cy="50" r="3.4" fill="var(--ink)" />
+          </svg>
+        </div>
+        <h4>Tone-scale curve</h4>
+        <p>Plots how tones shifted across 0–1, so you can see the contrast, rolloff and mid-grey placement at a glance.</p>
+      </div>
+
+      <div class="curve-card reveal">
+        <span class="ct">Scope · 03</span>
+        <div class="curve-fig">
+          <div class="chips">
+            <i style="background:var(--red)"></i>
+            <i style="background:var(--yellow)"></i>
+            <i style="background:var(--green)"></i>
+            <i style="background:var(--cyan)"></i>
+            <i style="background:var(--blue)"></i>
+            <i style="background:var(--magenta)"></i>
+          </div>
+        </div>
+        <h4>RGB chips pattern</h4>
+        <p>Shows how individual hue vectors are affected, so you can check each primary's behavior through the transform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BETA ============ -->
+<section class="beta" data-screen-label="Beta features">
+  <div class="wrap">
+    <div class="beta-card reveal">
+      <div class="bl">
+        <p class="eyebrow">Optional sandbox</p>
+        <h2>Beta features, on your terms.</h2>
+        <p>A set of experimental modules ships alongside the core transform: filmic and projector simulation among them. Test them at your own discretion, they won't interfere with the core DRT, so your everyday grades stay rock-solid while you play.</p>
+        <div class="beta-tags">
+          <span>Filmic simulation</span>
+          <span>Projector simulation</span>
+          <span>Won't touch the core</span>
+        </div>
+      </div>
+      <div class="beta-right">
+        <span class="glyph">β</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUPPORT ============ -->
+<section class="support" data-screen-label="Support">
+  <div class="wrap">
+    <div class="support-card reveal">
+      <div>
+        <p class="eyebrow">It's free, always</p>
+        <h2>Help support development.</h2>
+        <p>OpenDRT is free and open-source, no subscription, no catch. If it earns a place in your pipeline and you'd like to chip in toward keeping it maintained, there's a spot for that.</p>
+      </div>
+      <a class="btn blue" href="https://dec18studios.com/open-drt-ofx#support" target="_blank" rel="noopener">Support development →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LICENSE ============ -->
+<section class="license" data-screen-label="License">
+  <div class="wrap">
+    <div class="license-grid">
+      <div class="license-copy reveal">
+        <p class="eyebrow">License &amp; attribution</p>
+        <h2>Open source, in full compliance.</h2>
+        <p>This OpenDRT OFX incorporates and builds upon open-source components licensed under the GNU General Public License (GPL). All modifications and distributions are maintained in full compliance with the GPL. The complete source, including changes, is publicly available at <a class="inline" href="https://github.com/Dec18studios/Open-DRT-OFX" target="_blank" rel="noopener">github.com/Dec18studios/Open-DRT-OFX</a>.</p>
+        <p><strong>OpenDRT © Jed Smith.</strong> The OFX wrapper, CUDA and Metal backends, and build system are © Dec. 18 Studios, also released under GPL-3.0.</p>
+      </div>
+
+      <div class="attrib reveal">
+        <span class="lic-pill">GPL-3.0 licensed</span>
+        <div class="row2">
+          <span class="k">Original transform</span>
+          <span class="v">OpenDRT by <a href="https://github.com/jedypod/open-display-transform" target="_blank" rel="noopener">Jed Smith</a></span>
+        </div>
+        <div class="row2">
+          <span class="k">OFX, CUDA &amp; Metal</span>
+          <span class="v">© Dec. 18 Studios</span>
+        </div>
+        <div class="row2">
+          <span class="k">Source repository</span>
+          <span class="v"><a href="https://github.com/Dec18studios/Open-DRT-OFX" target="_blank" rel="noopener">Dec18studios/Open-DRT-OFX</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../">Color Grading Tools</a>
+        <a href="../lookdevtools/">Look Dev Tools</a>
+        <a href="../photochemist/">Photo Chemist</a>
+        <a href="../technicolordrt/">Technicolor DRT</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="/cdn-cgi/l/email-protection#88ebfaede9fcedc8ecedebb9b0fbfcfdece1e7fba6ebe7e5"><span class="__cf_email__" data-cfemail="3b58495e5a4f5e7b5f5e580a03484f4e5f52544815585456">[email&#160;protected]</span></a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · OpenDRT © Jed Smith · GPL-3.0</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  /* ============ SCROLL REVEAL ============ */
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#5b78d6" />
+        <stop offset="0.5" stop-color="#5ec6d6" />
+        <stop offset="1" stop-color="#5bd68a" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="15" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">DRT</text>
+  </svg>
+</template>
+
+</body>
+</html>
