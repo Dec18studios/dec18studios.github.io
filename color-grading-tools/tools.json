@@ -24,6 +24,14 @@
     "url": "lookdevtools/"
   },
   {
+    "name": "OpenDRT",
+    "slug": "opendrt",
+    "tier": "free",
+    "color": "blue",
+    "desc": "Jed Smith's open-source display rendering transform, free as an OFX — Metal + CUDA, 16 input gamuts, full look-dev modules.",
+    "url": "opendrt/"
+  },
+  {
     "name": "Hue Contrast Compressor",
     "slug": "hue-contrast-compressor",
     "tier": "pro",
