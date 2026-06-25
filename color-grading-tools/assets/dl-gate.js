@@ -54,7 +54,7 @@
         '<div style="position:relative;background:#13151c;border:1px solid #2a2d3a;border-radius:14px;padding:36px 32px;max-width:400px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.6)">' +
           '<button id="dlClose" type="button" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#555;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;transition:color .15s" title="Close">✕</button>' +
           '<h3 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#e8eaf0">One quick thing</h3>' +
-          '<p style="margin:0 0 24px;font-size:14px;color:#888;line-height:1.65">Drop your email and we\'ll let you know when a new version drops. We don\'t send many — just release notes when something changes.</p>' +
+          '<p style="margin:0 0 24px;font-size:14px;color:#888;line-height:1.65">Drop your email and we might send you a few setup tips and let you know when a new version drops. We don\'t send many — just helpful tips and release notes when something changes.</p>' +
           '<form id="dlForm" autocomplete="on">' +
             '<input id="dlEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com" required style="width:100%;background:#1a1d24;border:1px solid #2a2d3a;color:#e8eaf0;border-radius:8px;padding:11px 14px;font-size:14px;font-family:inherit;margin-bottom:10px;outline:none;transition:border-color .15s;box-sizing:border-box">' +
             '<button type="submit" style="width:100%;background:#4a8aff;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s">Download</button>' +
