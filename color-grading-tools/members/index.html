@@ -565,6 +565,12 @@
           + ' data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo || '') + '"'
           + ' data-os="' + currentOS + '" data-type="' + esc(t.type) + '">'
           + ICON.dl + 'Download</a>';
+      } else if (!t.repo) {
+        // Premium tool with no release repo (landing-page tools, e.g. Hue Tools,
+        // Skin Tone Mastery). Link to its page instead of a broken proxy URL.
+        dlBtn = '<a class="btn sm primary" href="' + esc(t.url || '#') + '"'
+          + ' data-slug="' + esc(t.slug) + '">'
+          + ICON.dl + 'View</a>';
       } else {
         dlBtn = '<button class="btn sm primary licdl"'
           + ' data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo || '') + '"'
@@ -744,6 +750,11 @@
           ? (tool.proxyAsset[info.os] || "*")
           : tool.proxyAsset;
       }
+      if (!info.repo) {
+        toast("This tool has no direct download here — open its page instead.");
+        console.warn("[requestLicensedDownload] Missing repo for", info.slug);
+        return;
+      }
       var version = info.version || "latest";
       var url = proxy + "/v1/Dec18studios/" + encodeURIComponent(info.repo)
         + "/releases/download/" + encodeURIComponent(version) + "/" + encodeURIComponent(assetPattern)
@@ -794,14 +805,33 @@
       }
     })();
 
-    // render now, then try to sync from tools.json
+    // The hardcoded TOOLS list above is authoritative for download-critical
+    // fields (repo, proxyAsset, type) — the public ../tools.json is a thin
+    // marketing manifest with no repo. Overlay ONLY cosmetic fields from the
+    // manifest; never let it clobber download fields (doing so produced empty
+    // repo segments -> proxy "Invalid download path" errors). Manifest-only
+    // tools are not added here: without a repo they can't be proxy-downloaded.
+    function mergeManifest(base, manifest) {
+      var bySlug = {};
+      manifest.forEach(function (m) { if (m && m.slug) bySlug[m.slug] = m; });
+      base.forEach(function (t) {
+        var m = bySlug[t.slug];
+        if (!m) return;
+        ["name", "desc", "color"].forEach(function (k) {
+          if (m[k] != null && m[k] !== "") t[k] = m[k];
+        });
+      });
+      return base;
+    }
+
+    // render now, then refresh display copy from tools.json (download fields stay)
     render(TOOLS);
     if (MANIFEST_URL) {
       fetch(MANIFEST_URL, { cache: "no-store" })
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) {
           var list = Array.isArray(data) ? data : (data && data.tools);
-          if (Array.isArray(list) && list.length) render(list);
+          if (Array.isArray(list) && list.length) render(mergeManifest(TOOLS, list));
         })
         .catch(function () {});
     }
