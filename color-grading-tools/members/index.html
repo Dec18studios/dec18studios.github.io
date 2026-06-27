@@ -798,14 +798,28 @@
       var host = document.getElementById("groups");
       if (host) host.innerHTML = '<div class="group-label">Couldn’t load the tool list — please refresh.</div>';
     }
-    fetch(MANIFEST_URL, { cache: "no-store" })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        var list = Array.isArray(data) ? data : (data && data.tools);
-        if (Array.isArray(list) && list.length) { TOOLS = list; render(TOOLS); }
-        else showCatalogError();
-      })
-      .catch(showCatalogError);
+    // Fetch the catalog with a per-load cache-buster. The JSON is served through
+    // Cloudflare with max-age=600, so right after a deploy an edge node can still
+    // hold a stale 404 (the file was just (re)created) and would blank the page
+    // for up to 10 minutes. A unique query string sidesteps any edge-cached 404,
+    // and we retry once before giving up so a single propagation hiccup never
+    // forces the visitor to hand-refresh.
+    function loadCatalog(attempt) {
+      var bust = (MANIFEST_URL.indexOf("?") < 0 ? "?" : "&") + "v=" + Date.now();
+      fetch(MANIFEST_URL + bust, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          var list = Array.isArray(data) ? data : (data && data.tools);
+          if (Array.isArray(list) && list.length) { TOOLS = list; render(TOOLS); }
+          else if (attempt < 1) { setTimeout(function () { loadCatalog(attempt + 1); }, 800); }
+          else showCatalogError();
+        })
+        .catch(function () {
+          if (attempt < 1) setTimeout(function () { loadCatalog(attempt + 1); }, 800);
+          else showCatalogError();
+        });
+    }
+    loadCatalog(0);
 
     var toastT;
     window.toast = function (msg) {
