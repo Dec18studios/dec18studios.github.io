@@ -488,7 +488,12 @@
     // Manager's tools/generate-tools-json.mjs from the SAME stable.json manifests
     // the desktop app installs from — so this list can't drift from the app.
     // Regenerate after any catalog change; never hand-edit the tool list here.
-    var MANIFEST_URL = "../members-tools.json";
+    // Absolute URL (not relative) so the catalog resolves no matter what origin
+    // this markup runs on — the github.io page, the Squarespace-injected members
+    // page, or a local preview. members-tools.json is served with CORS *, so a
+    // cross-origin fetch is fine. Squarespace code injection may override
+    // window.MANIFEST_URL if it ever needs a different source.
+    var MANIFEST_URL = window.MANIFEST_URL || "https://tools.dec18studios.com/color-grading-tools/members-tools.json";
     var ORG = "https://github.com/Dec18studios/";
 
     // Populated from MANIFEST_URL at load. Each entry carries the download-critical
