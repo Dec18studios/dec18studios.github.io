@@ -110,7 +110,7 @@
     "desc": "A color-space transform into a film-negative working space.",
     "url": "film-negative-space-cst/",
     "repo": "Film-Negative-Space-CST-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/Film-Negative-Space-CST-DCTL/releases/latest/download/Film-Negative-Space-CST-DCTL-v2.2.zip"
+    "dlUrl": "https://github.com/Dec18studios/Film-Negative-Space-CST-DCTL/releases/latest/download/Film-Negative-Space-CST-DCTL.zip"
   },
   {
     "name": "Saturation Separator",
