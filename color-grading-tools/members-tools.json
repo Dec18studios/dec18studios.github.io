@@ -9,9 +9,9 @@
     "category": "Film Emulation",
     "repo": "PhotoChemist-OFX",
     "proxyAsset": {
-      "mac": "PhotoChemist_v*_macOS_universal_portable.zip",
-      "win": "PhotoChemist_v*_windows_cuda_portable.zip",
-      "linux": "PhotoChemist_v*_linux_cuda_portable.zip"
+      "mac": "PhotoChemist_*_macOS_universal_portable.zip",
+      "win": "PhotoChemist_*_windows_cuda_portable.zip",
+      "linux": "PhotoChemist_*_linux_cuda_portable.zip"
     }
   },
   {
@@ -39,9 +39,9 @@
     "category": "Color Grading",
     "repo": "LookDevTools-OFX",
     "proxyAsset": {
-      "mac": "LookDevTools_v*_macOS_universal_portable.zip",
-      "win": "LookDevTools_v*_windows_cuda_portable.zip",
-      "linux": "LookDevTools_v*_linux_cuda_portable.zip"
+      "mac": "LookDevTools_*_macOS_universal_portable.zip",
+      "win": "LookDevTools_*_windows_cuda_portable.zip",
+      "linux": "LookDevTools_*_linux_cuda_portable.zip"
     }
   },
   {
@@ -63,7 +63,7 @@
     "type": "DCTL",
     "category": "Color Grading",
     "repo": "Hue-Contrast-Compressor-DCTL",
-    "proxyAsset": "Hue-Contrast-Compressor-v*.zip"
+    "proxyAsset": "Hue-Contrast-Compressor-*.zip"
   },
   {
     "name": "Volume Curve",
@@ -85,7 +85,7 @@
     "type": "DCTL",
     "category": "Film Emulation",
     "repo": "Grain-By-Greg-DCTL",
-    "proxyAsset": "Grain-By-Greg-v*.zip"
+    "proxyAsset": "Grain-By-Greg-*.zip"
   },
   {
     "name": "Color Slicer",
@@ -107,7 +107,7 @@
     "type": "OFX",
     "category": "Color Grading",
     "repo": "Hue-Contrast-Compressor-OFX",
-    "proxyAsset": "Hue-Contrast-Compressor-OFX-v*-macOS-universal.zip"
+    "proxyAsset": "Hue-Contrast-Compressor-OFX-*-macOS-universal.zip"
   },
   {
     "name": "GradeMatch",
@@ -119,9 +119,9 @@
     "category": "Color Grading",
     "repo": "GradeMatch-OFX",
     "proxyAsset": {
-      "mac": "GradeMatch_v*_macOS_universal_portable.zip",
-      "win": "GradeMatch_v*_windows_portable.zip",
-      "linux": "GradeMatch_v*_linux_portable.zip"
+      "mac": "GradeMatch_*_macOS_universal_portable.zip",
+      "win": "GradeMatch_*_windows_portable.zip",
+      "linux": "GradeMatch_*_linux_portable.zip"
     }
   },
   {
@@ -134,9 +134,9 @@
     "category": "Color Grading",
     "repo": "SplitToneX-OFX",
     "proxyAsset": {
-      "mac": "SplitToneX_v*_macOS_universal_portable.zip",
-      "win": "SplitToneX_v*_windows_cuda_portable.zip",
-      "linux": "SplitToneX_v*_linux_cuda_portable.zip"
+      "mac": "SplitToneX_*_macOS_universal_portable.zip",
+      "win": "SplitToneX_*_windows_cuda_portable.zip",
+      "linux": "SplitToneX_*_linux_cuda_portable.zip"
     }
   },
   {
@@ -148,7 +148,7 @@
     "type": "DCTL",
     "category": "Color Grading",
     "repo": "Trim-Top-Bottom-DCTL",
-    "proxyAsset": "Trim-Top-Bottom-DCTL-v*.zip"
+    "proxyAsset": "Trim-Top-Bottom-DCTL-*.zip"
   },
   {
     "name": "Perfect Exposure Every Time",
@@ -181,7 +181,7 @@
     "type": "DCTL",
     "category": "Color Grading",
     "repo": "Saturation-Separator-DCTL",
-    "proxyAsset": "Saturation-Separator-v*.zip"
+    "proxyAsset": "Saturation-Separator-*.zip"
   },
   {
     "name": "Linear Ramp Diagnostic",
@@ -203,7 +203,7 @@
     "type": "DCTL",
     "category": "Color Grading",
     "repo": "Hue-Inspector-DCTL",
-    "proxyAsset": "Hue-Inspector-DCTL-v*.zip"
+    "proxyAsset": "Hue-Inspector-DCTL-*.zip"
   },
   {
     "name": "RGB Chips",
