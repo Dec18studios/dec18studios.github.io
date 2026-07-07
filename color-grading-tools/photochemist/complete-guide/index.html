@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PhotoChemist, Complete Guide, Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.62;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.64 0.205 25 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.82); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("../assets/logo-full.png") left center / contain no-repeat;
+            mask: url("../assets/logo-full.png") left center / contain no-repeat;
+  }
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(44px, 6vw, 82px); padding-bottom: clamp(30px, 4vw, 52px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -30%; right: -14%; width: 720px; height: 720px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(150px); opacity: 0.12; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(38px, 5.6vw, 64px); line-height: 1.0; letter-spacing: -0.02em; margin: 18px 0 0; max-width: 18ch;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 32%, var(--blue) 58%, var(--cyan) 80%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 20px; font-size: clamp(16px, 1.9vw, 19px); color: var(--ink-dim); max-width: 66ch; text-wrap: pretty; }
+  .hero-sub strong { color: var(--ink); font-weight: 600; }
+  .hero-sub a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+  .hero-meta { display: flex; gap: 26px; margin-top: 30px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 24px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ DOC LAYOUT ============ */
+  .doc { border-top: 1px solid var(--line-soft); }
+  .doc .wrap { display: grid; grid-template-columns: 246px minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start;
+    padding-top: clamp(30px, 4vw, 52px); padding-bottom: clamp(52px, 7vw, 92px); }
+  @media (max-width: 940px) { .doc .wrap { grid-template-columns: 1fr; gap: 0; } }
+
+  /* --- TOC --- */
+  .toc { position: sticky; top: 90px; align-self: start; }
+  .toc .toc-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .toc ol { list-style: none; counter-reset: toc; display: flex; flex-direction: column; gap: 1px; border-left: 1px solid var(--line-soft); }
+  .toc li { counter-increment: toc; }
+  .toc a {
+    display: flex; gap: 9px; align-items: baseline; padding: 5px 12px; font-size: 13px; color: var(--ink-faint);
+    border-left: 2px solid transparent; margin-left: -1px; transition: color 0.16s, border-color 0.16s; line-height: 1.35; text-wrap: pretty;
+  }
+  .toc a::before { content: counter(toc, decimal-leading-zero); font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); opacity: 0.6; flex: none; }
+  .toc a:hover { color: var(--ink-dim); }
+  .toc a.active { color: var(--ink); border-left-color: var(--red); }
+  .toc a.active::before { color: var(--red); opacity: 1; }
+  @media (max-width: 940px) {
+    .toc { position: static; margin-bottom: 30px; }
+    .toc.as-details { border: 1px solid var(--line-soft); border-radius: 12px; background: var(--bg-1); overflow: hidden; }
+    .toc summary { cursor: pointer; padding: 15px 18px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-dim); list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    .toc summary::-webkit-details-marker { display: none; }
+    .toc summary::after { content: "+"; font-size: 17px; color: var(--ink-faint); }
+    .toc[open] summary::after { content: "–"; }
+    .toc .toc-k { display: none; }
+    .toc ol { padding: 4px 12px 14px; }
+  }
+
+  /* --- content --- */
+  .content { min-width: 0; }
+  .content > section { scroll-margin-top: 90px; padding: 0 0 clamp(36px, 5vw, 56px); }
+  .content > section + section { padding-top: clamp(30px, 4vw, 46px); border-top: 1px solid var(--line-soft); }
+  .sec-num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--red); font-weight: 600; display: inline-flex; align-items: center; gap: 10px; }
+  .sec-num::before { content: ""; width: 22px; height: 2px; background: var(--red); }
+  .content h2 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -0.02em; line-height: 1.05; margin-top: 12px; }
+  .content h3 { font-family: var(--display); font-weight: 600; font-size: clamp(19px, 2.1vw, 23px); letter-spacing: -0.01em; margin-top: 30px; }
+  .content h4 { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); margin-top: 24px; }
+  .content p { margin-top: 15px; color: var(--ink-dim); font-size: 16px; text-wrap: pretty; }
+  .content p strong { color: var(--ink); font-weight: 600; }
+  .content p code, .content li code, td code { font-family: var(--mono); font-size: 0.86em; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 5px; padding: 1.5px 6px; color: var(--cyan); }
+  .content ul.bul { list-style: none; margin: 16px 0 0; display: grid; gap: 10px; }
+  .content ul.bul li { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .content ul.bul li strong { color: var(--ink); font-weight: 600; }
+  .content ul.bul li::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--accent, var(--red)); flex: none; margin-top: 8px; }
+  .content ol.steps-ol { margin: 18px 0 0; padding: 0; list-style: none; counter-reset: sn; display: grid; gap: 12px; }
+  .content ol.steps-ol li { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: flex-start; font-size: 15.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .content ol.steps-ol li strong { color: var(--ink); font-weight: 600; }
+  .content ol.steps-ol li::before { counter-increment: sn; content: counter(sn, decimal-leading-zero); font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--red);
+    width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--red-d); background: var(--red-d); display: grid; place-items: center; flex: none; }
+
+  /* --- tables --- */
+  .tbl-wrap { margin-top: 20px; border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden; overflow-x: auto; }
+  table.ptable { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 540px; }
+  table.ptable thead th { background: var(--bg-2); text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 11px 15px; border-bottom: 1px solid var(--line); }
+  table.ptable td { padding: 12px 15px; border-bottom: 1px solid var(--line-soft); color: var(--ink-dim); vertical-align: top; text-wrap: pretty; }
+  table.ptable tr:last-child td { border-bottom: none; }
+  table.ptable td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  table.ptable td.mono, table.ptable td:nth-child(2).num, table.ptable .m { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+  table.ptable td strong { color: var(--ink); font-weight: 600; }
+  table.ptable.wide { min-width: 640px; }
+  /* comparison 2-col */
+  table.ptable.cmp td:first-child { color: var(--ink-dim); font-weight: 400; white-space: normal; }
+  table.ptable.cmp td:last-child { color: var(--ink); }
+
+  /* --- callouts --- */
+  .callout { margin-top: 22px; border-radius: 14px; padding: 16px 20px; background: var(--accent-d, var(--cyan-d)); position: relative; overflow: hidden; }
+  .callout::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent, var(--cyan)); }
+  .callout .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent, var(--cyan)); font-weight: 600; }
+  .callout p { margin-top: 7px; font-size: 14.5px; color: var(--ink); line-height: 1.55; }
+  .callout p:first-child { margin-top: 0; }
+  .callout.tip { --accent: var(--green); --accent-d: var(--green-d); }
+  .callout.warn { --accent: var(--yellow); --accent-d: var(--yellow-d); }
+  .callout.note { --accent: var(--blue); --accent-d: var(--blue-d); }
+  .callout.key { --accent: var(--red); --accent-d: var(--red-d); }
+
+  /* --- screenshot figure --- */
+  .shot { display: block; margin-top: 22px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line-soft); background: var(--bg-1); box-shadow: 0 30px 80px -50px oklch(0 0 0 / 0.85); transition: border-color 0.18s; }
+  .shot:hover { border-color: var(--line); }
+  .shot img { display: block; width: 100%; height: auto; }
+  .shot .cap { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); padding: 10px 14px; border-top: 1px solid var(--line-soft); text-wrap: pretty; }
+
+  /* --- screenshot placeholder --- */
+  .shotph { margin-top: 22px; position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 1px solid var(--line-soft); background: var(--bg-1); }
+  .shotph .fill { position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    background-image: repeating-linear-gradient(45deg, oklch(0.215 0.014 264) 0 13px, oklch(0.195 0.013 264) 13px 26px); }
+  .shotph .pc { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 22px; }
+  .shotph .ic { width: 46px; height: 46px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-2); display: grid; place-items: center; }
+  .shotph .ic span { width: 18px; height: 18px; border-radius: 4px; background: linear-gradient(135deg, var(--magenta), var(--blue)); }
+  .shotph .play { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: oklch(0 0 0 / 0.35); border: 1px solid oklch(1 0 0 / 0.22); }
+  .shotph .play::before { content: ""; width: 0; height: 0; margin-left: 4px; border-left: 16px solid var(--ink); border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+  .shotph .cap { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink); font-weight: 500; }
+  .shotph .sub { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+  .shotph .tag { position: absolute; left: 12px; top: 12px; z-index: 3; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 10px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff; }
+
+  /* --- faq accordion --- */
+  details.faq { margin-top: 10px; border: 1px solid var(--line-soft); border-radius: 12px; background: var(--bg-1); overflow: hidden; }
+  details.faq summary { cursor: pointer; padding: 15px 18px; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--ink);
+    list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary::after { content: "+"; font-family: var(--mono); font-size: 16px; color: var(--ink-faint); flex: none; }
+  details.faq[open] summary::after { content: "–"; }
+  details.faq .fb { padding: 0 18px 16px; }
+  details.faq .fb p { margin-top: 0; font-size: 14.5px; }
+
+  /* --- pill row --- */
+  .modes { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .modes { grid-template-columns: 1fr; } }
+  .mode { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 12px; padding: 16px 18px; }
+  .mode .mn { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent, var(--red)); font-weight: 600; }
+  .mode b { display: block; font-family: var(--display); font-weight: 600; font-size: 17px; margin-top: 7px; }
+  .mode p { margin-top: 6px; font-size: 13.5px; color: var(--ink-dim); }
+
+  /* ============ NEXT / SERIES ============ */
+  .next { border-top: 1px solid var(--line-soft); }
+  .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .next-grid { grid-template-columns: 1fr; } }
+  .next-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.18s, transform 0.18s; position: relative; overflow: hidden; }
+  .next-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--accent, var(--magenta)); opacity: 0.9; }
+  .next-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  .next-card .idx { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .next-card h4 { font-family: var(--display); font-weight: 700; font-size: 21px; letter-spacing: -0.01em; }
+  .next-card p { font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .next-card .go { margin-top: auto; font-family: var(--mono); font-size: 12px; color: var(--accent, var(--magenta)); letter-spacing: 0.04em; }
+  .next-card.now { background: linear-gradient(180deg, var(--bg-2), var(--bg-1)); }
+  .next-card.now .idx { color: var(--green); }
+  .next-card.soon { opacity: 0.72; } .next-card.soon .go { color: var(--ink-faint); }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  .totop { position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 44px; height: 44px; border-radius: 12px;
+    background: var(--bg-2); border: 1px solid var(--line); color: var(--ink); display: grid; place-items: center; cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s, background 0.16s; font-size: 18px; }
+  .totop.show { opacity: 1; pointer-events: auto; }
+  .totop:hover { background: var(--bg-3); }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    nav.toplinks a.cta { min-height: 44px; }
+    .toc a { padding-block: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios, home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">← PhotoChemist</a>
+      <a href="../quickstart/">Quick Start</a>
+      <a href="#quick-processing">Controls</a>
+      <a href="#fse">Editors</a>
+      <a href="#faq">FAQ</a>
+      <a href="../#subscribe" class="cta">Get it · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Complete Guide hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <p class="eyebrow">Complete Guide · PhotoChemist</p>
+    <h1 class="hero-title">Every control, the <em>whole film chain.</em></h1>
+    <p class="hero-sub">The authoritative reference for PhotoChemist, a physically-based spectral film-emulation plugin for DaVinci Resolve. It explains what every on-screen control group does, how the simulated film chain flows through them, and how to make grading decisions with them. New here? Read the <a class="inline" href="../quickstart/">Quick Start</a> first for a five-minute path to a look. This is the deep reference.</p>
+    <div class="hero-meta">
+      <div class="m"><b>43-band</b><span>spectral engine</span></div>
+      <div class="m"><b>17+</b><span>stage film chain</span></div>
+      <div class="m"><b>2</b><span>factories in the bundle</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOC ============ -->
+<div class="doc">
+  <div class="wrap">
+
+    <!-- ===== TOC ===== -->
+    <details class="toc as-details" id="toc" open>
+      <summary>Contents</summary>
+      <div class="toc-k">On this page</div>
+      <ol>
+        <li><a href="#what">What PhotoChemist is</a></li>
+        <li><a href="#spectral">Spectral, not a LUT</a></li>
+        <li><a href="#chain">The film chain, mapped</a></li>
+        <li><a href="#apply">Applying it in Resolve</a></li>
+        <li><a href="#quick-processing">Quick Processing</a></li>
+        <li><a href="#printer-calibration">Printer Calibration</a></li>
+        <li><a href="#input-condition">Input Condition</a></li>
+        <li><a href="#development">Film Development</a></li>
+        <li><a href="#textures">Textures</a></li>
+        <li><a href="#preset-manager">Preset Manager</a></li>
+        <li><a href="#film-stock">Negative &amp; Print Film Stock</a></li>
+        <li><a href="#io-config">Input/Output Config</a></li>
+        <li><a href="#lut-export">LUT Export</a></li>
+        <li><a href="#fse">The Film Stock Editor</a></li>
+        <li><a href="#textures-editor">The Textures Editor</a></li>
+        <li><a href="#printer-lights">Printer Lights (feeder)</a></li>
+        <li><a href="#diagnostics">Diagnostic view modes</a></li>
+        <li><a href="#workflow">Workflow &amp; best practices</a></li>
+        <li><a href="#faq">Troubleshooting &amp; FAQ</a></li>
+      </ol>
+    </details>
+
+    <!-- ===== CONTENT ===== -->
+    <div class="content">
+
+      <!-- 1 -->
+      <section id="what" class="reveal" data-screen-label="What it is">
+        <span class="sec-num">01</span>
+        <h2>What PhotoChemist is</h2>
+        <p>PhotoChemist is a physically-based, spectral simulation of the analog film photochemistry chain, running as a per-pixel OpenFX render inside DaVinci Resolve. It does not approximate the film look with a 3D LUT, an S-curve, or a channel-mixer matrix. Instead it reconstructs the actual chemical and optical events that happen when light exposes a negative, that negative is developed into subtractive cyan/magenta/yellow (CMY) dye, the negative is printed onto a print stock, and the print is shone through a projector bulb.</p>
+        <p>Internally it works in a <strong>43-band spectral representation</strong> (360–780 nm at 10 nm steps): your image becomes spectra, those spectra drive real physical events, and only at the very ends does it return to RGB. The film look you want emerges from physics, overlapping curves talking to each other, rather than being baked into a fixed transfer.</p>
+        <p>The plugin ships as a bundle with <strong>two factories</strong>:</p>
+        <ul class="bul">
+          <li><span><strong>PhotoChemist</strong>, the main film-emulation effect (this whole guide, except the feeder section).</span></li>
+          <li><span><strong>PhotoChemist Printer Lights</strong>, a companion generator/trim node that produces per-pixel printer-light maps, wired into PhotoChemist's optional Printer Link input. See <a class="inline" href="#printer-lights" style="color:var(--cyan)">that section</a>.</span></li>
+        </ul>
+      </section>
+
+      <!-- 2 -->
+      <section id="spectral" class="reveal" data-screen-label="Spectral not a LUT">
+        <span class="sec-num">02</span>
+        <h2>Spectral, not a LUT, why it matters</h2>
+        <p>A film-look LUT is <strong>a recording of an outcome</strong>. Someone shot a chart on a stock, scanned it, and froze the RGB-in → RGB-out relationship into a cube. It is fast and often looks good because the destination is real, but it is a photograph of a <em>result</em>, not the <em>process</em> that made it. A LUT only knows the one illuminant, one exposure, and one print condition it was baked under. Push outside that operating point and it has nothing to fall back on.</p>
+        <p>PhotoChemist simulates the chemistry instead, so the look re-derives whenever you change anything:</p>
+        <div class="tbl-wrap">
+          <table class="ptable cmp wide">
+            <thead><tr><th>LUT / curve emulation</th><th>PhotoChemist</th></tr></thead>
+            <tbody>
+              <tr><td>Maps RGB → RGB through a fixed transfer</td><td>Maps RGB → <strong>spectrum</strong> → physical events → spectrum → RGB</td></tr>
+              <tr><td>The look is baked, static, single-illuminant</td><td>The look <em>emerges</em> from sensitivity curves, dye densities, H&amp;D curves, printer lights</td></tr>
+              <tr><td>Channel crosstalk is faked with a matrix</td><td>Crosstalk is <strong>real</strong>, it falls out of spectral overlap of dye absorptions and layer sensitivities</td></tr>
+              <tr><td>Halation / grain / sharpness are post effects bolted on</td><td>They act <strong>in the physically correct space and pipeline order</strong></td></tr>
+              <tr><td>Cannot answer "what if the print stock were different?"</td><td>Negative stock and print stock are independent spectral objects you can swap or edit</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Concretely: a red apple vs. skin tone</h3>
+        <p>A red apple's reflected light is not "255 red", it is a spectral curve, mostly energy past ~600 nm with a long tail. PhotoChemist dots that spectrum against three layer sensitivities: the red-sensitive (cyan-forming) layer lights up hard, but green and blue sensitivity haven't fully died at those wavelengths, so they catch a little too. Skin is not "less apple", it is a broad, smooth reflectance with strong long-wavelength content <em>plus</em> real green energy and a notch in the blues. It loads all three layers in a completely different <strong>ratio</strong>, and the dyes that form overlap spectrally on the way back out (cyan dye absorbs into the greens, magenta bleeds toward red). That wavelength-specific overlap is the crosstalk, and it colors the apple and the skin differently even where their RGB would land close.</p>
+        <div class="callout key">
+          <div class="k">The buy</div>
+          <p>A 3D matrix or cube applies the <em>same</em> fixed cross-channel mixing to every pixel by its RGB address. It cannot know the apple and the skin arrived via different spectra. The spectral sim does, because it never collapsed to RGB in the middle. Shift a printer light or the print dye and both the apple and the skin re-derive correctly, with skin staying believable while saturated reds bloom the way real stock does.</p>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section id="chain" class="reveal" data-screen-label="The film chain">
+        <span class="sec-num">03</span>
+        <h2>The film chain, mapped to the controls</h2>
+        <p>The full <strong>Neg to Print</strong> path, in plain language, with the control group that governs each step:</p>
+        <ol class="steps-ol">
+          <li><span><strong>Exposure</strong>, your RGB is converted to spectra and projected onto the negative's three spectral layer sensitivities, giving three real exposures. <em>(Input Condition rescales the scene into the stock's exposure window first; Negative Film Stock defines the sensitivities.)</em></span></li>
+          <li><span><strong>Latent image</strong>, silver forms by the law <code>P = 1 − exp(−k·H)</code> (exposure <code>H</code>, per-layer rate <code>k</code>).</span></li>
+          <li><span><strong>Grain (pre-curve)</strong>, grain is injected into the latent signal <em>before</em> the characteristic curve, in density space, because real grain is a property of the developed silver, not a post overlay. <em>(Textures → Grain.)</em></span></li>
+          <li><span><strong>H&amp;D characteristic curve</strong>, the latent fraction is shaped into dye concentration; this is the stock's contrast personality (toe, gamma, shoulder), run <strong>per layer</strong>. <em>(Neg HD Curve.)</em></span></li>
+          <li><span><strong>Dye formation + spectral integration</strong>, the three layers drive subtractive CMY dye; densities combine via Beer–Lambert. <em>(Negative dye colors.)</em></span></li>
+          <li><span><strong>Developer competition / interimage</strong>, real cross-channel coupling from shared developer. <em>(Film Development → Negative.)</em></span></li>
+          <li><span><strong>Negative halation</strong>, bright sources bloom around themselves, in density space. <em>(Textures → Halation.)</em></span></li>
+          <li><span><strong>Scan</strong>, the negative is digitized under scanner illumination. <em>(Neg Scan mode stops here.)</em></span></li>
+          <li><span><strong>Print</strong>, the scanned negative is re-exposed onto the <strong>print stock</strong> (its own sensitivities, grain, H&amp;D curve returning transmittance), with its own interimage and halation. <em>(Print Film Stock, Film Development → Print, Print grain/halation.)</em></span></li>
+          <li><span><strong>Projection</strong>, the projector bulb shines through the developed print against the print base (Dmin), producing the final viewed image. <em>(Quick Processing → Projector Bulb / Power, Theater Screen Sim.)</em></span></li>
+        </ol>
+        <div class="callout note">
+          <div class="k">Two things riding the chain</div>
+          <p>Sharpness (MTF) is applied as a resolution-dependent blur in exposure space, per format, on both the negative and print stages (Textures → MTF). The <strong>printer lights</strong> ride between the negative and print, they are the lab's exposure/balance control for how the negative is printed onto the print stock.</p>
+        </div>
+        <h3>Top-level groups, in on-screen order</h3>
+        <ol class="steps-ol">
+          <li><span><strong>Quick Processing</strong> (open by default), printer lights, projector, screen sim, stock presets, editor launches. Contains the <strong>Printer Calibration</strong> subgroup.</span></li>
+          <li><span><strong>Input Condition</strong>, dynamic-range rescaling into the stock's window.</span></li>
+          <li><span><strong>Film Development</strong>, push/pull, bleach bypass, developer competition, enhanced interimage, negative and print.</span></li>
+          <li><span><strong>Textures</strong>, Grain, Halation, MTF/Film Resolution, Film Breath, Gate Weave.</span></li>
+          <li><span><strong>Preset Manager</strong>, save/import/export readable JSON presets. <em>(Hidden in demo builds.)</em></span></li>
+          <li><span><strong>Negative Film Stock</strong>, direct spectral model authoring (hidden in the default build; the FSE owns it).</span></li>
+          <li><span><strong>Print Film Stock</strong>, same, for the print stock.</span></li>
+          <li><span><strong>Input/Output Config</strong>, color-space I/O, processing mode, diagnostic views.</span></li>
+          <li><span><strong>LUT Export</strong>, bake the color transform to a <code>.cube</code>. <em>(Hidden in demo builds.)</em></span></li>
+        </ol>
+        <p>Plus two page buttons at the bottom: <strong>Learn how to use this plugin</strong> and <strong>Check for updates &amp; more tools</strong>.</p>
+      </section>
+
+      <!-- 4 -->
+      <section id="apply" class="reveal" data-screen-label="Applying it">
+        <span class="sec-num">04</span>
+        <h2>Applying PhotoChemist in Resolve</h2>
+        <p>Add PhotoChemist on a serial node <strong>after</strong> your basic balance, treat it as the <em>film stage</em>, not a primary corrector. Find it in the OpenFX / effects library under <strong>Film Look Tools - Dec. 18 Studios</strong>.</p>
+        <p>Two setup controls (both in Input/Output Config, mirrored conceptually at the top of your workflow):</p>
+        <ul class="bul">
+          <li><span><strong>Input Mode</strong>, <strong>DaVinci Intermediate</strong> for a DWG/Intermediate timeline, <strong>Linear</strong> for scene-referred linear.</span></li>
+          <li><span><strong>Processing Mode</strong>, <strong>Neg to Print</strong> (full chain, start here), <strong>Neg Scan</strong> (stops at the scanned negative), or <strong>Print Only</strong> (treats the input as an already-scanned negative).</span></li>
+        </ul>
+      </section>
+
+      <!-- 5 -->
+      <section id="quick-processing" class="reveal" data-screen-label="Quick Processing">
+        <span class="sec-num">05</span>
+        <h2>Quick Processing</h2>
+        <p>The main grading surface: printer lights, calibration, projector lamp, screen sim, the film-stock preset dropdowns, and the two editor-launch buttons. Open by default.</p>
+        <div class="callout key">
+          <div class="k">Printer-light currency</div>
+          <p><strong>25 = neutral</strong> and <strong>±1 point ≈ 1/12 stop</strong>. The lab convention is counter-intuitive: <em>more light = more print exposure = a denser (darker) print</em>, so you <strong>lower</strong> a printer light to print <strong>brighter</strong>. Because the per-layer print curves intentionally cross, printer-light balance shifts with tonal position; this is lab <em>timing</em>, not a simple brightness slider.</p>
+        </div>
+        <h3>Printer lights &amp; projection</h3>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Printer Light</td><td class="m">0–50</td><td class="m">25</td><td>Overall printer light for all three channels, applied equally. Lower it to print brighter.</td></tr>
+              <tr><td>Red / Green / Blue Printer Points</td><td class="m">0–50</td><td class="m">25</td><td>Per-channel printer light, your color balance / timing knob. 25 = calibrated baseline.</td></tr>
+              <tr><td>Projector Bulb</td><td class="m">preset</td><td class="m">Neutral</td><td>Picks a calibrated R/G/B triplet for the projector color sliders (Neutral, Carbon Arc, Xenon, etc.). Editing any projector color slider flips it back to <strong>Custom</strong>. Does not touch Projector Power.</td></tr>
+              <tr><td>Projector Power</td><td class="m">0–10</td><td class="m">1.0</td><td>Overall projector intensity, the light through the emulsions onto the screen.</td></tr>
+              <tr><td>Projector R / G / B Light</td><td class="m">0–5</td><td class="m">1.0</td><td>Per-channel projector intensity (the viewing-lamp color).</td></tr>
+              <tr><td>Theater Screen Sim</td><td class="m">0.01–0.2</td><td class="m">0.040</td><td>Print <strong>base density (Dmin)</strong>, the black-point floor. Higher = lifted, milkier blacks; lower = deeper blacks. The label is cosmetic; not a screen-reflectance model.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Stock presets</h3>
+        <p>These dropdowns pick the physical stock models. <strong>Full Preset</strong> is the fast path, it loads sensitivity, dye formation, and both HD curves together.</p>
+        <div class="tbl-wrap">
+          <table class="ptable">
+            <thead><tr><th>Control</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Full Preset</td><td>Combined preset: loads Silver Sensitivity, Dye Formation, and HD Curves together (negative + print). Default <strong>Seneca Cine</strong>. This is ~80% of a look.</td></tr>
+              <tr><td>Neg Sensitivity Preset</td><td>Negative-stock silver sensitivity (emulsion spectral response).</td></tr>
+              <tr><td>Print Sensitivity Preset</td><td>Print-stock silver sensitivity (independent from the negative).</td></tr>
+              <tr><td>Neg Dye Preset</td><td>Negative-stock dye-formation (spectral dye absorption).</td></tr>
+              <tr><td>Print Dye Preset</td><td>Print-stock dye-formation (includes coordinated printer/projector power).</td></tr>
+              <tr><td>Neg HD Curve</td><td>Characteristic (D-log E) curve for the negative, contrast/toe/shoulder.</td></tr>
+              <tr><td>Print HD Curve</td><td>Characteristic curve for the print stock (independent from the negative).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Texture master toggles &amp; editors</h3>
+        <div class="tbl-wrap">
+          <table class="ptable">
+            <thead><tr><th>Control</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Grain (checkbox)</td><td>Master On/Off for film grain (negative + print). Off by default; tune the look in the Textures Editor.</td></tr>
+              <tr><td>Halation (checkbox)</td><td>Master On/Off for halation.</td></tr>
+              <tr><td>MTF (checkbox)</td><td>Master On/Off for MTF / softness.</td></tr>
+              <tr><td>Film Stock Editor…</td><td>Opens the FSE panel to draw custom sensitivity and dye curves.</td></tr>
+              <tr><td>Textures Editor…</td><td>Opens the Textures Editor (Grain/Halation/MTF; macOS).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <div class="k">Note</div>
+          <p>The three master texture checkboxes are the on/off gates; every enable inside the Textures group is AND-gated by them. New nodes come up with textures <strong>off</strong> because these masters default off.</p>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section id="printer-calibration" class="reveal" data-screen-label="Printer Calibration">
+        <span class="sec-num">06</span>
+        <h2>Printer Calibration</h2>
+        <p>A subgroup of Quick Processing (closed by default). A calibration layer <strong>separate</strong> from the grading printer lights: the calibration offsets ride <strong>additively</strong> on the printer lights (<code>effective = light + (calib − 25)</code>), so you balance mid-grey once per stock without spending grading points.</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Mid-Grey Test Pattern</td><td class="m">on/off</td><td class="m">off</td><td>Overrides the input with a pristine neutral 3-band patch (−1 stop / 0.18 mid-grey / +1 stop) that runs the whole pipeline. Read it on a waveform, then balance the R/G/B Calibration until the centre band is neutral.</td></tr>
+              <tr><td>Red / Green / Blue Calibration</td><td class="m">0–50</td><td class="m">25</td><td>Mid-grey calibration offset per channel; rides additively on the corresponding Printer Points.</td></tr>
+              <tr><td>Lamp Ceiling</td><td class="m">20–80</td><td class="m">50</td><td>How high a single printer light can shine before it rolls back toward white (50 = valve full open; 25 = ceiling pinned at neutral white). Models one white lamp split into R/G/B valves.</td></tr>
+              <tr><td>Ceiling Softness</td><td class="m">0–0.9</td><td class="m">0.5</td><td>How gently light rolls into the Lamp Ceiling (0 = hard clip at white; higher = softer/earlier roll).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout tip">
+          <div class="k">Workflow</div>
+          <p>Enable the test pattern → read the centre band on a waveform/parade → adjust R/G/B Calibration until neutral → disable the pattern. Your grading printer lights are now free for timing, starting from a truly neutral base.</p>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section id="input-condition" class="reveal" data-screen-label="Input Condition">
+        <span class="sec-num">07</span>
+        <h2>Input Condition</h2>
+        <p>Technicolor-style dynamic-range rescaling that maps the scene's stops into the film stock's optimal exposure window <strong>before</strong> the spectral pipeline. Closed by default.</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Enable Dynamic Rescaling</td><td class="m">0–1</td><td class="m">1 (on)</td><td>Turn the rescaler on/off.</td></tr>
+              <tr><td>Input Range (stops)</td><td class="m">8–20</td><td class="m">16</td><td>Scene dynamic range in stops (typical HDR 12–16).</td></tr>
+              <tr><td>Target Range (stops)</td><td class="m">4–12</td><td class="m">6</td><td>Film-stock optimal exposure range in stops (typical 6–8).</td></tr>
+              <tr><td>Rescaling Pivot</td><td class="m">0.01–1.0</td><td class="m">0.18</td><td>Pivot point for rescaling (18% grey = 0.18).</td></tr>
+              <tr><td>Exposure Offset (stops)</td><td class="m">−15–15</td><td class="m">0</td><td>Additional exposure offset in stops.</td></tr>
+              <tr><td>Saturation Awareness</td><td class="m">0–1</td><td class="m">1</td><td>Preserve color relationships during rescaling (0 = off, 1 = full).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Use this when your source has a much wider dynamic range than the stock can hold gracefully, it compresses the scene into the film's sweet spot before exposure so highlights and shadows land where the H&amp;D curve expects them.</p>
+      </section>
+
+      <!-- 8 -->
+      <section id="development" class="reveal" data-screen-label="Film Development">
+        <span class="sec-num">08</span>
+        <h2>Film Development</h2>
+        <p>Push/pull, bleach bypass, developer competition/inhibition, and enhanced interimage saturation effects, negative and print stages independently.</p>
+        <h3>Negative Development</h3>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Push/Pull</td><td class="m">−2–2</td><td class="m">0</td><td>Negative development push/pull, in stops.</td></tr>
+              <tr><td>Bleach Bypass</td><td class="m">0–2</td><td class="m">0.10</td><td>Bleach-bypass strength (retained silver → denser, desaturated, contrastier neg).</td></tr>
+              <tr><td>Developer Competition</td><td class="m">0–2</td><td class="m">0.1</td><td>Silver-halide developer competition strength.</td></tr>
+              <tr><td>Dye Inhibition</td><td class="m">0–2</td><td class="m">0.05</td><td>Cross-channel dye inhibition strength.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Enhanced Effects (Negative)</h4>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Midtone Expansion</td><td class="m">0–1</td><td class="m">0</td><td>Per-channel midtone boost (stronger for green).</td></tr>
+              <tr><td>Chroma Expansion</td><td class="m">0–2</td><td class="m">0</td><td>Opponent-space saturation expansion (hue-preserving).</td></tr>
+              <tr><td>Weak Channel Protection</td><td class="m">0–1</td><td class="m">0</td><td>Additive floor for weak channels (prevents color loss).</td></tr>
+              <tr><td>Spectral Sharpening</td><td class="m">0–1</td><td class="m">0</td><td>43-band spectral peak tightening (reduces hue bleed).</td></tr>
+              <tr><td>nRed / nGreen / nBlue Bias</td><td class="m">0–2</td><td class="m">0</td><td>Per-layer <strong>retained-silver weight</strong> for the bleach-bypass look. Fine-tunes how much silver each layer adds to the neutral-density crossover. Builds on top of Negative Bleach Bypass. Advanced.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Print Development</h3>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Push/Pull</td><td class="m">−2–2</td><td class="m">0</td><td>Print development push/pull, in stops.</td></tr>
+              <tr><td>Bleach Bypass</td><td class="m">0–2</td><td class="m">0</td><td>Bleach-bypass strength on the print.</td></tr>
+              <tr><td>Developer Competition</td><td class="m">0–2</td><td class="m">0.1</td><td>Silver-halide competition strength.</td></tr>
+              <tr><td>Dye Inhibition</td><td class="m">0–2</td><td class="m">0.05</td><td>Cross-channel dye inhibition strength.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Enhanced Effects (Print)</h4>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Midtone Expansion</td><td class="m">0–1</td><td class="m">0</td><td>Per-channel midtone boost.</td></tr>
+              <tr><td>Chroma Expansion</td><td class="m">0–2</td><td class="m">0</td><td>Opponent-space saturation expansion.</td></tr>
+              <tr><td>Weak Channel Protection</td><td class="m">0–1</td><td class="m">0</td><td>Additive floor for weak channels.</td></tr>
+              <tr><td>Spectral Sharpening</td><td class="m">0–1</td><td class="m">0</td><td>43-band spectral peak tightening.</td></tr>
+              <tr><td>pRed / pGreen / pBlue Bias</td><td class="m">0–2</td><td class="m">0</td><td>Per-layer retained-silver weight on the <em>print</em> stage, same mechanism as the negative Bias controls, building on top of Print Bleach Bypass. Advanced.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <div class="k">On the Bias controls</div>
+          <p>These six sliders scale how much each emulsion layer's retained silver contributes to the broadband neutral density of the bleach-bypass look, and the stage's Bleach Bypass value is added on top. They let you tint the neutral-density crossover per layer. Leave them at 0 unless you are deliberately sculpting a bleach-bypass look.</p>
+        </div>
+      </section>
+
+      <!-- 9 -->
+      <section id="textures" class="reveal" data-screen-label="Textures">
+        <span class="sec-num">09</span>
+        <h2>Textures</h2>
+        <p>The master container for <strong>Grain, Halation, MTF, Film Breath, and Gate Weave</strong>. Closed by default. The three master on/off checkboxes (Grain / Halation / MTF) live up in Quick Processing; the per-format dropdowns are driven from the Textures Editor.</p>
+        <div class="tbl-wrap">
+          <table class="ptable">
+            <thead><tr><th>Group switch</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Make LUT-Ready</td><td class="m">off</td><td>Temporarily disables the texture-effect master toggles so the remaining color transform stays LUT-export friendly. Your toggle choices are preserved while enabled.</td></tr>
+              <tr><td>Enable Film Breath</td><td class="m">off</td><td>Master switch for Film Breath (organic frame-to-frame variation).</td></tr>
+              <tr><td>Enable Gate Weave</td><td class="m">off</td><td>Master switch for mechanical gate-weave position wobble.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Grain</h3>
+        <p>Film-grain simulation based on published granularity curves, injected <strong>before</strong> the H&amp;D curve in density space, so it rides the curve like real emulsion (living mostly in midtones and toe) rather than sitting flat on top. It uses a two-sublayer silver-crystal model (a coarse population and a fine population, with selectable crystal shape). Negative and Print have full independent trees. Per-side enables: <strong>Neg Grain Enable</strong> / <strong>Print Grain Enable</strong> (both default on, AND-gated by the master Grain toggle).</p>
+        <h4>Main grain controls (per stage)</h4>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Amount</td><td class="m">0–15</td><td class="m">0.5</td><td>Grain intensity, scales the grain RMS linearly. The slider reaches 15, but the <strong>useful working range is ≈0–2</strong>: 0.5 = subtle/natural, 1 = pronounced, above ~3 = stylized/heavy.</td></tr>
+              <tr><td>Size</td><td class="m">0.5–2</td><td class="m">1.0</td><td>Grain size relative to the ISO-100 baseline.</td></tr>
+              <tr><td>ISO</td><td class="m">100–3200</td><td class="m">400</td><td>ISO used for the granularity curve.</td></tr>
+              <tr><td>Color / Mono</td><td class="m">0–1</td><td class="m">0.7</td><td>0 = chromatic (independent RGB grain), 1 = monochromatic (shared luma grain).</td></tr>
+              <tr><td>Seed</td><td class="m">0–1000</td><td class="m">0 / 500</td><td>Random seed offset (neg / print).</td></tr>
+              <tr><td>Density Falloff</td><td class="m">0.1–2</td><td class="m">0.8</td><td>How fast grain decays into density.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Chromatic Distribution (per stage)</h4>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Red / Green / Blue Layer</td><td class="m">0–3</td><td class="m">0.85 / 1.00 / 1.15</td><td>Per-layer grain amount multiplier (red finest, blue coarsest).</td></tr>
+              <tr><td>Red / Green / Blue Falloff</td><td class="m">0.1–2</td><td class="m">0.8</td><td>Per-layer density falloff.</td></tr>
+              <tr><td>Red / Green / Blue Shadow Lift</td><td class="m">0–1</td><td class="m">0</td><td>Shadow-grain lift (0 = toe rolloff, 1 = full grain into deepest shadows).</td></tr>
+              <tr><td>Red / Green / Blue Shadow Reach</td><td class="m">0.02–1</td><td class="m">0.35</td><td>Shadow-grain reach / toe width.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Crystal Structure (per stage)</h4>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Size Variance</td><td class="m">0–4</td><td class="m">1.5</td><td>Ratio between coarse and fine crystal populations (0 = single population; 1.5 ≈ coarse 2.5× fine).</td></tr>
+              <tr><td>Speed Bias</td><td class="m">0–1</td><td class="m">0.4</td><td>Energy balance between populations (0 = fine/slow dominant, 1 = coarse/fast dominant).</td></tr>
+              <tr><td>Layer Correlation</td><td class="m">0–1</td><td class="m">0.35</td><td>How much coarse activation clusters fine crystals together.</td></tr>
+              <tr><td>Crystal Shape</td><td class="m">R / Sq / T</td><td class="m">Square</td><td>Crystal morphology: Round (globular), Square (cubic), T-Grain (flat tabular platelet).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="k">Tell that grain is overdone</div>
+          <p>It stops looking like structure and starts looking like video noise sitting <em>on top</em> of the picture, especially crawling into the blacks. Back off Amount toward 0.5–1.</p>
+        </div>
+
+        <h3>Halation</h3>
+        <p>Backscatter light haloing around bright areas, the characteristic red-orange bloom around highlights. Applied in density/transmission space <em>after</em> dye formation, where scatter physically happens. Negative and print stages independently. Radius is a master reach; per-channel <strong>spread</strong> multipliers set each layer's halo reach and per-channel <strong>boost</strong> sets each layer's strength.</p>
+        <h4>Negative side (Neg Halation Enable, default on)</h4>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Remjet Strength</td><td class="m">0–1</td><td class="m">0.5</td><td>Anti-halation remjet layer (0 = no remjet/full scatter, 1 = full remjet/halation suppressed).</td></tr>
+              <tr><td>Neg Radius</td><td class="m">1–20</td><td class="m">7.0</td><td>Negative backscatter radius in pixels (master reach).</td></tr>
+              <tr><td>Neg Threshold</td><td class="m">0–1</td><td class="m">0.85</td><td>Brightness threshold above which halation kicks in.</td></tr>
+              <tr><td>Neg R / G / B Boost</td><td class="m">0–3</td><td class="m">1.2 / 0.6 / 0.2</td><td>Per-channel halation strength (red dominant = the classic red halo).</td></tr>
+              <tr><td>Neg R / G / B Spread</td><td class="m">0–2</td><td class="m">0.88 / 1.0 / 1.18</td><td>Per-channel halo reach (× Neg Radius).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Print side (Print Halation Enable, default on)</h4>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Print Anti-Halation</td><td class="m">0–1</td><td class="m">0.3</td><td>Print anti-halation backing (0 = full scatter, 1 = fully suppressed).</td></tr>
+              <tr><td>Print Radius</td><td class="m">1–20</td><td class="m">5.0</td><td>Print backscatter radius in pixels.</td></tr>
+              <tr><td>Print Threshold</td><td class="m">0–1</td><td class="m">0.85</td><td>Brightness threshold for print halation.</td></tr>
+              <tr><td>Print R / G / B Boost</td><td class="m">0–3</td><td class="m">1.0 / 0.5 / 0.1</td><td>Per-channel strength.</td></tr>
+              <tr><td>Print R / G / B Spread</td><td class="m">0–2</td><td class="m">0.88 / 1.0 / 1.18</td><td>Per-channel halo reach (× Print Radius).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Show Halation Map</strong> overrides the view to display the halation source/brightness map for debugging.</p>
+        <div class="callout warn">
+          <div class="k">Tell that halation is overdone</div>
+          <p>The glow detaches from its source and everything bright wears a uniform red halo, it reads like a filter, not light scattering. Lower the boosts, radius, or raise the threshold.</p>
+        </div>
+
+        <h3>MTF / Film Resolution</h3>
+        <p>Film resolving-power (Modulation Transfer Function) simulation, how faithfully the stock reproduces fine detail, and the edge "bite" (acutance) that makes film look crisp without looking digitally over-sharpened. Negative and print stages independently. Real film MTF <em>rises above 100%</em> in the mid-frequencies (the adjacency/Eberhard edge overshoot) before rolling off at the high end; this module reproduces both the overshoot and the roll-off together. A single master <strong>Pressure</strong> scales the whole effect without moving the datasheet-shaped per-channel knees.</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>MTF Pressure</td><td class="m">0–3</td><td class="m">1.0</td><td>Master strength of the whole MTF effect (1 = as drawn, 0 = off, 3 = strong). Scales acutance and roll-off depth.</td></tr>
+              <tr><td>R / G / B Resolving Power</td><td class="m">10–300 lp/mm</td><td class="m">120 / 80 / 60</td><td>Layer resolving power. Lower lp/mm = softer (blurs sooner).</td></tr>
+              <tr><td>ISO Coupling</td><td class="m">0–1</td><td class="m">0.7</td><td>Links resolving power to the grain ISO (0 = fixed, 1 = full coupling).</td></tr>
+              <tr><td>R / G / B Acutance</td><td class="m">0–1</td><td class="m">0.9</td><td>Edge enhancement from developer diffusion (height of the above-100% mid-frequency bump).</td></tr>
+              <tr><td>R / G / B Bump Width</td><td class="m">1.5–6</td><td class="m">3.0</td><td>Adjacency bump width (tight spike 1.5 → broad hump 6; 3 = film).</td></tr>
+              <tr><td>R / G / B Fine Crispness</td><td class="m">0–0.5</td><td class="m">0</td><td>Fine-detail bite on top of the roll-off (0 = pure datasheet roll-off to zero).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="k">Acutance default 0.9 is the deliberate look</div>
+          <p>0.5 would be neutral; below 0.5 actively softens. Do not "correct" it downward, that reintroduces the "MTF does nothing" problem. Print-side acutance is internally gentler than the negative at the same slider value, matching real film. <strong>Tell that MTF is overdone:</strong> hard, ringing edges, the electronic over-sharpened halo that screams digital.</p>
+        </div>
+
+        <h3>Film Breath</h3>
+        <p>Organic frame-to-frame variation for motion: printer/projector bulb flicker, chemical timing drift, dye spectral drift. Gated by the <strong>Enable Film Breath</strong> master switch. Off by default; keep amounts low.</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Global Strength</td><td class="m">0–1</td><td class="m">0.3</td><td>Overall film-breath intensity.</td></tr>
+              <tr><td>Frequency (Hz)</td><td class="m">0.1–2</td><td class="m">0.6</td><td>Breath cycle frequency (0.1 = slow, 2 = fast).</td></tr>
+              <tr><td>Coherence</td><td class="m">0–1</td><td class="m">0.6</td><td>Inter-channel sync (0 = chaotic, 1 = unified pulse).</td></tr>
+              <tr><td>Enable Negative Mechanical</td><td class="m">on/off</td><td class="m">on</td><td>Printer-bulb flicker during negative exposure.</td></tr>
+              <tr><td>Enable Print Mechanical</td><td class="m">on/off</td><td class="m">on</td><td>Projector-bulb flicker during print exposure.</td></tr>
+              <tr><td>Enable Chemical Variations</td><td class="m">on/off</td><td class="m">on</td><td>Developer/bleach timing drift.</td></tr>
+              <tr><td>Enable Emulsion Drift</td><td class="m">on/off</td><td class="m">on</td><td>Spectral-peak drift per dye layer.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Sub-controls: <strong>Mechanical (Neg / Print)</strong> give per-channel bulb-flicker amounts (0–1); <strong>Chemical Development</strong> gives Developer Variation and Bleach-Fix Variation (0–1, default 0); <strong>Emulsion Spectral Drift</strong> gives Cyan / Magenta / Yellow peak drift (0–1 = 0–2 nm, default 0).</p>
+
+        <h3>Gate Weave</h3>
+        <p>Mechanical position wobble from the film gate. Gated by the <strong>Enable Gate Weave</strong> master switch. All default 0.</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Horizontal Wobble</td><td class="m">0–1</td><td class="m">0</td><td>Left/right position wobble (0–1 = 0–2 px).</td></tr>
+              <tr><td>Vertical Wobble</td><td class="m">0–1</td><td class="m">0</td><td>Up/down wobble (0–1 = 0–2 px).</td></tr>
+              <tr><td>Rotation Wobble</td><td class="m">0–1</td><td class="m">0</td><td>Rotational wobble (0–1 = 0–0.5°).</td></tr>
+              <tr><td>Scale Pump</td><td class="m">0–1</td><td class="m">0</td><td>Zoom wobble from film tension (0–1 = 0–0.3%).</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section id="preset-manager" class="reveal" data-screen-label="Preset Manager">
+        <span class="sec-num">10</span>
+        <h2>Preset Manager</h2>
+        <p>Save, update, rename, delete, import, and export readable JSON preset files. Closed by default (and hidden in demo builds).</p>
+        <div class="tbl-wrap">
+          <table class="ptable">
+            <thead><tr><th>Control</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Preset Family</td><td>Which family the manager acts on: Silver Sensitivity / Dye Formation / HD Curves / Full Preset / Neg Sensitivity / Print Sensitivity / Neg Dye / Print Dye. Default Full Preset.</td></tr>
+              <tr><td>Preset Name</td><td>Name used when saving or renaming a user preset.</td></tr>
+              <tr><td>Save New Preset</td><td>Save current family values as a new JSON preset, appended to the family selector.</td></tr>
+              <tr><td>Update Current Preset</td><td>Overwrite the selected user preset with live values.</td></tr>
+              <tr><td>Rename Current Preset</td><td>Rename the selected user preset.</td></tr>
+              <tr><td>Delete Current Preset</td><td>Delete the selected user preset.</td></tr>
+              <tr><td>Import Parameters</td><td>Import a JSON preset for the selected family (or migrate a legacy text export).</td></tr>
+              <tr><td>Export Parameters</td><td>Export the selected family to a readable JSON preset file.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Presets are plain JSON, so you can share stock definitions between machines or hand them off to collaborators.</p>
+      </section>
+
+      <!-- 11 -->
+      <section id="film-stock" class="reveal" data-screen-label="Film Stock model">
+        <span class="sec-num">11</span>
+        <h2>Negative &amp; Print Film Stock</h2>
+        <p>Direct spectral-model authoring for the negative and print stocks. In the shipping build these controls are <strong>hidden</strong> and non-persistent, the <strong>Film Stock Editor owns them</strong>, and you should author stocks there rather than dialing raw doubles. This section documents them at reference altitude so you understand what the FSE is manipulating under the hood.</p>
+        <p>Each stock (negative and print) has three model layers:</p>
+        <ul class="bul">
+          <li><span><strong>Silver Sensitivity</strong>, the spectral response of each emulsion layer, as an <strong>asymmetric Gaussian</strong> (K, peak wavelength, Sigma Left / Sigma Right widths, spectral height). Plus a <strong>Master Exposure (stops)</strong> trim that multiplies all three layer speeds by 2^stops while preserving the R/G/B ratio. Red-cyan peaks near 645 nm, green-magenta near 525 nm, blue-yellow near 460 nm.</span></li>
+          <li><span><strong>HD Curves</strong>, the characteristic (D-log E) curve per layer: <strong>Gamma</strong> (slope/contrast), <strong>H0</strong> (midpoint / speed point), <strong>Toe</strong> and <strong>Shoulder</strong> (shadow/highlight roll-off), and <strong>Dmin / Dmax</strong>. There are global offset sliders and per-channel values. The negative curve returns dye concentration; the print curve returns transmittance; the two <strong>cascade</strong>, total contrast is the negative printed through the print.</span></li>
+          <li><span><strong>Dye Colors</strong>, the subtractive CMY dye absorption per layer, again as an asymmetric Gaussian (peak nm, amplitude, sigma left/right, baseline). Their spectral overlap is the source of the crosstalk that makes film color behave the way it does.</span></li>
+        </ul>
+        <p>The full per-band double values are numerous; you do not dial them individually in normal use. <strong>Use the Film Stock Editor</strong> to sculpt these as curves and pucks with live feedback. The legacy <strong>Show Stock Creator</strong> direct-authoring UI is retired in the FSE build.</p>
+      </section>
+
+      <!-- 12 -->
+      <section id="io-config" class="reveal" data-screen-label="I/O Config">
+        <span class="sec-num">12</span>
+        <h2>Input/Output Config</h2>
+        <p>Color-space I/O, workflow mode, and diagnostic views.</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Options</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Input Mode</td><td class="m">DaVinci Int. / Linear</td><td class="m">DaVinci Int.</td><td>Input color-space mode. DaVinci Intermediate for a DWG/Intermediate timeline; Linear for scene-referred.</td></tr>
+              <tr><td>Processing Mode</td><td class="m">Neg to Print / Neg Scan / Print Only</td><td class="m">Neg to Print</td><td>Film processing workflow: full neg→print, negative-scan look, or print-only.</td></tr>
+              <tr><td>View Mode</td><td class="m">9 options</td><td class="m">Final Print</td><td>Which stage of the spectral simulation to display, see Diagnostic view modes.</td></tr>
+              <tr><td>Diagnostic Mode</td><td class="m">Off / HD / Dye / Sensitivity (neg &amp; print)</td><td class="m">Off</td><td>Overlays a diagnostic plot of the chosen model over the image.</td></tr>
+              <tr><td>FSE Activation Model</td><td class="m">Original / Wiener × 2 / Mallett 2019</td><td class="m">Original</td><td>How an FSE-sculpted sensitivity curve's <strong>shape</strong> drives the image, see below.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>FSE Activation Model</h3>
+        <p>This controls how a custom sensitivity curve is compared with the input RGB values to determine a silver activation value:</p>
+        <ul class="bul">
+          <li><span><strong>Original Method</strong> (default), the shipping behavior. This option puts more weight on the overall peak position and spectral height, minimizing metameric errors that can occur.</span></li>
+          <li><span><strong>Wiener, Smoothness Prior / Wiener, Measured Covariance / Mallett 2019, Three-Basis</strong>, these make the curve's shape actually drive the image, using a linear estimator that stays in XYZ color (so it introduces limited metamerism artifacts). You can switch modes without the picture jumping. Wiener Smoothness assumes smooth reflectances; Wiener Measured uses a real ColorChecker statistical prior; Mallett 2019 upsamples via three fixed energy-conserving sRGB basis functions.</span></li>
+        </ul>
+        <p>Leave this on <strong>Original</strong> unless you want to increase how sensitive the system is to dynamic lobe shaping.</p>
+      </section>
+
+      <!-- 13 -->
+      <section id="lut-export" class="reveal" data-screen-label="LUT Export">
+        <span class="sec-num">13</span>
+        <h2>LUT Export</h2>
+        <p>Bake the current effective color transform to a <code>.cube</code> 3D LUT. Closed by default (hidden in demo builds).</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Options</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Resolution</td><td class="m">17 / 33 / 65</td><td class="m">33</td><td>3D LUT lattice size (higher = more accurate, larger file).</td></tr>
+              <tr><td>Export LUT…</td><td class="m">button</td><td class="m">, </td><td>Exports the current color transform as a <code>.cube</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout note">
+          <div class="k">What a LUT can't carry</div>
+          <p><strong>Grain, halation, MTF, motion effects, and diagnostic overlays are omitted</strong> from the LUT, a LUT is a static color transform and cannot carry spatial or temporal texture. Use <strong>Make LUT-Ready</strong> (in Textures) first to temporarily disable the texture masters so the exported transform matches what a downstream LUT will actually reproduce. Apply the exported grain/halation/MTF as separate texture passes downstream if you need them.</p>
+        </div>
+      </section>
+
+      <!-- 14 -->
+      <section id="fse" class="reveal" data-screen-label="Film Stock Editor">
+        <span class="sec-num">14</span>
+        <h2>The Film Stock Editor (FSE)</h2>
+        <p>An external, non-modal panel (native on Mac, with a Windows/Linux equivalent) launched from the <strong>Film Stock Editor…</strong> button. It draws the spectral model directly as curves, your scalpel for sculpting a stock's character. A user-drawn curve here becomes the <strong>highest-priority override</strong> for that stock.</p>
+        <a class="shot" href="shots/film-stock-editor.png" target="_blank" rel="noopener">
+          <img src="shots/film-stock-editor.png" alt="The Film Stock Editor panel: Neg Sensitivity, Neg Dye, Neg HD Curve, and datasheet reference" loading="lazy" />
+          <span class="cap">The Film Stock Editor, sensitivity, dye, and HD curves with a datasheet reference</span>
+        </a>
+        <div class="tbl-wrap">
+          <table class="ptable">
+            <thead><tr><th>Mode tab</th><th>What it edits</th></tr></thead>
+            <tbody>
+              <tr><td>Neg Sensitivity</td><td>R/G/B spectral sensitivity curves for the negative stock.</td></tr>
+              <tr><td>Print Sensitivity</td><td>R/G/B spectral sensitivity curves for the print stock.</td></tr>
+              <tr><td>Neg Dye</td><td>R/G/B dye absorption curves for the negative (R = cyan, G = magenta, B = yellow).</td></tr>
+              <tr><td>Print Dye</td><td>R/G/B dye absorption curves for the print stock.</td></tr>
+              <tr><td>Neg HD Curve</td><td>D-log E characteristic curve for the negative, parametric sliders + canvas preview.</td></tr>
+              <tr><td>Print HD Curve</td><td>D-log E characteristic curve for the print stock.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Curve editing.</strong> In the sensitivity/dye modes each channel is a draggable spline of 9 control points <code>(wavelength, value)</code> across 360–780 nm; the plugin interpolates them to the 43 internal bands and re-renders live as you drag.</p>
+        <h4>Sliders alongside the curves (mirror the OFX params)</h4>
+        <ul class="bul">
+          <li><span><strong>Sensitivity modes</strong>, three Height sliders per stage plus a Master Exposure (stops) slider.</span></li>
+          <li><span><strong>Dye modes</strong>, three Amplitude sliders per stage.</span></li>
+          <li><span><strong>HD Curve modes</strong>, six scalars per channel (Gamma, H0, Dmin, Dmax, Toe, Shoulder), plotted on the canvas.</span></li>
+          <li><span><strong>Print HD Curve mode</strong>, the print-stage Printer Lights (R/G/B, 0–50, 25 = neutral) and Printer Power anchor are editable live, so you can slide tones along the print curve while you shape it.</span></li>
+        </ul>
+        <p><strong>Stock dropdowns.</strong> Each mode has a stock selector populated with stocks that have measured spectral data; loading one seeds the curves for that mode. <strong>Save to Preset…</strong> runs the standard managed-preset save for the active mode's family, appending the curve control points. Closing the panel just clears the "editor open" flag, the curves were always live.</p>
+        <div class="callout tip">
+          <div class="k">Earn the FSE</div>
+          <p>Let the presets and printer lights teach you the model's personality first; then the FSE becomes a scalpel instead of a hammer. Redrawing a stock's character before you know what "correct" looks like is the classic way to blame the model for your own curve. Remember, too, that these are my interpretations of idealized stocks. Feel free to make them your own.</p>
+        </div>
+      </section>
+
+      <!-- 15 -->
+      <section id="textures-editor" class="reveal" data-screen-label="Textures Editor">
+        <span class="sec-num">15</span>
+        <h2>The Textures Editor</h2>
+        <p>An external, non-modal panel (macOS) launched from the <strong>Textures Editor…</strong> button. It is a live front-end for the same Grain / Halation / MTF params documented in the Textures section, not a separate parameter set. It edits the three subsystems three-columns-across, each with a Negative and a Print side.</p>
+        <a class="shot" href="shots/textures-editor.png" target="_blank" rel="noopener">
+          <img src="shots/textures-editor.png" alt="The Textures Editor panel: Grain, Halation, and MTF columns with live loupes" loading="lazy" />
+          <span class="cap">The Textures Editor, Grain, Halation, and MTF columns with live loupes</span>
+        </a>
+        <ul class="bul">
+          <li><span><strong>Header</strong>, a Neg/Print side toggle; master and per-subsystem <strong>Format</strong> dropdowns (Off / 65mm / 35mm / 16mm). Setting a format seeds grain, halation, and MTF at physically sensible ratios for that gauge. Smaller gauge = grainier, softer, more halation.</span></li>
+          <li><span><strong>Per-column enables</strong>, Grain / Halation / MTF, each Neg and Print.</span></li>
+          <li><span><strong>Per-column Sync toggle</strong>, when on, the Neg and Print sides move together.</span></li>
+          <li><span><strong>Grain column</strong>, Amount, Size, ISO, Correlation, Seed, Falloff; per-layer Mix and Falloff; per-layer Shadow Lift + Shadow Reach (twin-puck box); Size Variance, Speed Bias, Layer Correlation; Crystal Shape.</span></li>
+          <li><span><strong>Halation column</strong>, Strength, Radius, Threshold; per-channel tint boost and per-channel Spread (pucks).</span></li>
+          <li><span><strong>MTF column</strong>, per-channel Resolving Power, ISO Coupling, per-channel Acutance; a Character puck (Bump Width + Fine Crispness); plus the master MTF Pressure slider.</span></li>
+          <li><span><strong>Live loupes</strong>, each column shows a downscaled whole-frame thumbnail plus a full-res crop centred on that column's puck, and the panel draws the live neg/print HD curves behind the grain datasheet chart so you can see the same D-log E curves as the FSE.</span></li>
+        </ul>
+        <p>Reach for the Textures Editor once you can hear the difference between gauges and want to mix them deliberately (e.g. a 35mm negative printed to a 16mm-flavored print).</p>
+      </section>
+
+      <!-- 16 -->
+      <section id="printer-lights" class="reveal" data-screen-label="Printer Lights feeder">
+        <span class="sec-num">16</span>
+        <h2>PhotoChemist Printer Lights (feeder factory)</h2>
+        <p>A <strong>second factory</strong> in the same bundle, labelled <strong>PhotoChemist Printer Lights</strong>, under the same <strong>Film Look Tools - Dec. 18 Studios</strong> group. It is a companion generator/trim node whose output feeds PhotoChemist's optional <strong>Printer Link</strong> input, letting you make printer-light maps that vary <strong>spatially</strong> across the frame, windows, qualifiers, and masks become local printer-light adjustments.</p>
+        <h3>How it wires in</h3>
+        <ol class="steps-ol">
+          <li><span>Add a <strong>PhotoChemist Printer Lights</strong> node.</span></li>
+          <li><span>On your <strong>PhotoChemist</strong> node, connect that node's output to PhotoChemist's <strong>Printer Link</strong> input.</span></li>
+          <li><span>PhotoChemist decodes each pixel of the Printer Link input as printer points: a flat <strong>0.5 = neutral (0 points)</strong>, one stop of gain on the feeder = <strong>+12 printer points</strong>. So a Resolve window or qualifier feeding the node paints printer-light offsets exactly where you want them.</span></li>
+        </ol>
+        <h3>Controls</h3>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Generate Feed</td><td class="m">on/off</td><td class="m">on</td><td><strong>On:</strong> replace the input with a flat printer-point frame (a generator). <strong>Off:</strong> trim mode, the input passes through multiplied by the per-channel gain; at neutral it is an exact passthrough, and with sliders moved it stacks additively on top of an upstream feeder (node masks limit where the trim lands).</td></tr>
+              <tr><td>Master Printer Points</td><td class="m">0–50</td><td class="m">25</td><td>Base printer points for all three channels (25 = neutral, 1 point = 1/12 stop). Same currency and lab direction as PhotoChemist's Printer Light: more points = darker print.</td></tr>
+              <tr><td>Red / Green / Blue Printer Points</td><td class="m">0–50</td><td class="m">25</td><td>Base per-channel printer points.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Supported contexts: Filter, General, and Generator. In Generator context there is no source clip; in Filter/General the source is optional.</p>
+      </section>
+
+      <!-- 17 -->
+      <section id="diagnostics" class="reveal" data-screen-label="Diagnostic views">
+        <span class="sec-num">17</span>
+        <h2>Diagnostic view modes</h2>
+        <p>The <strong>View Mode</strong> dropdown (Input/Output Config) shows any stage of the spectral simulation instead of the final image, invaluable for understanding what a control is doing and for troubleshooting.</p>
+        <div class="tbl-wrap">
+          <table class="ptable wide">
+            <thead><tr><th>#</th><th>Label</th><th>Shows</th></tr></thead>
+            <tbody>
+              <tr><td class="m">0</td><td>Scanned Negative</td><td>The developed/scanned negative image.</td></tr>
+              <tr><td class="m">1</td><td>Final Print (default)</td><td>The complete neg→print positive, your normal view.</td></tr>
+              <tr><td class="m">2</td><td>Negative Developed Density</td><td>A 2×2 split of the negative's cyan/magenta/yellow layer densities plus the final.</td></tr>
+              <tr><td class="m">3</td><td>Print Developed Density</td><td>The same 2×2 split for the print stage.</td></tr>
+              <tr><td class="m">4</td><td>Negative Dye Absorption</td><td>The negative's per-dye spectral absorption.</td></tr>
+              <tr><td class="m">5</td><td>Negative Dye Transmission</td><td>The negative's per-dye transmission.</td></tr>
+              <tr><td class="m">6</td><td>Print Dye Absorption</td><td>The print's per-dye absorption.</td></tr>
+              <tr><td class="m">7</td><td>Print Dye Transmission</td><td>The print's per-dye transmission.</td></tr>
+              <tr><td class="m">8</td><td>Halation Brightness Map</td><td>The halation source/brightness map (which areas seed the bloom).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The separate <strong>Diagnostic Mode</strong> dropdown overlays a plot of a chosen model (HD curves, dye colors, or silver sensitivity, neg or print) on top of the image without switching the view.</p>
+      </section>
+
+      <!-- 18 -->
+      <section id="workflow" class="reveal" data-screen-label="Workflow">
+        <span class="sec-num">18</span>
+        <h2>Workflow &amp; best practices</h2>
+        <p>A first session, using only the safe controls:</p>
+        <ol class="steps-ol">
+          <li><span><strong>Processing Mode → Neg to Print.</strong> Confirm you are running the full chemical chain before you judge anything.</span></li>
+          <li><span><strong>Full Preset.</strong> Step through a handful and land on one near your intent (Seneca Cine is the friendly default). This is ~80% of your look. Watch the color <em>re-derive</em> with each preset, not just shift, that is the spectral model talking.</span></li>
+          <li><span><strong>Printer Lights.</strong> Nudge gently, a few points at a time. Watch how balance shifts with tonal position, not just overall brightness. Remember 25 = neutral, 1 point = 1/12 stop, more light = darker. This is your real fine-tune.</span></li>
+          <li><span><strong>Textures Editor → master format 65 / 35 / 16mm.</strong> Pick the gauge that fits the story; it sets grain, halation, and MTF together. Smaller gauge = grainier, softer, more halation.</span></li>
+        </ol>
+        <p>That is a finished, defensible look using only safe controls.</p>
+        <h3>Start here vs. leave for later</h3>
+        <div class="tbl-wrap">
+          <table class="ptable cmp wide">
+            <thead><tr><th>Start here (safe, teaches the model)</th><th>Leave for later (deep / can wreck the chain)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Full Preset</strong>, sets the whole chain</td><td><strong>Film Stock Editor</strong>, redraws 43-band dye &amp; sensitivity curves and reshapes HD curves per channel</td></tr>
+              <tr><td><strong>Processing Mode</strong>, Neg to Print</td><td><strong>Parametric peak / sigma / K</strong> sensitivity controls, easy to push into nonsense</td></tr>
+              <tr><td><strong>Printer Lights</strong>, balance, 1 pt = 1/12 stop</td><td><strong>Per-channel HD curve dots</strong>, until you know what "correct" looks like</td></tr>
+              <tr><td><strong>Textures master</strong>, 65 / 35 / 16mm</td><td><strong>Hand-dialing grain / halation / MTF</strong> past the format presets</td></tr>
+              <tr><td><strong>Projector Bulb preset</strong></td><td><strong>Printer Calibration offsets</strong>, for neutralizing casts once you understand the model</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Other habits</h4>
+        <ul class="bul">
+          <li><span>Grade gross exposure and white balance <strong>before</strong> the PhotoChemist node; let printer lights do color timing, not brightness rescue.</span></li>
+          <li><span>Use <strong>Printer Calibration + Mid-Grey Test Pattern</strong> once per stock to neutralize its base, then leave grading printer lights free for timing.</span></li>
+          <li><span>For a LUT deliverable, enable <strong>Make LUT-Ready</strong>, export at 33 or 65, and re-apply textures downstream.</span></li>
+          <li><span>Use the <strong>diagnostic view modes</strong> to see what a control changes rather than guessing.</span></li>
+        </ul>
+      </section>
+
+      <!-- 19 -->
+      <section id="faq" class="reveal" data-screen-label="Troubleshooting FAQ">
+        <span class="sec-num">19</span>
+        <h2>Troubleshooting &amp; FAQ</h2>
+        <details class="faq"><summary>One printer-light tweak won't neutralize across daylight and tungsten</summary><div class="fb"><p>By design, the per-layer print curves cross, so balance depends on tonal position. This is film behaving like film, not a bug. Balance the base with Printer Calibration, then time with printer lights.</p></div></details>
+        <details class="faq"><summary>Printer lights feel like the wrong direction</summary><div class="fb"><p>Correct: the lab convention is <em>more light = denser (darker) print</em>. Lower a printer light to print brighter.</p></div></details>
+        <details class="faq"><summary>Grain looks like video noise on top of the image, crawling in the blacks</summary><div class="fb"><p>Grain Amount is too high, bring it back to ≈0.5–1, and prefer the format preset over hand-dialing.</p></div></details>
+        <details class="faq"><summary>Halation reads like a red filter over everything bright</summary><div class="fb"><p>Boosts/radius too high, or threshold too low. Lower the boosts, shrink the radius, or raise the threshold so only true highlights bloom.</p></div></details>
+        <details class="faq"><summary>Edges look hard and ringing</summary><div class="fb"><p>Over-sharpened MTF. Lower MTF Pressure or acutance, but don't drop acutance below ~0.9 chasing "realism"; below 0.5 it actively softens and the effect appears to do nothing.</p></div></details>
+        <details class="faq"><summary>Blacks are milky / lifted</summary><div class="fb"><p>Lower <strong>Theater Screen Sim</strong> (print base density) toward 0.01 for deeper blacks; raise it for a milkier, lifted look.</p></div></details>
+        <details class="faq"><summary>The image barely looks like film</summary><div class="fb"><p>Confirm <strong>Processing Mode = Neg to Print</strong> and that a <strong>Full Preset</strong> is actually loaded, the factory defaults are deliberately neutral.</p></div></details>
+        <details class="faq"><summary>I drew a custom sensitivity curve in the FSE and the shape does nothing</summary><div class="fb"><p>That's expected on <strong>FSE Activation Model = Original</strong> (only height/position matters). Switch to a Wiener or Mallett mode to make the shape drive the image; it's a no-op at the factory curve, so switching won't jump the picture.</p></div></details>
+        <details class="faq"><summary>Can I export this as a LUT?</summary><div class="fb"><p>Yes, LUT Export bakes the color transform, but grain/halation/MTF/motion are omitted (a LUT is spatial-blind). Use Make LUT-Ready first and re-apply textures downstream.</p></div></details>
+        <details class="faq"><summary>Do the editors work on Windows/Linux?</summary><div class="fb"><p>The FSE has a native Mac panel and a Windows/Linux equivalent. The Textures Editor is macOS.</p></div></details>
+        <div class="callout warn">
+          <div class="k">Common beginner mistakes</div>
+          <p>Treating printer lights as an exposure slider (they are lab balance). Opening the FSE too early and redrawing a stock before you know what correct looks like. Hand-dialing grain/acutance past the format presets until "film" tips into video noise or ringing edges. Fighting the spectral model with extreme parametric perturbations instead of choosing a stock close to intent and nudging.</p>
+        </div>
+      </section>
+
+    </div><!-- /content -->
+  </div>
+</div>
+
+<!-- ============ SERIES ============ -->
+<section class="next" data-screen-label="Guide series">
+  <div class="wrap">
+    <p class="eyebrow" style="margin-bottom:8px;">The guide series</p>
+    <div class="next-grid reveal">
+      <a class="next-card" style="--accent: var(--green);" href="../quickstart/">
+        <span class="idx">Guide 01</span>
+        <h4>Quick Start</h4>
+        <p>Apply it, pick a preset, learn the eight day-one controls, and dial two recipe looks. About five minutes.</p>
+        <span class="go">Read it →</span>
+      </a>
+      <div class="next-card now" style="--accent: var(--red);">
+        <span class="idx">Guide 02 · You're here</span>
+        <h4>The Complete Guide</h4>
+        <p>Every control group, the full film chain, both editors, the printer-lights feeder, LUT export, and the diagnostic views.</p>
+        <span class="go">Reading now</span>
+      </div>
+      <a class="next-card soon" style="--accent: var(--blue);" href="#">
+        <span class="idx">Guide 03 · Planned</span>
+        <h4>Design Your Own Stock</h4>
+        <p>A hands-on path through the Film Stock Editor and Textures Editor, draw spectral curves and build textures from scratch.</p>
+        <span class="go">Coming soon →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../../">Color Grading Tools</a>
+        <a href="../">PhotoChemist</a>
+        <a href="../quickstart/">Quick Start</a>
+        <a href="../../technicolordrt/">Technicolor DRT</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<button class="totop" id="totop" type="button" aria-label="Back to top">↑</button>
+
+<script>
+  /* ===== SCROLL REVEAL ===== */
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+
+  /* ===== TOC SCROLLSPY ===== */
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var visible = {};
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { visible[en.target.id] = en.isIntersecting ? en.intersectionRatio : 0; });
+      var best = null, bestR = 0;
+      Object.keys(visible).forEach(function (id) { if (visible[id] > bestR) { bestR = visible[id]; best = id; } });
+      if (best) { links.forEach(function (a) { a.classList.remove('active'); }); if (map[best]) map[best].classList.add('active'); }
+    }, { rootMargin: '-84px 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] });
+    document.querySelectorAll('.content > section').forEach(function (s) { spy.observe(s); });
+
+    // close mobile TOC after a jump
+    var toc = document.getElementById('toc');
+    links.forEach(function (a) { a.addEventListener('click', function () {
+      if (window.matchMedia('(max-width: 940px)').matches && toc) { toc.removeAttribute('open'); }
+    }); });
+  })();
+
+  /* ===== BACK TO TOP ===== */
+  (function () {
+    var btn = document.getElementById('totop');
+    if (!btn) return;
+    var onScroll = function () { if (window.scrollY > 900) btn.classList.add('show'); else btn.classList.remove('show'); };
+    window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d8455f" />
+        <stop offset="0.5" stop-color="#b154c9" />
+        <stop offset="1" stop-color="#5b78d6" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="19" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">PC</text>
+  </svg>
+</template>
+
+</body>
+</html>
