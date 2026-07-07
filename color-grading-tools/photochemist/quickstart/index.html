@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PhotoChemist — Quick Start — Dec. 18 Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --red-d:     oklch(0.64 0.205 25 / 0.16);
+    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
+    --green-d:   oklch(0.74 0.165 148 / 0.16);
+    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
+    --blue-d:    oklch(0.62 0.165 262 / 0.18);
+    --magenta-d: oklch(0.65 0.205 332 / 0.16);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.64 0.205 25 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("../assets/logo-full.png") left center / contain no-repeat;
+            mask: url("../assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(48px, 7vw, 92px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -18%; right: -14%; width: 780px; height: 780px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(140px); opacity: 0.13; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: clamp(32px, 5vw, 60px); align-items: center; }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  h1.hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 6.2vw, 76px); line-height: 0.98; letter-spacing: -0.02em; margin: 22px 0 0;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 32%, var(--blue) 58%, var(--cyan) 80%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 48ch; text-wrap: pretty; }
+  .hero-sub strong { color: var(--ink); font-weight: 600; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+
+  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
+  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
+  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* ============ STOCK VIEWER (hero right) ============ */
+  .viewer {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg));
+    border: 1px solid var(--line-soft); border-radius: 18px; padding: 16px; overflow: hidden;
+    box-shadow: 0 40px 90px -52px oklch(0 0 0 / 0.9);
+  }
+  .viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 6px 14px; }
+  .viewer-head .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .viewer-head .live { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--red);
+    border: 1px solid oklch(0.64 0.205 25 / 0.45); border-radius: 5px; padding: 3px 8px; }
+  .stage {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
+    background: var(--bg); border: 1px solid var(--line-soft);
+  }
+  .stage img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: filter 0.5s ease, opacity 0.35s ease; -webkit-user-drag: none; user-select: none;
+  }
+  .stage .badge {
+    position: absolute; left: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 11px; border-radius: 6px; background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(4px);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .stage .badge .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--red); }
+  .stage .compare {
+    position: absolute; right: 12px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 12px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff;
+    border: 1px solid oklch(1 0 0 / 0.25); cursor: pointer; backdrop-filter: blur(4px); user-select: none;
+    transition: background 0.16s;
+  }
+  .stage .compare:hover { background: oklch(0 0 0 / 0.72); }
+  .stage .compare:active, .stage .compare.holding { background: var(--ink); color: var(--bg); }
+
+  .stock-picker { margin-top: 14px; display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .stock-picker label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .stock-picker .selrow { display: flex; gap: 10px; align-items: stretch; }
+  .stock-select {
+    flex: 1; font-family: var(--mono); font-size: 13.5px; color: var(--ink); background: var(--bg-2);
+    border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-dim) 50%), linear-gradient(135deg, var(--ink-dim) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+  }
+  .stock-select:hover { border-color: oklch(0.42 0.013 264); }
+  .swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+  .swatches button {
+    width: 30px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; padding: 0;
+    background-size: cover; background-position: center; transition: transform 0.14s, border-color 0.14s; position: relative;
+  }
+  .swatches button:hover { transform: translateY(-2px); }
+  .swatches button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ink); }
+  .stock-note { margin-top: 11px; font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--ink-faint); text-wrap: pretty; }
+  .stock-desc { margin: 2px 6px 0; font-size: 14px; color: var(--ink-dim); min-height: 2.6em; text-wrap: pretty; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section { padding-block: clamp(52px, 7vw, 100px); position: relative; }
+  .sec-head { max-width: 64ch; margin-bottom: clamp(34px, 5vw, 54px); }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px);
+    letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px;
+  }
+  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
+  .sec-head p strong { color: var(--ink); font-weight: 600; }
+  .divider { height: 1px; background: var(--line-soft); }
+
+  /* ============ STORY : what it is ============ */
+  .story { border-top: 1px solid var(--line-soft); }
+  .story-grid { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
+  @media (max-width: 880px) { .story-grid { grid-template-columns: 1fr; } }
+  .story-copy h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 46px);
+    letter-spacing: -0.02em; line-height: 1.04; margin-top: 14px;
+  }
+  .story-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.7vw, 18px); text-wrap: pretty; }
+  .story-copy p strong { color: var(--ink); font-weight: 600; }
+  .story-copy .free-note { margin-top: 24px; border-radius: 14px; padding: 16px 18px; background: var(--cyan-d); position: relative; overflow: hidden; }
+  .story-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan); }
+  .story-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .story-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); }
+
+  /* ============ VIDEO PLACEHOLDER ============ */
+  .videoph {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--line-soft); background: var(--bg-1);
+    box-shadow: 0 30px 80px -50px oklch(0 0 0 / 0.85);
+  }
+  .videoph .fill {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    background-image: repeating-linear-gradient(45deg, oklch(0.215 0.014 264) 0 13px, oklch(0.195 0.013 264) 13px 26px);
+  }
+  .videoph .pc { display: flex; flex-direction: column; gap: 12px; align-items: center; padding: 24px; }
+  .videoph .play {
+    width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center;
+    background: oklch(0 0 0 / 0.35); border: 1px solid oklch(1 0 0 / 0.22); backdrop-filter: blur(3px);
+    transition: transform 0.18s, background 0.18s;
+  }
+  .videoph:hover .play { transform: scale(1.06); background: oklch(0 0 0 / 0.5); }
+  .videoph .play::before { content: ""; width: 0; height: 0; margin-left: 4px;
+    border-left: 18px solid var(--ink); border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+  .videoph .cap { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: var(--ink); font-weight: 500; }
+  .videoph .sub { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+  .videoph .tag {
+    position: absolute; left: 12px; top: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .videoph .tag .rd { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+  .videoph.slim { aspect-ratio: 21 / 9; }
+
+  /* ============ BEFORE / AFTER SWIPE ============ */
+  .ba {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--line-soft); background: var(--bg); touch-action: none; user-select: none; cursor: ew-resize;
+  }
+  .ba img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; -webkit-user-drag: none;
+  }
+  .ba .after { clip-path: inset(0 0 0 var(--x, 50%)); }
+  .ba .before { clip-path: inset(0 calc(100% - var(--x, 50%)) 0 0); }
+  .ba .lbl {
+    position: absolute; bottom: 10px; z-index: 4; font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 9px; border-radius: 5px;
+    background: oklch(0 0 0 / 0.55); color: #fff; backdrop-filter: blur(3px);
+  }
+  .ba .lbl.b { left: 10px; } .ba .lbl.a { right: 10px; }
+  .ba .handle {
+    position: absolute; top: 0; bottom: 0; left: var(--x, 50%); width: 2px; background: oklch(1 0 0 / 0.85);
+    transform: translateX(-1px); z-index: 5; pointer-events: none;
+  }
+  .ba .handle::after {
+    content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 38px; height: 38px; border-radius: 50%; background: oklch(1 0 0 / 0.9);
+    box-shadow: 0 2px 12px oklch(0 0 0 / 0.55);
+    -webkit-mask: linear-gradient(#000,#000) center/9px 2px no-repeat, linear-gradient(#000,#000) center/2px 9px no-repeat;
+  }
+  .ba .grip {
+    position: absolute; top: 50%; left: var(--x, 50%); transform: translate(-50%, -50%); z-index: 6;
+    width: 38px; height: 38px; pointer-events: none;
+    display: grid; place-items: center; color: var(--bg); font-family: var(--mono); font-size: 13px;
+  }
+  .ba .grip::before { content: "‹ ›"; letter-spacing: -1px; font-weight: 600; }
+  .ba .ph-note {
+    position: absolute; left: 50%; top: 12px; transform: translateX(-50%); z-index: 4;
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(1 0 0 / 0.7);
+    background: oklch(0 0 0 / 0.4); padding: 3px 9px; border-radius: 5px; white-space: nowrap;
+  }
+
+  /* ============ APPLY / STEPS ============ */
+  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
+  .steps { display: grid; gap: 12px; counter-reset: step; }
+  .step {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start;
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px;
+  }
+  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--green);
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.74 0.165 148 / 0.4); background: var(--green-d);
+    display: grid; place-items: center; flex: none; }
+  .step .n::before { content: counter(step, decimal-leading-zero); }
+  .step .st b { font-weight: 600; font-size: 15.5px; }
+  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .step .st p strong { color: var(--ink); }
+  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--cyan); }
+  .step .st a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
+
+  .install-aside { display: flex; flex-direction: column; gap: 16px; }
+  .note-card { background: var(--yellow-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--yellow); }
+  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+  .note-card.cy { background: var(--cyan-d); } .note-card.cy::before { background: var(--cyan); } .note-card.cy .k { color: var(--cyan); }
+  .aside-cap { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+
+  /* ============ CONTROL CARDS ============ */
+  .controls-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .controls-grid { grid-template-columns: 1fr; } }
+  .ctrl {
+    --accent: var(--red); --accent-d: var(--red-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden;
+    padding: 22px 24px; position: relative; transition: border-color 0.18s, transform 0.18s;
+  }
+  .ctrl::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .ctrl:hover { border-color: var(--line); transform: translateY(-2px); }
+  .ctrl .grp { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .ctrl h4 { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: -0.01em; margin-top: 8px; }
+  .ctrl p { margin-top: 9px; font-size: 14px; color: var(--ink-dim); line-height: 1.55; text-wrap: pretty; }
+  .ctrl p strong { color: var(--ink); font-weight: 600; }
+  .ctrl .push { margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.04em; color: var(--ink); background: var(--accent-d);
+    border-radius: 999px; padding: 5px 12px; }
+  .ctrl .push::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--accent); }
+
+  /* ============ RECIPES ============ */
+  .recipes { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  .recipe-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .recipe-grid { grid-template-columns: 1fr; } }
+  .recipe {
+    --accent: var(--cyan); --accent-d: var(--cyan-d);
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .recipe .rhead { padding: 22px 24px 18px; border-bottom: 1px solid var(--line-soft);
+    background: linear-gradient(180deg, var(--accent-d), transparent 90%); }
+  .recipe .rhead .kick { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+    display: inline-flex; align-items: center; gap: 10px; }
+  .recipe .rhead .kick::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+  .recipe .rhead h3 { font-family: var(--display); font-weight: 700; font-size: clamp(22px, 2.6vw, 28px); letter-spacing: -0.015em; margin-top: 12px; line-height: 1.05; }
+  .recipe .rhead p { margin-top: 8px; font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .recipe .rba { padding: 16px 24px 0; }
+  .recipe .rsteps { list-style: none; margin: 0; padding: 20px 24px 24px; display: grid; gap: 11px; counter-reset: rs; }
+  .recipe .rsteps li { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: flex-start; font-size: 14.5px; color: var(--ink); text-wrap: pretty; }
+  .recipe .rsteps li .rn { counter-increment: rs; font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--accent);
+    width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent-d); display: grid; place-items: center; flex: none; margin-top: 1px; }
+  .recipe .rsteps li .rn::before { content: counter(rs); }
+  .recipe .rsteps li strong { font-weight: 600; }
+
+  /* ============ TROUBLESHOOTING ============ */
+  .fixes { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
+  details.manual { margin-top: 8px; border: 1px solid var(--line-soft); border-radius: 14px; background: var(--bg-1); overflow: hidden; }
+  details.manual summary { cursor: pointer; padding: 16px 20px; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--ink); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  details.manual summary::-webkit-details-marker { display: none; }
+  details.manual summary::after { content: "+"; font-size: 16px; color: var(--ink-faint); flex: none; }
+  details.manual[open] summary::after { content: "–"; }
+  details.manual[open] summary { color: var(--ink); }
+  details.manual .mbody { padding: 0 20px 18px; }
+  details.manual .mbody p { font-size: 14px; color: var(--ink-dim); text-wrap: pretty; line-height: 1.6; }
+  details.manual .mbody p strong { color: var(--ink); font-weight: 600; }
+  details.manual code { font-family: var(--mono); font-size: 12px; background: var(--bg-2); border-radius: 5px; padding: 1px 6px; color: var(--cyan); }
+
+  /* ============ NEXT / SERIES ============ */
+  .next { border-top: 1px solid var(--line-soft); }
+  .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .next-grid { grid-template-columns: 1fr; } }
+  .next-card {
+    background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px;
+    display: flex; flex-direction: column; gap: 10px; transition: border-color 0.18s, transform 0.18s; position: relative; overflow: hidden;
+  }
+  .next-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--accent, var(--magenta)); opacity: 0.9; }
+  .next-card:hover { border-color: var(--line); transform: translateY(-2px); }
+  .next-card .idx { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .next-card h4 { font-family: var(--display); font-weight: 700; font-size: 21px; letter-spacing: -0.01em; }
+  .next-card p { font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
+  .next-card .go { margin-top: auto; font-family: var(--mono); font-size: 12px; color: var(--accent, var(--magenta)); letter-spacing: 0.04em; }
+  .next-card.now { background: linear-gradient(180deg, var(--bg-2), var(--bg-1)); }
+  .next-card.now .idx { color: var(--green); }
+  .next-card.soon { opacity: 0.72; }
+  .next-card.soon .go { color: var(--ink-faint); }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (pointer: coarse) {
+    nav.toplinks a { padding-block: 4px; }
+    .btn, nav.toplinks a.cta, .stock-select, .compare { min-height: 44px; }
+    .swatches button { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">← PhotoChemist</a>
+      <a href="#apply">Apply</a>
+      <a href="#fastpath">Fast path</a>
+      <a href="#controls">Controls</a>
+      <a href="#recipes">Recipes</a>
+      <a href="#fixes">Fixes</a>
+      <a href="../#subscribe" class="cta">Get it · $47.34/yr</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Quick Start hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Quick Start · PhotoChemist</p>
+        <h1 class="hero-title">A great film<br />look in about<br /><em>five minutes.</em></h1>
+        <p class="hero-sub">PhotoChemist is a physically-based film emulation that runs inside DaVinci Resolve. <strong>No physics required</strong>. Pick a preset, nudge a few controls, done.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#apply">Start here →</a>
+          <a class="btn" href="#fastpath">Jump to the fast path</a>
+        </div>
+        <div class="hero-meta">
+          <div class="m"><b>~5 min</b><span>to a look</span></div>
+          <div class="m"><b>1</b><span>control does 80%</span></div>
+          <div class="m"><b>8</b><span>day-one controls</span></div>
+        </div>
+      </div>
+
+      <!-- Hero stock viewer: presets swap the look live. Drop real exports into the STOCKS array. -->
+      <div class="viewer reveal">
+        <div class="viewer-head">
+          <span class="lbl">Preset preview</span>
+          <span class="live" id="liveTag">Real export</span>
+        </div>
+        <div class="stage" id="stage">
+          <img id="stockImg" src="../looks/Seneca%20Cine.jpg" alt="PhotoChemist preset preview" />
+          <div class="badge"><span class="dot" id="stockDot"></span><span id="stockBadge">Seneca Cine</span></div>
+          <button class="compare" id="compareBtn" type="button" aria-label="Hold to see the plain Rec.709 frame">Hold: Rec.709</button>
+        </div>
+        <p class="stock-desc" id="stockDesc"></p>
+        <div class="stock-picker">
+          <label for="stockSelect">Full Preset · one control, ~80% of your look</label>
+          <div class="selrow">
+            <select class="stock-select" id="stockSelect"></select>
+            <div class="swatches" id="swatches"></div>
+          </div>
+          <p class="stock-note" id="stockNote">Real Full Preset exports on one frame. Your own footage lands differently, but the response is the same. Hold the button to see the neutral starting point.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT IT IS ============ -->
+<section class="story" data-screen-label="What it is">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-copy reveal">
+        <p class="eyebrow">What PhotoChemist is</p>
+        <h2>A film lab in a node, not a LUT.</h2>
+        <p>Instead of stamping a fixed "film look" onto your image with a 3D LUT or an S-curve, PhotoChemist simulates the real photochemistry: your image exposes a <strong>negative</strong>, the negative develops into cyan / magenta / yellow <strong>dye</strong>, that negative is <strong>printed</strong> onto a print stock, and the print is <strong>projected</strong> through a bulb.</p>
+        <p>Because it re-derives the look from that chain, everything responds the way real film does when you change stock, balance, or exposure. You do not need to understand the chemistry to use it.</p>
+        <div class="free-note">
+          <div class="k">The one thing to remember</div>
+          <p>Pick a <strong>Full Preset</strong>, nudge a few controls, done. Everything else on this page is just dialing the look.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="videoph">
+          <span class="tag"><span class="rd"></span>Explainer clip</span>
+          <div class="fill">
+            <div class="pc">
+              <div class="play"></div>
+              <div class="cap">What PhotoChemist does · 60-second overview</div>
+              <div class="sub">Drop video clip here</div>
+            </div>
+          </div>
+        </div>
+        <p class="aside-cap" style="margin-top:12px;">Placeholder · negative → develop → print → project, in one pass</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1 · APPLY IN RESOLVE ============ -->
+<section class="install" id="apply" data-screen-label="Apply in Resolve">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 1 · Apply it in Resolve</p>
+      <h2>Get it onto a node.</h2>
+      <p>Treat PhotoChemist as the <strong>film stage</strong>, not your primary corrector. Clean up exposure and white balance first, then let it do the film part. That's the whole setup.</p>
+    </div>
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Add a serial node after your balance</b><p>In the <strong>Color</strong> page, add a serial node <strong>after</strong> your basic balance. Correct gross exposure and white balance on an earlier node. PhotoChemist is the film stage, not the corrector.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Drag PhotoChemist onto the node</b><p>It lives under <strong>Film Look Tools - Dec. 18 Studios</strong> in the OpenFX / effects library. Drop it on the node you just made.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Confirm the two top controls</b><p><strong>Input Mode</strong>: leave on <code>DaVinci Intermediate</code> for a normal DWG/Intermediate timeline; choose <code>Linear</code> if your image is scene-referred linear. <strong>Processing Mode</strong> — leave on <code>Neg to Print</code> for the full film chain (the default, and where you want to start).</p></div>
+        </div>
+      </div>
+      <aside class="install-aside reveal">
+        <div class="videoph">
+          <span class="tag"><span class="rd"></span>Screen recording</span>
+          <div class="fill">
+            <div class="pc">
+              <div class="play"></div>
+              <div class="cap">Applying it to a node in Resolve</div>
+              <div class="sub">Drop clip here</div>
+            </div>
+          </div>
+        </div>
+        <div class="note-card">
+          <div class="k">That's it for setup</div>
+          <p>Two controls confirmed and you're done installing the look. Everything below is about <strong>dialing</strong> it.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · FASTEST PATH ============ -->
+<section class="install" id="fastpath" data-screen-label="Fastest path">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 2 · The fastest path to a look</p>
+      <h2>Pick a stock preset. That's 80% of it.</h2>
+      <p>The single biggest move lives in the <strong>Quick Processing</strong> group (open by default). One dropdown does most of the work.</p>
+    </div>
+    <div class="install-grid">
+      <div class="steps reveal">
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Step through the Full Preset dropdown</b><p>Land on one near your intent. <strong>Seneca Cine</strong> is the friendly default. This one control loads the negative stock, the print stock, both characteristic (contrast) curves, and the per-stock printer lights all at once, roughly <strong>80% of your look</strong>.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Watch the colors re-derive</b><p>As you switch presets the colors <strong>re-derive</strong> rather than just shifting. That's the spectral model working: real film response, not a filter swap.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Set a texture pass by gauge</b><p>Open the <strong>Textures Editor…</strong> button and set the master format to <code>65mm</code> / <code>35mm</code> / <code>16mm</code>. It sets grain, halation, and sharpness together at physically sensible ratios. Smaller gauge = grainier, softer, more halation.</p></div>
+        </div>
+      </div>
+      <aside class="install-aside reveal">
+        <div class="ba" data-ba>
+          <img class="before" src="../looks/compare-3-base.jpg" alt="Before: neutral OpenDRT base" />
+          <img class="after"  src="../looks/compare-3-seneca-cine.jpg" alt="After: Seneca Cine preset" />
+          <span class="lbl b">Base</span>
+          <span class="lbl a">Seneca Cine</span>
+          <span class="handle"></span>
+          <span class="grip"></span>
+        </div>
+        <p class="aside-cap">Drag the handle · same frame, one Full Preset applied</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · DAY-ONE CONTROLS ============ -->
+<section class="install" id="controls" data-screen-label="Day-one controls">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 3 · The controls that matter on day one</p>
+      <h2>Eight controls carry almost every look.</h2>
+      <p>Most live in <strong>Quick Processing</strong>. Learn which way to push each one and you can shape nearly anything.</p>
+    </div>
+    <div class="controls-grid reveal">
+      <div class="ctrl" style="--accent: var(--yellow); --accent-d: var(--yellow-d);">
+        <div class="grp">Quick Processing</div>
+        <h4>Full Preset</h4>
+        <p>Loads a complete stock + curve + printer-light look in one move. <strong>Start here</strong>: this is most of your result.</p>
+        <span class="push">Step through, land near your intent</span>
+      </div>
+      <div class="ctrl" style="--accent: var(--red); --accent-d: var(--red-d);">
+        <div class="grp">Quick Processing</div>
+        <h4>Printer Light</h4>
+        <p>Overall lab exposure / balance for all three channels. <strong>25 = neutral</strong>, 1 point ≈ 1/12 stop. Lab convention: <em>more light = darker print</em>.</p>
+        <span class="push">Lower it to print brighter</span>
+      </div>
+      <div class="ctrl" style="--accent: var(--magenta); --accent-d: var(--magenta-d);">
+        <div class="grp">Quick Processing</div>
+        <h4>R / G / B Printer Points</h4>
+        <p>Per-channel version of the same control, your color-balance / timing knob. Same <strong>25 = neutral</strong> rule.</p>
+        <span class="push">Nudge a few points to warm, cool, or correct a cast</span>
+      </div>
+      <div class="ctrl" style="--accent: var(--blue); --accent-d: var(--blue-d);">
+        <div class="grp">Quick Processing</div>
+        <h4>Neg HD / Print HD Curve</h4>
+        <p>The contrast personality of the negative and print stocks: toe, gamma, and shoulder.</p>
+        <span class="push">Swap for a punchier or softer stock feel</span>
+      </div>
+      <div class="ctrl" style="--accent: var(--cyan); --accent-d: var(--cyan-d);">
+        <div class="grp">Quick Processing</div>
+        <h4>Projector Bulb</h4>
+        <p>Calibrated viewing-lamp color: Neutral, Carbon Arc, Xenon, and more. Editing any projector slider flips it to <strong>Custom</strong>.</p>
+        <span class="push">Warm or cool the whole projection</span>
+      </div>
+      <div class="ctrl" style="--accent: var(--green); --accent-d: var(--green-d);">
+        <div class="grp">Quick Processing</div>
+        <h4>Theater Screen Sim</h4>
+        <p>Print base density = your black point. Default <strong>0.040</strong>. Higher (toward 0.2) = milkier, lifted blacks; lower (toward 0.01) = deeper blacks.</p>
+        <span class="push">Lower for deeper blacks</span>
+      </div>
+      <div class="ctrl" style="--accent: var(--yellow); --accent-d: var(--yellow-d);">
+        <div class="grp">Quick Processing</div>
+        <h4>Grain / Halation / MTF</h4>
+        <p>Master on / off for the three film textures. Turn them on, then tune the feel in the Textures Editor.</p>
+        <span class="push">On, then tune in the Textures Editor</span>
+      </div>
+      <div class="ctrl" style="--accent: var(--red); --accent-d: var(--red-d);">
+        <div class="grp">Textures Editor / Textures</div>
+        <h4>Grain Amount</h4>
+        <p>Grain intensity. The slider goes to 15 but the natural range is <strong>0–2</strong>: 0.5 subtle (default), 1 pronounced, above 3 stylized / heavy.</p>
+        <span class="push">Keep it around 0.5–1</span>
+      </div>
+    </div>
+
+    <div class="note-card cy reveal" style="margin-top: 20px;">
+      <div class="k">For motion clips</div>
+      <p>Two extra switches in the <strong>Textures</strong> group add life: <strong>Enable Film Breath</strong> (organic frame-to-frame bulb / chemistry flicker) and <strong>Enable Gate Weave</strong> (mechanical position wobble). Both are off by default. Turn them on and keep the amounts low.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 · TWO RECIPE LOOKS ============ -->
+<section class="recipes" id="recipes" data-screen-label="Recipe looks">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 4 · Two recipe looks</p>
+      <h2>Two starting points, dialed for you.</h2>
+      <p>Follow either one top to bottom. Both start from a Full Preset and take a minute of nudging.</p>
+    </div>
+    <div class="recipe-grid">
+      <article class="recipe reveal" style="--accent: var(--cyan); --accent-d: var(--cyan-d);">
+        <div class="rhead">
+          <span class="kick">Recipe 01</span>
+          <h3>Clean modern negative</h3>
+          <p>A crisp, contemporary film feel with just enough texture to read as film.</p>
+        </div>
+        <div class="rba">
+          <div class="ba" data-ba>
+            <img class="before" src="../looks/compare-1-base.jpg" alt="Before: neutral OpenDRT base" />
+            <img class="after"  src="../looks/compare-1-seneca-cine.jpg" alt="After: Seneca Cine preset" />
+            <span class="lbl b">Base</span>
+            <span class="lbl a">Seneca Cine</span>
+            <span class="handle"></span>
+            <span class="grip"></span>
+          </div>
+        </div>
+        <ol class="rsteps">
+          <li><span class="rn"></span><span><strong>Full Preset →</strong> a modern / balanced stock (start from Seneca Cine).</span></li>
+          <li><span class="rn"></span><span><strong>Printer Lights:</strong> leave at 25, then nudge R / B a point or two to taste.</span></li>
+          <li><span class="rn"></span><span><strong>Textures Editor →</strong> master format <strong>35mm</strong>.</span></li>
+          <li><span class="rn"></span><span><strong>Grain Amount ≈ 0.5</strong>, Halation on but gentle.</span></li>
+          <li><span class="rn"></span><span><strong>Theater Screen Sim</strong> low (deeper blacks) for a clean, contrasty base.</span></li>
+        </ol>
+      </article>
+
+      <article class="recipe reveal" style="--accent: var(--red); --accent-d: var(--red-d);">
+        <div class="rhead">
+          <span class="kick">Recipe 02</span>
+          <h3>Vintage print with halation</h3>
+          <p>A warmer, glowier, older-print character.</p>
+        </div>
+        <div class="rba">
+          <div class="ba" data-ba>
+            <img class="before" src="../looks/compare-2-base.jpg" alt="Before: neutral OpenDRT base" />
+            <img class="after"  src="../looks/compare-2-seneca-vivid.jpg" alt="After: Seneca Vivid preset" />
+            <span class="lbl b">Base</span>
+            <span class="lbl a">Seneca Vivid</span>
+            <span class="handle"></span>
+            <span class="grip"></span>
+          </div>
+        </div>
+        <ol class="rsteps">
+          <li><span class="rn"></span><span><strong>Full Preset →</strong> a stock with more character; step through until the color feels period-correct.</span></li>
+          <li><span class="rn"></span><span><strong>Projector Bulb → Carbon Arc</strong> (or nudge projector color warm).</span></li>
+          <li><span class="rn"></span><span><strong>Printer Lights:</strong> lower the master a touch to print brighter / warmer, then balance R / B warm.</span></li>
+          <li><span class="rn"></span><span><strong>Textures Editor →</strong> master format <strong>16mm</strong>, or bump Halation boost / radius by hand.</span></li>
+          <li><span class="rn"></span><span><strong>Grain Amount ≈ 1</strong>, Theater Screen Sim raised slightly for milkier, lifted blacks.</span></li>
+          <li><span class="rn"></span><span>On motion, add a little <strong>Film Breath</strong> and <strong>Gate Weave</strong>.</span></li>
+        </ol>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · IF IT LOOKS WRONG ============ -->
+<section class="fixes" id="fixes" data-screen-label="Troubleshooting">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Step 5 · If it looks wrong</p>
+      <h2>Common snags, fixed fast.</h2>
+      <p>The quick answers to the things that trip people up first.</p>
+    </div>
+    <div class="reveal" style="max-width: 880px;">
+      <details class="manual"><summary>Too dark or too bright overall</summary><div class="mbody"><p>Don't fight it with Printer Lights alone: they are <strong>balance</strong>, not a brightness slider, and the per-layer print curves cross by design. Fix gross exposure on a node <strong>before</strong> PhotoChemist, then let printer lights do color timing. Remember: <em>more printer light = darker print</em>.</p></div></details>
+      <details class="manual"><summary>A color cast you can't shake</summary><div class="mbody"><p>Nudge the individual <strong>Red / Green / Blue Printer Points</strong> a few points, or open <strong>Printer Calibration</strong> and balance mid-grey once for the stock.</p></div></details>
+      <details class="manual"><summary>Grain looks like video noise sitting on top</summary><div class="mbody"><p>Especially if it's crawling in the blacks, you've pushed <code>Grain Amount</code> too far. Bring it back toward <strong>0.5–1</strong>.</p></div></details>
+      <details class="manual"><summary>Halation looks like a red filter, not a glow</summary><div class="mbody"><p>If everything bright reads red rather than glowing around sources, lower the halation strength / boost or radius. Trust the format preset.</p></div></details>
+      <details class="manual"><summary>Edges look hard and ringing</summary><div class="mbody"><p>That's over-sharpened <strong>MTF</strong>. Back off, or just use the format preset instead of hand-dialing.</p></div></details>
+      <details class="manual"><summary>Nothing looks like film</summary><div class="mbody"><p>Confirm <strong>Processing Mode = Neg to Print</strong> and that you actually picked a <strong>Full Preset</strong>. The defaults are deliberately neutral.</p></div></details>
+      <details class="manual"><summary>Blacks look milky / lifted unexpectedly</summary><div class="mbody"><p>Lower <strong>Theater Screen Sim</strong>: it sets the print base density, which is your black point.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHERE TO GO NEXT / SERIES ============ -->
+<section class="next" data-screen-label="Where to go next">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Where to go next</p>
+      <h2>The PhotoChemist guide series.</h2>
+      <p>When presets and printer lights feel natural, keep going. Three guides, from first look to designing your own stocks.</p>
+    </div>
+    <div class="next-grid reveal">
+      <div class="next-card now" style="--accent: var(--green);">
+        <span class="idx">Guide 01 · You're here</span>
+        <h4>Quick Start</h4>
+        <p>Apply it, pick a preset, learn the eight day-one controls, and dial two recipe looks. About five minutes.</p>
+        <span class="go">Reading now</span>
+      </div>
+      <a class="next-card soon" style="--accent: var(--magenta);" href="#">
+        <span class="idx">Guide 02 · Planned</span>
+        <h4>The Complete Guide</h4>
+        <p>Every group in depth: the film-chain signal flow, Printer Calibration, the Printer Lights feeder node, LUT export, and the diagnostic view modes.</p>
+        <span class="go">Coming soon →</span>
+      </a>
+      <a class="next-card soon" style="--accent: var(--blue);" href="#">
+        <span class="idx">Guide 03 · Planned</span>
+        <h4>Design Your Own Stock</h4>
+        <p>The Film Stock Editor and Textures Editor: draw your own spectral curves and build grain, halation, and MTF as independent systems.</p>
+        <span class="go">Coming soon →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../../">Color Grading Tools</a>
+        <a href="../">PhotoChemist</a>
+        <a href="../../technicolordrt/">Technicolor DRT</a>
+        <a href="https://dec18studios.com/color-grading-tools/colorslice">Color Slice O'matic</a>
+        <a href="https://dec18studios.com/hire-us">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============ HERO PRESET VIEWER ============
+     Real Full Preset exports live in ../looks/ (the same frame for each). `src` is the
+     developed look; `base` is the neutral OpenDRT starting point shown on Hold-to-compare.
+     This mirrors the main PhotoChemist page's set — add a preset by dropping a JPG in
+     looks/ and adding an entry here. */
+  (function () {
+    var BASE_IMG = "../looks/OpenDRTphotochemist.jpg";
+    var STOCKS = [
+      { name: "Seneca Cine",        color: "var(--cyan)",    src: "../looks/Seneca Cine.jpg",        base: BASE_IMG, filter: "",
+        desc: "The friendly default. A balanced, cinematic negative with clean skin and gentle contrast. Start here." },
+      { name: "Balanced Modern",    color: "var(--blue)",    src: "../looks/Balanced Modern.jpg",    base: BASE_IMG, filter: "",
+        desc: "Crisp and contemporary with natural color. The base for Recipe 01, the clean modern negative." },
+      { name: "Seneca Everyday",    color: "var(--yellow)",  src: "../looks/Seneca Everyday.jpg",    base: BASE_IMG, filter: "",
+        desc: "An easy, all-purpose stock. Warm and forgiving, a safe pick when you're not sure where to start." },
+      { name: "Seneca Portrait",    color: "var(--red)",     src: "../looks/Seneca Portrait.jpg",    base: BASE_IMG, filter: "",
+        desc: "Tuned for skin. Softer contrast and flattering warmth for faces and close work." },
+      { name: "Seneca Press",       color: "var(--ink)",     src: "../looks/Seneca Press.jpg",       base: BASE_IMG, filter: "",
+        desc: "A cleaner, punchier press-print feel with crisp neutrals and a little more snap." },
+      { name: "Seneca Vivid",       color: "var(--magenta)", src: "../looks/Seneca Vivid.jpg",       base: BASE_IMG, filter: "",
+        desc: "Richer and warmer with deeper saturation. The base for Recipe 02, the vintage print." },
+      { name: "Sakura Natural",     color: "var(--green)",   src: "../looks/Sakura Natural.jpg",     base: BASE_IMG, filter: "",
+        desc: "A soft, natural palette with gentle roll-off, leaning slightly cool and delicate." },
+      { name: "250T Day For Night", color: "var(--blue)",    src: "../looks/250T Day For Night.jpg", base: BASE_IMG, filter: "",
+        desc: "A tungsten-balanced night stock: cool, moody, and built for day-for-night." },
+      { name: "Black and White",    color: "var(--ink-dim)", src: "../looks/Black and White.jpg",    base: BASE_IMG, filter: "",
+        desc: "A monochrome silver stock. Contrast and tonality with no dye color at all." }
+    ];
+
+    var img = document.getElementById("stockImg");
+    var sel = document.getElementById("stockSelect");
+    var sw = document.getElementById("swatches");
+    var badge = document.getElementById("stockBadge");
+    var dot = document.getElementById("stockDot");
+    var desc = document.getElementById("stockDesc");
+    var cmp = document.getElementById("compareBtn");
+    var liveTag = document.getElementById("liveTag");
+    if (!img || !sel) return;
+
+    var current = 0;
+
+    STOCKS.forEach(function (s, i) {
+      var o = document.createElement("option");
+      o.value = i; o.textContent = s.name; sel.appendChild(o);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.title = s.name;
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.style.background = "var(--bg-2)";
+      b.dataset.i = i;
+      b.addEventListener("click", function () { apply(i); });
+      sw.appendChild(b);
+    });
+
+    function paintSwatches() {
+      Array.prototype.forEach.call(sw.children, function (b, i) {
+        b.style.backgroundImage = "url(" + (STOCKS[i].src || BASE_IMG) + ")";
+        b.style.filter = STOCKS[i].src ? "none" : STOCKS[i].filter;
+        b.setAttribute("aria-pressed", i === current ? "true" : "false");
+      });
+    }
+
+    function apply(i) {
+      current = i;
+      var s = STOCKS[i];
+      if (s.src) {
+        img.src = s.src;
+        img.style.filter = "none";
+        if (liveTag) { liveTag.textContent = "Real export"; }
+      } else {
+        img.src = BASE_IMG;
+        img.style.filter = s.filter;
+        if (liveTag) { liveTag.textContent = "Live look sim"; }
+      }
+      badge.textContent = s.name;
+      dot.style.background = s.color;
+      desc.textContent = s.desc;
+      sel.value = i;
+      paintSwatches();
+    }
+
+    sel.addEventListener("change", function () { apply(parseInt(sel.value, 10)); });
+
+    function showOrig(on) {
+      var s = STOCKS[current];
+      if (on) {
+        if (s.base) { img.src = s.base; img.style.filter = "none"; }
+        else { img.src = BASE_IMG; img.style.filter = "saturate(0.4) contrast(0.82) brightness(1.08)"; }
+        cmp.classList.add("holding"); cmp.textContent = "Rec.709";
+      } else {
+        apply(current);
+        cmp.classList.remove("holding"); cmp.textContent = "Hold: Rec.709";
+      }
+    }
+    cmp.addEventListener("pointerdown", function (e) { e.preventDefault(); showOrig(true); });
+    cmp.addEventListener("pointerup", function () { showOrig(false); });
+    cmp.addEventListener("pointerleave", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+    cmp.addEventListener("pointercancel", function () { if (cmp.classList.contains("holding")) showOrig(false); });
+
+    apply(0);
+  })();
+
+  /* ============ BEFORE / AFTER SWIPE ============ */
+  (function () {
+    var nodes = document.querySelectorAll('[data-ba]');
+    nodes.forEach(function (el) {
+      var after = el.querySelector('.after');
+      var f = el.getAttribute('data-after-filter');
+      if (after && f) { after.style.filter = f; }
+      el.style.setProperty('--x', '50%');
+      var dragging = false;
+      function setFromEvent(e) {
+        var rect = el.getBoundingClientRect();
+        var cx = (e.touches ? e.touches[0].clientX : e.clientX);
+        var pct = ((cx - rect.left) / rect.width) * 100;
+        pct = Math.max(0, Math.min(100, pct));
+        el.style.setProperty('--x', pct + '%');
+      }
+      el.addEventListener('pointerdown', function (e) { dragging = true; el.setPointerCapture && el.setPointerCapture(e.pointerId); setFromEvent(e); });
+      el.addEventListener('pointermove', function (e) { if (dragging) setFromEvent(e); });
+      window.addEventListener('pointerup', function () { dragging = false; });
+    });
+  })();
+
+  /* ============ SCROLL REVEAL ============ */
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs>
+      <linearGradient id="d18g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d8455f" />
+        <stop offset="0.5" stop-color="#b154c9" />
+        <stop offset="1" stop-color="#5b78d6" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#d18g)" />
+    <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">PC</text>
+  </svg>
+</template>
+
+</body>
+</html>
