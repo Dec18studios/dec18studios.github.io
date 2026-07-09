@@ -644,8 +644,10 @@
           }
           list.innerHTML = html;
           // Beta-channel tools default to the newest release (prereleases included),
-          // since "latest" resolves server-side to the newest *stable* only.
-          if (isBeta && newestTag) selectVersion(dd, newestTag);
+          // since "latest" resolves server-side to the newest *stable* only. The
+          // download pins to the concrete tag, but the label reads "Latest (tag)"
+          // so it stays clear this IS the latest — it just happens to be a beta.
+          if (isBeta && newestTag) selectVersion(dd, newestTag, "Latest (" + newestTag + ")");
           onDone();
         })
         .catch(function () {
@@ -657,7 +659,7 @@
 
     // Apply a version selection to a row's dropdown + download button. Shared by
     // the dropdown click handler and the beta-channel auto-default.
-    function selectVersion(dd, version) {
+    function selectVersion(dd, version, label) {
       var btn = dd.querySelector(".ver-btn");
       var list = dd.querySelector(".ver-list");
       var slug = dd.getAttribute("data-slug");
@@ -667,7 +669,7 @@
           l.classList.toggle("sel", l.getAttribute("data-version") === version);
         });
       }
-      if (btn) btn.querySelector(".ver-label").textContent = version === "latest" ? "Latest" : version;
+      if (btn) btn.querySelector(".ver-label").textContent = label || (version === "latest" ? "Latest" : version);
       var drow = dd.closest(".drow");
       if (drow) {
         var dlBtn = drow.querySelector(".licdl");
