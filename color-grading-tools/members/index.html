@@ -634,10 +634,18 @@
           var html = '<li data-version="latest" class="sel">Latest</li>';
           var newestTag = null;
           if (Array.isArray(data)) {
+            // GitHub's /releases order is by created_at, which TIES when tags share
+            // a commit date (all our beta tags do) — so beta.10 can land below
+            // beta.9. Sort by published_at (actual release recency) so the newest
+            // release is genuinely first, both for the default pick and the list.
+            data.sort(function (a, b) {
+              return (Date.parse(b.published_at || b.created_at) || 0) -
+                     (Date.parse(a.published_at || a.created_at) || 0);
+            });
             data.forEach(function (r) {
               var tag = r.tag || r.tag_name;
               if (tag) {
-                if (!newestTag) newestTag = tag; // GitHub returns releases newest-first
+                if (!newestTag) newestTag = tag; // newest-first after the sort above
                 html += '<li data-version="' + esc(tag) + '">' + esc(tag) + '</li>';
               }
             });
