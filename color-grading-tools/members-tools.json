@@ -12,7 +12,8 @@
       "mac": "PhotoChemist_*_macOS_universal_portable.zip",
       "win": "PhotoChemist_*_windows_cuda_portable.zip",
       "linux": "PhotoChemist_*_linux_cuda_portable.zip"
-    }
+    },
+    "betaChannel": true
   },
   {
     "name": "Technically Technicolor DRT",
@@ -257,5 +258,20 @@
     "category": "Workflow",
     "repo": "IDT-Lut-Loaders-DCTL",
     "dlAsset": "IDT-Lut-Loaders-DCTL.zip"
+  },
+  {
+    "name": "Gradient Domain Grading Tools",
+    "slug": "gradientfield",
+    "tier": "pro",
+    "color": "green",
+    "desc": "Gradient-domain grading suite — halo-free local contrast (Field Sharpen), gradient-domain hue and saturation (Color Vector), and edge-aware selective grading (Color Slicer) in one GPU-accelerated bundle.",
+    "type": "OFX",
+    "category": "Color Grading",
+    "repo": "GradientField-OFX",
+    "proxyAsset": {
+      "mac": "GradientField_*_macOS_universal_portable.zip",
+      "win": "GradientField_*_windows_cuda_portable.zip",
+      "linux": "GradientField_*_linux_cuda_portable.zip"
+    }
   }
 ]

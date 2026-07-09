@@ -179,5 +179,14 @@
     "desc": "Load camera decodes to linear or intermediate per-clip in the LUT slot — freeing up Groups for other uses.",
     "repo": "IDT-Lut-Loaders-DCTL",
     "dlUrl": "https://github.com/Dec18studios/IDT-Lut-Loaders-DCTL/releases/latest/download/IDT-Lut-Loaders-DCTL.zip"
+  },
+  {
+    "name": "Gradient Domain Grading Tools",
+    "slug": "gradientfield",
+    "tier": "pro",
+    "color": "green",
+    "desc": "Gradient-domain grading suite — halo-free local contrast (Field Sharpen), gradient-domain hue and saturation (Color Vector), and edge-aware selective grading (Color Slicer) in one GPU-accelerated bundle.",
+    "url": "https://dec18studios.com/gradientfield",
+    "repo": "GradientField-OFX"
   }
 ]

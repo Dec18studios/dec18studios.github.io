@@ -537,7 +537,7 @@
       // Version dropdown — lazy-loads release list on first open
       var CHEV = '<svg class="ver-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
       var verSel = t.repo
-        ? '<div class="ver-dd" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo) + '" data-free="' + (free ? '1' : '0') + '">'
+        ? '<div class="ver-dd" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo) + '" data-free="' + (free ? '1' : '0') + '" data-beta="' + (t.betaChannel ? '1' : '0') + '">'
           + '<button class="ver-btn" type="button" aria-expanded="false" aria-haspopup="listbox">'
           + '<span class="ver-label">Latest</span>' + CHEV + '</button>'
           + '<ul class="ver-list" role="listbox"></ul></div>'
@@ -598,6 +598,7 @@
       });
       wireRows();
       revealAll();
+      tryInitBeta();
     }
 
     function revealAll() {
@@ -625,18 +626,26 @@
           + "/v1/Dec18studios/" + encodeURIComponent(repo) + "/releases?token=" + encodeURIComponent(token);
       }
 
+      var isBeta = dd.getAttribute("data-beta") === "1";
       fetch(url)
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) {
           _loadedVersions[slug] = true;
           var html = '<li data-version="latest" class="sel">Latest</li>';
+          var newestTag = null;
           if (Array.isArray(data)) {
             data.forEach(function (r) {
               var tag = r.tag || r.tag_name;
-              if (tag) html += '<li data-version="' + esc(tag) + '">' + esc(tag) + '</li>';
+              if (tag) {
+                if (!newestTag) newestTag = tag; // GitHub returns releases newest-first
+                html += '<li data-version="' + esc(tag) + '">' + esc(tag) + '</li>';
+              }
             });
           }
           list.innerHTML = html;
+          // Beta-channel tools default to the newest release (prereleases included),
+          // since "latest" resolves server-side to the newest *stable* only.
+          if (isBeta && newestTag) selectVersion(dd, newestTag);
           onDone();
         })
         .catch(function () {
@@ -645,6 +654,57 @@
           onDone();
         });
     }
+
+    // Apply a version selection to a row's dropdown + download button. Shared by
+    // the dropdown click handler and the beta-channel auto-default.
+    function selectVersion(dd, version) {
+      var btn = dd.querySelector(".ver-btn");
+      var list = dd.querySelector(".ver-list");
+      var slug = dd.getAttribute("data-slug");
+      var repo = dd.getAttribute("data-repo");
+      if (list) {
+        list.querySelectorAll("li").forEach(function (l) {
+          l.classList.toggle("sel", l.getAttribute("data-version") === version);
+        });
+      }
+      if (btn) btn.querySelector(".ver-label").textContent = version === "latest" ? "Latest" : version;
+      var drow = dd.closest(".drow");
+      if (drow) {
+        var dlBtn = drow.querySelector(".licdl");
+        if (dlBtn) dlBtn.setAttribute("data-version", version);
+        var a = drow.querySelector(".freedl");
+        if (a) {
+          if (version === "latest") {
+            var tool = TOOLS.find(function (t) { return t.slug === slug; });
+            a.href = (tool && publicDl(tool)) || "#";
+          } else {
+            a.href = "https://github.com/Dec18studios/" + encodeURIComponent(repo) + "/releases/tag/" + encodeURIComponent(version);
+          }
+        }
+      }
+    }
+
+    // Beta-channel defaults need the member token (to list premium releases). The
+    // token is injected by the Squarespace page code after this script runs, on no
+    // fixed schedule — so kick off once now, again on the d18m:ready handoff, and
+    // poll briefly as a fallback until each beta tool resolves (then stop).
+    function initBetaChannels() {
+      document.querySelectorAll('.ver-dd[data-beta="1"]').forEach(function (dd) {
+        var isFree = dd.getAttribute("data-free") === "1";
+        if (!isFree && !window.MEMBER_TOKEN) return; // wait for token
+        fetchVersions(dd, function () {});
+      });
+    }
+    var _betaTries = 0;
+    function tryInitBeta() {
+      initBetaChannels();
+      var pending = Array.prototype.some.call(
+        document.querySelectorAll('.ver-dd[data-beta="1"]'),
+        function (dd) { return !_loadedVersions[dd.getAttribute("data-slug")]; }
+      );
+      if (pending && _betaTries++ < 40) setTimeout(tryInitBeta, 500);
+    }
+    document.addEventListener("d18m:ready", tryInitBeta);
 
     function closeAllDropdowns() {
       document.querySelectorAll(".ver-list.open").forEach(function (l) {
@@ -674,28 +734,7 @@
         list.addEventListener("click", function (e) {
           var li = e.target.closest("li[data-version]");
           if (!li) return;
-          var version = li.getAttribute("data-version");
-          var slug = dd.getAttribute("data-slug");
-          var repo = dd.getAttribute("data-repo");
-
-          list.querySelectorAll("li").forEach(function (l) { l.classList.remove("sel"); });
-          li.classList.add("sel");
-          btn.querySelector(".ver-label").textContent = version === "latest" ? "Latest" : version;
-
-          var drow = dd.closest(".drow");
-          if (drow) {
-            var dlBtn = drow.querySelector(".licdl");
-            if (dlBtn) dlBtn.setAttribute("data-version", version);
-            var a = drow.querySelector(".freedl");
-            if (a) {
-              if (version === "latest") {
-                var tool = TOOLS.find(function (t) { return t.slug === slug; });
-                a.href = (tool && publicDl(tool)) || "#";
-              } else {
-                a.href = "https://github.com/Dec18studios/" + encodeURIComponent(repo) + "/releases/tag/" + encodeURIComponent(version);
-              }
-            }
-          }
+          selectVersion(dd, li.getAttribute("data-version"));
           closeAllDropdowns();
         });
       });
