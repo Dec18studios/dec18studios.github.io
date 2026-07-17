@@ -537,7 +537,7 @@
       // Version dropdown — lazy-loads release list on first open
       var CHEV = '<svg class="ver-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
       var verSel = t.repo
-        ? '<div class="ver-dd" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo) + '" data-free="' + (free ? '1' : '0') + '" data-beta="' + (t.betaChannel ? '1' : '0') + '">'
+        ? '<div class="ver-dd" data-slug="' + esc(t.slug) + '" data-repo="' + esc(t.repo) + '" data-free="' + (free ? '1' : '0') + '" data-beta="' + (t.betaChannel ? '1' : '0') + '"' + (t.tagFilter ? ' data-tagfilter="' + esc(t.tagFilter) + '"' : '') + '>'
           + '<button class="ver-btn" type="button" aria-expanded="false" aria-haspopup="listbox">'
           + '<span class="ver-label">Latest</span>' + CHEV + '</button>'
           + '<ul class="ver-list" role="listbox"></ul></div>'
@@ -627,12 +627,23 @@
       }
 
       var isBeta = dd.getAttribute("data-beta") === "1";
+      // Per-row tag filter (regex on tag names). Two tools can share ONE release
+      // repo split by release line — e.g. PhotoChemist 2.x (^v2\.) and
+      // PhotoChemist 3.0 Beta (^v3\.) both live in PhotoChemist-OFX. Without the
+      // filter, the other line's tags pollute this row's dropdown and its
+      // downloads 404 against this row's asset glob.
+      var tagRe = null;
+      try {
+        var tf = dd.getAttribute("data-tagfilter");
+        if (tf) tagRe = new RegExp(tf);
+      } catch (e) { /* bad pattern -> no filtering */ }
       fetch(url)
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) {
           _loadedVersions[slug] = true;
-          var html = '<li data-version="latest" class="sel">Latest</li>';
           var newestTag = null;
+          var anyStable = false;
+          var items = '';
           if (Array.isArray(data)) {
             // GitHub's /releases order is by created_at, which TIES when tags share
             // a commit date (all our beta tags do) — so beta.10 can land below
@@ -644,13 +655,20 @@
             });
             data.forEach(function (r) {
               var tag = r.tag || r.tag_name;
-              if (tag) {
+              if (tag && (!tagRe || tagRe.test(tag))) {
                 if (!newestTag) newestTag = tag; // newest-first after the sort above
-                html += '<li data-version="' + esc(tag) + '">' + esc(tag) + '</li>';
+                if (!r.prerelease) anyStable = true;
+                items += '<li data-version="' + esc(tag) + '">' + esc(tag) + '</li>';
               }
             });
           }
-          list.innerHTML = html;
+          // "latest" resolves SERVER-side to the newest stable release in the whole
+          // repo. For a row whose release line has no stable yet (PhotoChemist 3.0
+          // Beta: every v3 release is a prerelease), that would fetch the OTHER
+          // line's stable and 404 against this row's asset glob — pin the Latest
+          // entry to the newest matching tag instead.
+          var latestVer = (!anyStable && newestTag) ? newestTag : "latest";
+          list.innerHTML = '<li data-version="' + esc(latestVer) + '" class="sel">Latest</li>' + items;
           // Beta-channel tools default to the newest release (prereleases included),
           // since "latest" resolves server-side to the newest *stable* only. The
           // download pins to the concrete tag, but the label reads "Latest (tag)"
