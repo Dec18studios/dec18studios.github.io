@@ -13,7 +13,25 @@
       "win": "PhotoChemist_*_windows_cuda_portable.zip",
       "linux": "PhotoChemist_*_linux_cuda_portable.zip"
     },
-    "betaChannel": true
+    "betaChannel": true,
+    "tagFilter": "^v2\\."
+  },
+  {
+    "name": "PhotoChemist 3.0 Beta",
+    "slug": "photochemist-3-beta",
+    "tier": "pro",
+    "color": "red",
+    "desc": "PhotoChemist 3.0 public beta — next-gen spectral film engine, installs alongside 2.x.",
+    "type": "OFX",
+    "category": "Film Emulation",
+    "repo": "PhotoChemist-OFX",
+    "proxyAsset": {
+      "mac": "PhotoChemist3Beta-macOS.zip",
+      "win": "PhotoChemist3Beta-windows-cuda.zip",
+      "linux": "PhotoChemist3Beta-linux-cuda.zip"
+    },
+    "betaChannel": true,
+    "tagFilter": "^v3\\."
   },
   {
     "name": "Technically Technicolor DRT",
