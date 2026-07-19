@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pricing · The Tool Box · Dec. 18 Studios</title>
+<meta name="description" content="One price for the whole Tool Box. A one-time purchase plus a year of updates. Updates are optional after that, and whatever you've paid for keeps running." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        oklch(0.165 0.012 264);
+    --bg-1:      oklch(0.195 0.013 264);
+    --bg-2:      oklch(0.225 0.014 264);
+    --bg-3:      oklch(0.255 0.015 264);
+    --line:      oklch(0.32 0.013 264);
+    --line-soft: oklch(0.27 0.012 264);
+
+    --ink:       oklch(0.95 0.006 264);
+    --ink-dim:   oklch(0.72 0.010 264);
+    --ink-faint: oklch(0.55 0.010 264);
+
+    --red:     oklch(0.64 0.205 25);
+    --yellow:  oklch(0.84 0.150 92);
+    --green:   oklch(0.74 0.165 148);
+    --cyan:    oklch(0.80 0.110 200);
+    --blue:    oklch(0.62 0.165 262);
+    --magenta: oklch(0.65 0.205 332);
+
+    --maxw: 1180px;
+    --pad: clamp(20px, 5vw, 64px);
+
+    --sans: "Hanken Grotesk", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
+  }
+  ::selection { background: oklch(0.64 0.205 25 / 0.35); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ============ TOP BAR ============ */
+  header.topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
+    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
+  }
+  .topbar .row {
+    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand .logo {
+    display: block;
+    height: clamp(44px, 5.2vw, 58px);
+    aspect-ratio: 862 / 380;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
+    -webkit-mask: url("../assets/logo-full.png") left center / contain no-repeat;
+            mask: url("../assets/logo-full.png") left center / contain no-repeat;
+  }
+
+  nav.toplinks { display: flex; gap: 30px; align-items: center; }
+  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
+  nav.toplinks a:hover { color: var(--ink); }
+  nav.toplinks a.current { color: var(--ink); }
+  nav.toplinks a.cta {
+    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
+    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
+  }
+  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
+  @media (max-width: 880px) {
+    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
+    nav.toplinks {
+      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px; scrollbar-width: none;
+    }
+    nav.toplinks::-webkit-scrollbar { display: none; }
+    nav.toplinks a { white-space: nowrap; font-size: 13px; }
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    font-family: var(--sans); font-weight: 600; font-size: 15px;
+    padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+    color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: oklch(0.86 0.006 264); }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding-top: clamp(46px, 7vw, 92px); padding-bottom: clamp(30px, 4vw, 56px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: -22%; right: -12%; width: 720px; height: 720px;
+    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
+    border-radius: 50%; filter: blur(150px); opacity: 0.12; pointer-events: none; z-index: 0;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  h1.title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 6.6vw, 82px); line-height: 0.98; letter-spacing: -0.02em; margin: 20px 0 0;
+    max-width: 15ch;
+  }
+  h1.title em {
+    font-style: normal;
+    background: linear-gradient(96deg, var(--red), var(--magenta) 32%, var(--blue) 58%, var(--cyan) 80%, var(--green));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .lede { margin-top: 26px; font-size: clamp(18px, 2.1vw, 22px); color: var(--ink-dim); max-width: 54ch; text-wrap: pretty; }
+  .lede strong { color: var(--ink); font-weight: 700; }
+
+  /* ============ LAYOUT ============ */
+  .body-grid {
+    display: grid; grid-template-columns: 1.35fr 0.65fr; gap: clamp(32px, 5vw, 64px);
+    align-items: start; padding-bottom: clamp(56px, 8vw, 104px);
+  }
+  @media (max-width: 900px) { .body-grid { grid-template-columns: 1fr; } }
+
+  .story > * + * { margin-top: clamp(26px, 3.4vw, 40px); }
+  .block h2 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(23px, 3vw, 30px);
+    letter-spacing: -0.01em; line-height: 1.1; margin-bottom: 12px;
+  }
+  .block p { color: var(--ink-dim); max-width: 62ch; text-wrap: pretty; }
+  .block p + p { margin-top: 14px; }
+  .block p strong { color: var(--ink); font-weight: 600; }
+  .accent { color: var(--cyan); font-weight: 600; }
+  .amt-inline { font-family: var(--mono); color: var(--ink); font-weight: 600; }
+
+  .callout {
+    border-left: 2px solid var(--line); padding: 4px 0 4px 22px;
+  }
+  .callout p { font-size: clamp(18px, 2vw, 21px); color: var(--ink); font-family: var(--display); font-weight: 500; line-height: 1.35; max-width: 40ch; }
+
+  /* ============ PRICE CARD (sticky) ============ */
+  .rail { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 18px; }
+  @media (max-width: 900px) { .rail { position: static; } }
+  .price-card {
+    background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line);
+    border-radius: 18px; padding: 26px 24px;
+  }
+  .price-card .plan { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 12px; }
+  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: 48px; letter-spacing: -0.02em; }
+  .price-card .amt span { color: var(--ink-faint); font-size: 15px; }
+  .price-card .sub { margin-top: 8px; color: var(--ink-dim); font-size: 14.5px; }
+  .price-list { list-style: none; margin: 20px 0; display: flex; flex-direction: column; gap: 11px; }
+  .price-list li { position: relative; padding-left: 26px; color: var(--ink-dim); font-size: 14.5px; line-height: 1.45; }
+  .price-list li::before {
+    content: ""; position: absolute; left: 0; top: 7px; width: 12px; height: 12px; border-radius: 50%;
+    background: linear-gradient(120deg, var(--cyan), var(--green)); opacity: 0.9;
+  }
+  .price-card .btn { width: 100%; justify-content: center; }
+  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+
+  /* ============ CTA STRIP ============ */
+  .cta-strip { border-top: 1px solid var(--line-soft); padding-block: clamp(48px, 7vw, 84px); }
+  .cta-strip h2 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 46px); letter-spacing: -0.02em; line-height: 1.02; }
+  .cta-strip p { margin-top: 16px; color: var(--ink-dim); max-width: 52ch; font-size: 18px; }
+  .cta-strip .row { margin-top: 26px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
+  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
+  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
+  footer .fcol a:hover { color: var(--ink); }
+  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
+  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .legal a.link { color: var(--cyan); }
+</style>
+</head>
+
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" target="_top" aria-label="Dec. 18 Studios, home">
+      <span class="logo"></span>
+    </a>
+    <nav class="toplinks">
+      <a href="../">All tools</a>
+      <a href="../#free-tools">Free tools</a>
+      <a href="./" class="current">Pricing</a>
+      <a href="https://dec18studios.com/account/digital-products" target="_top">Account</a>
+      <a href="https://dec18studios.com/clients?join=1" target="_top" class="cta">Get it · $47.34</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <p class="eyebrow">Pricing · own your tools</p>
+    <h1 class="title">One price. Every tool. <em>Yours to keep.</em></h1>
+    <p class="lede">The whole Tool Box is <strong>$47.34</strong>. That's every premium DCTL and OFX plugin on the channel, plus a full year of updates, new tools, and actual human support. That's us.</p>
+  </div>
+</section>
+
+<!-- ============ BODY ============ -->
+<section class="wrap">
+  <div class="body-grid">
+
+    <div class="story">
+      <div class="block">
+        <h2>A year of updates, not a leash</h2>
+        <p>That <span class="amt-inline">$47.34</span> is a one-time purchase. You get everything in the Tool Box today, and every update, new tool, and new release we ship over the next year.</p>
+        <p>After year one, updates are optional at <span class="amt-inline">$47.34</span>/year. You decide whether the new tools, new features, and new DaVinci Resolve support are worth it. If you stop, the tools don't. Everything you already have keeps running exactly as it did with your last update.</p>
+        <p>Pick updates back up whenever you like. <strong>No penalties, no re-buying, no lapse fees.</strong> Resume where you left off.</p>
+      </div>
+
+      <div class="block">
+        <h2>Your price is yours</h2>
+        <p>The price may go up for new members down the road. It will not go up for you. The day you join, your rate locks in and stays locked, even if you step away for a year or two and come back.</p>
+      </div>
+
+      <div class="block">
+        <h2>Owning beats renting</h2>
+        <p>Most tools like these are a subscription. Miss a payment and they stop, mid-project, mid-timeline, and everything you built with them goes dark until you pay again.</p>
+        <p>The Tool Box works the other way around. You buy in once. Updates are optional. And <strong>whatever you've paid for keeps running</strong>, on your machine, for as long as you want it. Three years of grading might cost you $47.34 or $142.02, depending on how many years of updates you choose. Whatever you've paid for, you keep.</p>
+      </div>
+
+      <div class="callout">
+        <p>Color is never just forward. Some months you're deep in a project, some months you're not cutting at all. Sometimes you open a piece from years ago and want to regrade it, a different mood, a different intention. Reaching for the exact tool you made those looks with, years later, and finding it still there, still working: that's what owning your tools means.</p>
+      </div>
+
+      <div class="block">
+        <p>The same way you've invested in your camera, your lenses, your monitor and your rig, we want the Tool Box to be another tool in your kit. One that helps you make images worth looking at.</p>
+      </div>
+    </div>
+
+    <!-- ============ STICKY PRICE CARD ============ -->
+    <aside class="rail">
+      <div class="price-card">
+        <div class="plan">Happy Little Noders</div>
+        <div class="amt"><b>$47.34</b><span>to start</span></div>
+        <p class="sub">Every premium tool on the channel, plus a year of updates.</p>
+        <ul class="price-list">
+          <li>Every premium DCTL &amp; OFX plugin</li>
+          <li>A full year of updates &amp; new releases</li>
+          <li>Updates optional after year one at $47.34/year</li>
+          <li>Stop anytime, your tools keep running</li>
+          <li>Resume anytime, no penalties</li>
+          <li>Your price locked in, even after time off</li>
+        </ul>
+        <a class="btn primary" href="https://dec18studios.com/clients?join=1" target="_top">Get the Tool Box →</a>
+        <div class="price-foot">One purchase · updates optional · yours to keep</div>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ============ CTA STRIP ============ -->
+<section class="cta-strip">
+  <div class="wrap">
+    <h2>Buy it once. Keep it for good.</h2>
+    <p>Plenty of the Tool Box is free, always. Grab the Tool Box Manager and start playing today, and unlock the premium kit whenever you're ready.</p>
+    <div class="row">
+      <a class="btn primary" href="https://dec18studios.com/clients?join=1" target="_top">Get the Tool Box · $47.34 →</a>
+      <a class="btn" href="../">Browse all the tools →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../">Color Grading Tools</a>
+        <a href="../photochemist/">Photo Chemist</a>
+        <a href="../technicolordrt/">Technicolor DRT</a>
+        <a href="../color-slicer/">Color Slicer</a>
+        <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_top" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_top" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_top" rel="noopener">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
