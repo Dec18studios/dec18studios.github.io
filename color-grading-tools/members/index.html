@@ -617,13 +617,20 @@
       list.innerHTML = '<li class="ver-loading">Loading…</li>';
 
       var url;
+      var fetchOpts = {};
       if (isFree) {
         url = "https://api.github.com/repos/Dec18studios/" + encodeURIComponent(repo) + "/releases";
       } else {
         var token = window.MEMBER_TOKEN;
         if (!token) { list.innerHTML = '<li class="ver-loading sel">Latest</li>'; onDone(); return; }
         url = (window.PROXY_URL || "https://dec18-download-proxy.dec18studios.workers.dev")
-          + "/v1/Dec18studios/" + encodeURIComponent(repo) + "/releases?token=" + encodeURIComponent(token);
+          + "/v1/Dec18studios/" + encodeURIComponent(repo) + "/releases";
+        // Send the licence key as a HEADER, never in the URL. An XHR can do
+        // this (a top-level download navigation cannot — see
+        // requestLicensedDownload, which uses a short-lived grant instead).
+        // A key in a query string leaks into history, referrers and any
+        // copy-pasted link, and it is a live credential for the whole catalogue.
+        fetchOpts.headers = { "X-License-Token": token };
       }
 
       var isBeta = dd.getAttribute("data-beta") === "1";
@@ -637,7 +644,7 @@
         var tf = dd.getAttribute("data-tagfilter");
         if (tf) tagRe = new RegExp(tf);
       } catch (e) { /* bad pattern -> no filtering */ }
-      fetch(url)
+      fetch(url, fetchOpts)
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) {
           _loadedVersions[slug] = true;
@@ -813,11 +820,42 @@
         return;
       }
       var version = info.version || "latest";
-      var url = proxy + "/v1/Dec18studios/" + encodeURIComponent(info.repo)
-        + "/releases/download/" + encodeURIComponent(version) + "/" + encodeURIComponent(assetPattern)
-        + "?token=" + encodeURIComponent(token);
       toast("Starting download…");
-      window.location.href = url;
+
+      // A download is a top-level navigation, so it cannot carry an
+      // Authorization header — which is why the raw licence key used to ride
+      // along in ?token=. Instead, ask the proxy (via an XHR, which CAN set
+      // headers) for a short-lived grant: an opaque blob bound to this one
+      // repo+tag+asset that expires in minutes. Leaking that URL leaks one
+      // download of one file; leaking a ?token= URL leaked the entire
+      // catalogue, permanently.
+      fetch(proxy + "/v1/grant"
+              + "?repo=" + encodeURIComponent(info.repo)
+              + "&tag=" + encodeURIComponent(version)
+              + "&asset=" + encodeURIComponent(assetPattern),
+            { headers: { "X-License-Token": token } })
+        .then(function (r) {
+          if (r.ok) return r.json();
+          // 401/403/429 are real answers — surface them. 400/404/5xx means the
+          // proxy predates grants, so fall back to the legacy URL rather than
+          // breaking downloads mid-deploy.
+          if (r.status === 401 || r.status === 403 || r.status === 429) {
+            return r.json().catch(function () { return {}; }).then(function (e) {
+              var err = new Error(e.error || "Download not permitted");
+              err.final = true;
+              throw err;
+            });
+          }
+          throw new Error("grant endpoint unavailable (" + r.status + ")");
+        })
+        .then(function (g) { window.location.href = g.url; })
+        .catch(function (err) {
+          if (err && err.final) { toast(err.message); return; }
+          console.warn("[requestLicensedDownload] grant unavailable, using legacy URL:", err);
+          window.location.href = proxy + "/v1/Dec18studios/" + encodeURIComponent(info.repo)
+            + "/releases/download/" + encodeURIComponent(version) + "/" + encodeURIComponent(assetPattern)
+            + "?token=" + encodeURIComponent(token);
+        });
     };
 
     function setOS(os) {
