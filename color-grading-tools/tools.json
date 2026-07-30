@@ -9,11 +9,11 @@
     "demo": true
   },
   {
-    "name": "PhotoChemist 3.0 Beta",
+    "name": "PhotoChemist 3.0",
     "slug": "photochemist-3-beta",
     "tier": "pro",
     "color": "red",
-    "desc": "PhotoChemist 3.0 public beta — next-gen spectral film engine, installs alongside 2.x.",
+    "desc": "Next-generation spectral film engine — installs alongside PhotoChemist 2.x.",
     "url": "photochemist/"
   },
   {
@@ -186,7 +186,7 @@
     "color": "cyan",
     "desc": "Load camera decodes to linear or intermediate per-clip in the LUT slot — freeing up Groups for other uses.",
     "repo": "IDT-Lut-Loaders-DCTL",
-    "dlUrl": "https://github.com/Dec18studios/IDT-Lut-Loaders-DCTL/releases/latest/download/IDT-Lut-Loaders-DCTL.zip"
+    "dlUrl": "https://github.com/Dec18studios/IDT-Lut-Loaders-DCTL/releases/latest/download/IDT-Lut-Loaders-DCTL-v1.1.zip"
   },
   {
     "name": "Gradient Domain Grading Tools",
