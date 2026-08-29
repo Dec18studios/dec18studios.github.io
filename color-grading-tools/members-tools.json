@@ -240,6 +240,7 @@
     "slug": "dolby-vision",
     "tier": "free",
     "color": "magenta",
+    "url": "dolby-vision/",
     "desc": "Preview a Dolby Vision-style trim without the full pipeline.",
     "type": "DCTL",
     "category": "Workflow",

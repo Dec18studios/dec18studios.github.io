@@ -158,6 +158,7 @@
     "slug": "dolby-vision",
     "tier": "free",
     "color": "magenta",
+    "url": "dolby-vision/",
     "desc": "Preview a Dolby Vision-style trim without the full pipeline.",
     "repo": "Dolby-Vision-Spoofer-DCTL",
     "dlUrl": "https://github.com/Dec18studios/Dolby-Vision-Spoofer-DCTL/releases/latest/download/Dolby-Vision-Spoofer-v1.0.0.zip"
