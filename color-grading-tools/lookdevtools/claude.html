@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Grade with an agent · Look Dev Tools — Dec. 18 Studios</title>
+<meta name="description" content="How to drive Look Dev Tools from an AI agent session running next to DaVinci Resolve: the three layers, the one time setup, and the prompts to start from." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:oklch(0.165 0.012 264);--bg-1:oklch(0.195 0.013 264);--bg-2:oklch(0.225 0.014 264);--bg-3:oklch(0.255 0.015 264);
+  --line:oklch(0.32 0.013 264);--line-soft:oklch(0.27 0.012 264);
+  --ink:oklch(0.95 0.006 264);--ink-dim:oklch(0.72 0.010 264);--ink-faint:oklch(0.55 0.010 264);
+  --red:oklch(0.64 0.205 25);--yellow:oklch(0.84 0.150 92);--green:oklch(0.74 0.165 148);
+  --cyan:oklch(0.80 0.110 200);--blue:oklch(0.62 0.165 262);--magenta:oklch(0.65 0.205 332);
+  --red-d:oklch(0.64 0.205 25 / 0.16);--yellow-d:oklch(0.84 0.150 92 / 0.16);--green-d:oklch(0.74 0.165 148 / 0.16);
+  --cyan-d:oklch(0.80 0.110 200 / 0.16);--blue-d:oklch(0.62 0.165 262 / 0.18);--magenta-d:oklch(0.65 0.205 332 / 0.16);
+  --maxw:1180px;--pad:clamp(20px,5vw,64px);
+  --sans:"Hanken Grotesk",system-ui,sans-serif;--display:"Bricolage Grotesque",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+::selection{background:oklch(0.62 0.165 262 / 0.4)}
+a{color:inherit;text-decoration:none}
+a:hover{color:var(--ink)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-faint)}
+header.topbar{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:oklch(0.165 0.012 264 / 0.82);border-bottom:1px solid var(--line-soft)}
+.topbar .row{max-width:var(--maxw);margin:0 auto;padding:16px var(--pad);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center}
+.brand .logo{display:block;height:clamp(44px,5.2vw,58px);aspect-ratio:862/380;background:linear-gradient(96deg,var(--red),var(--magenta) 30%,var(--blue) 54%,var(--cyan) 76%,var(--green));-webkit-mask:url("../assets/logo-full.png") left center / contain no-repeat;mask:url("../assets/logo-full.png") left center / contain no-repeat}
+nav.toplinks{display:flex;gap:30px;align-items:center}
+nav.toplinks a{font-size:15.5px;color:var(--ink-dim);font-weight:500;transition:color 0.18s}
+nav.toplinks a:hover,nav.toplinks a.current{color:var(--ink)}
+nav.toplinks a.cta{color:var(--bg);background:var(--ink);border:1px solid var(--ink);font-weight:600;border-radius:8px;padding:8px 15px;transition:all 0.18s;white-space:nowrap}
+nav.toplinks a.cta:hover{background:oklch(0.86 0.006 264);color:var(--bg)}
+@media (max-width:880px){.topbar .row{flex-wrap:wrap;row-gap:10px;padding-bottom:10px}nav.toplinks{order:3;width:100%;gap:20px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;scrollbar-width:none}nav.toplinks::-webkit-scrollbar{display:none}nav.toplinks a{white-space:nowrap;font-size:13px}}
+.hero{position:relative;padding-top:clamp(44px,6vw,80px);padding-bottom:clamp(34px,4.5vw,58px);overflow:hidden}
+.hero-glow{position:absolute;top:-22%;right:-12%;width:720px;height:720px;background:conic-gradient(from 0deg,var(--blue),var(--cyan),var(--green),var(--yellow),var(--magenta),var(--blue));border-radius:50%;filter:blur(140px);opacity:0.12;pointer-events:none;z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.backlink{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:0.08em;color:var(--cyan);border:1px solid oklch(0.80 0.110 200 / 0.35);background:var(--cyan-d);border-radius:99px;padding:7px 14px;transition:all 0.18s}
+.backlink:hover{border-color:var(--cyan);color:var(--cyan)}
+h1.hero-title{font-family:var(--display);font-weight:700;font-size:clamp(40px,6.4vw,78px);line-height:0.98;letter-spacing:-0.025em;margin:22px 0 0}
+h1.hero-title em{font-style:normal;background:linear-gradient(96deg,var(--blue),var(--cyan) 55%,var(--green));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{margin-top:22px;font-size:clamp(17px,2vw,21px);color:var(--ink-dim);max-width:56ch;text-wrap:pretty}
+.lede{margin-top:26px;max-width:70ch;border-left:2px solid var(--blue);padding-left:22px;color:var(--ink-dim);font-size:clamp(16px,1.7vw,18px);text-wrap:pretty}
+.lede strong{color:var(--ink);font-weight:600}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{font-family:var(--sans);font-weight:600;font-size:15px;padding:12px 20px;border-radius:10px;border:1px solid var(--line);color:var(--ink);background:var(--bg-2);cursor:pointer;transition:all 0.18s;display:inline-flex;align-items:center;gap:9px}
+.btn:hover{background:var(--bg-3);border-color:oklch(0.42 0.013 264);color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{background:oklch(0.86 0.006 264);color:var(--bg)}
+.shell{display:grid;grid-template-columns:224px minmax(0,1fr);gap:clamp(28px,4vw,54px);align-items:start;padding-top:clamp(20px,3vw,34px)}
+@media (max-width:940px){.shell{grid-template-columns:minmax(0,1fr);gap:0}}
+.toc{position:sticky;top:104px;border-left:1px solid var(--line-soft);padding-left:18px}
+.toc .th{font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+.toc a{display:block;font-size:14px;color:var(--ink-faint);padding:6px 0;transition:color 0.16s;line-height:1.35}
+.toc a:hover{color:var(--ink-dim)}
+.toc a.on{color:var(--ink);font-weight:600}
+@media (max-width:940px){.toc{position:sticky;top:0;z-index:40;border-left:none;border-bottom:1px solid var(--line-soft);padding:0;margin-bottom:14px;background:oklch(0.165 0.012 264 / 0.94);backdrop-filter:blur(12px)}.toc .th{display:none}.toc .tl{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;padding:12px 0}.toc .tl::-webkit-scrollbar{display:none}.toc a{white-space:nowrap;font-size:13px;font-family:var(--mono);letter-spacing:0.03em}}
+.doc section{padding-block:clamp(44px,5.5vw,76px);border-top:1px solid var(--line-soft);scroll-margin-top:96px}
+.doc section:first-child{border-top:none;padding-top:0}
+.doc h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,4vw,44px);letter-spacing:-0.022em;line-height:1.03;margin-top:12px}
+.doc h3{font-family:var(--display);font-weight:700;font-size:clamp(20px,2.4vw,26px);letter-spacing:-0.015em;margin-top:38px}
+.doc section > p,.doc .body p{margin-top:16px;color:var(--ink-dim);font-size:clamp(16px,1.7vw,18px);text-wrap:pretty;max-width:72ch}
+.doc p strong{color:var(--ink);font-weight:600}
+.doc p code,.doc li code,.doc dd code{font-family:var(--mono);font-size:0.86em;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:6px;padding:2px 7px;color:var(--cyan);word-break:break-word}
+.doc a.inline{color:var(--cyan);border-bottom:1px solid oklch(0.80 0.110 200 / 0.4)}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+@media (max-width:900px){.cards3{grid-template-columns:1fr}}
+.lcard{--accent:var(--blue);--accent-d:var(--blue-d);background:var(--bg-1);border:1px solid var(--line-soft);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:border-color 0.18s,transform 0.18s}
+.lcard:hover{border-color:var(--line);transform:translateY(-2px)}
+.lcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.lcard .n{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.lcard h4{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.012em;margin-top:10px}
+.lcard p{margin-top:10px;font-size:14.5px;color:var(--ink-dim);line-height:1.55;text-wrap:pretty}
+.callout{margin-top:28px;border-radius:16px;padding:22px 24px;background:var(--accent-d,var(--cyan-d));position:relative;overflow:hidden}
+.callout::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--cyan))}
+.callout .k{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent,var(--cyan));font-weight:600}
+.callout p{margin-top:9px;font-size:15.5px;color:var(--ink);line-height:1.6;max-width:72ch;text-wrap:pretty}
+.callout p+p{margin-top:12px}
+.note{--accent:var(--yellow);--accent-d:var(--yellow-d)}
+.checks{list-style:none;display:grid;gap:12px;margin-top:26px}
+.checks li{display:grid;grid-template-columns:auto 1fr;gap:13px;align-items:start;background:var(--bg-1);border:1px solid var(--line-soft);border-radius:13px;padding:16px 18px;font-size:15px;color:var(--ink-dim);text-wrap:pretty}
+.checks li::before{content:"✓";font-family:var(--mono);font-weight:700;color:var(--green);line-height:1.5}
+.checks li b{color:var(--ink);font-weight:600}
+.steps{display:grid;gap:14px;counter-reset:step;margin-top:28px}
+.step{background:var(--bg-1);border:1px solid var(--line-soft);border-radius:15px;padding:20px 22px}
+.step .sh{display:grid;grid-template-columns:auto 1fr;gap:15px;align-items:center}
+.step .n{counter-increment:step;font-family:var(--mono);font-weight:600;font-size:13px;color:var(--blue);width:30px;height:30px;border-radius:8px;border:1px solid oklch(0.62 0.165 262 / 0.45);background:var(--blue-d);display:grid;place-items:center;flex:none}
+.step .n::before{content:counter(step,decimal-leading-zero)}
+.step .sh b{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-0.01em}
+.step .body{padding-left:45px}
+@media (max-width:600px){.step .body{padding-left:0;margin-top:12px}}
+.step .body p{font-size:15px;margin-top:12px;max-width:70ch}
+.olist{list-style:none;counter-reset:o;display:grid;gap:12px;margin-top:26px}
+.olist li{counter-increment:o;display:grid;grid-template-columns:auto 1fr;gap:15px;align-items:start;background:var(--bg-1);border:1px solid var(--line-soft);border-radius:13px;padding:16px 18px;font-size:15px;color:var(--ink-dim);text-wrap:pretty}
+.olist li::before{content:counter(o);font-family:var(--mono);font-size:12px;font-weight:600;color:var(--cyan);width:26px;height:26px;border-radius:7px;border:1px solid oklch(0.80 0.110 200 / 0.4);background:var(--cyan-d);display:grid;place-items:center}
+.olist li b{color:var(--ink);font-weight:600}
+.codeblock{margin-top:20px;position:relative;background:oklch(0.145 0.011 264);border:1px solid var(--line-soft);border-radius:14px;overflow:hidden}
+.codeblock .cb-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--line-soft);background:var(--bg-1)}
+.codeblock .cb-lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-faint)}
+.copybtn{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-dim);background:var(--bg-2);border:1px solid var(--line);border-radius:7px;padding:7px 12px;cursor:pointer;transition:all 0.16s;min-height:32px}
+.copybtn:hover{color:var(--ink);border-color:oklch(0.42 0.013 264)}
+.copybtn.done{color:var(--green);border-color:oklch(0.74 0.165 148 / 0.5)}
+.codeblock pre{margin:0;padding:16px;overflow-x:auto}
+.codeblock code{font-family:var(--mono);font-size:13.5px;line-height:1.65;color:var(--ink);white-space:pre-wrap;word-break:break-word;display:block}
+.prompts{margin-top:34px}
+.pgroup{margin-top:32px}
+.pgroup .pgh{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pgroup .pgh h3{margin-top:0}
+.phase{display:flex;align-items:center;gap:14px;margin-top:44px;padding-bottom:12px;border-bottom:1px solid var(--line-soft)}
+.phase .pk{font-family:var(--mono);font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--bg);background:var(--cyan);border-radius:6px;padding:4px 10px;font-weight:600;flex:none}
+.phase .pt{font-family:var(--display);font-weight:700;font-size:clamp(17px,2vw,21px);letter-spacing:-0.012em}
+.phase-note{margin-top:14px !important;font-size:15px !important}
+.phase+.pgroup{margin-top:22px}
+.pgroup .pgh .pill{font-family:var(--mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);border:1px solid var(--line);border-radius:99px;padding:3px 10px}
+.wills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:28px}
+@media (max-width:820px){.wills{grid-template-columns:1fr}}
+.wcol{background:var(--bg-1);border:1px solid var(--line-soft);border-radius:16px;padding:24px}
+.wcol.will{border-color:oklch(0.74 0.165 148 / 0.32);background:linear-gradient(180deg,var(--green-d),transparent 78%)}
+.wcol.wont{border-color:oklch(0.64 0.205 25 / 0.3);background:linear-gradient(180deg,var(--red-d),transparent 78%)}
+.wcol .wh{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600}
+.wcol.will .wh{color:var(--green)}
+.wcol.wont .wh{color:var(--red)}
+.wcol ul{list-style:none;display:grid;gap:12px;margin-top:18px}
+.wcol li{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;font-size:14.5px;color:var(--ink-dim);line-height:1.55;text-wrap:pretty}
+.wcol.will li::before{content:"✓";font-family:var(--mono);font-weight:700;color:var(--green)}
+.wcol.wont li::before{content:"×";font-family:var(--mono);font-weight:700;color:var(--red)}
+.wcol li code{font-size:0.85em}
+.faq{margin-top:26px;display:grid;gap:12px}
+.qa{background:var(--bg-1);border:1px solid var(--line-soft);border-radius:14px;overflow:hidden}
+.qa summary{list-style:none;cursor:pointer;padding:18px 22px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;font-family:var(--display);font-weight:600;font-size:16.5px;letter-spacing:-0.008em;transition:background 0.16s}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:hover{background:var(--bg-2)}
+.qa summary::after{content:"+";font-family:var(--mono);font-size:18px;color:var(--ink-faint);line-height:1}
+.qa[open] summary::after{content:"–";color:var(--cyan)}
+.qa .ans{padding:0 22px 20px;border-top:1px solid var(--line-soft)}
+.qa .ans p{margin-top:16px;font-size:15px;color:var(--ink-dim);max-width:72ch;text-wrap:pretty}
+.gloss{margin-top:26px;background:var(--bg-1);border:1px solid var(--line-soft);border-radius:16px;overflow:hidden}
+.grow{display:grid;grid-template-columns:0.3fr 0.7fr;gap:18px;padding:17px clamp(20px,3vw,26px);border-bottom:1px solid var(--line-soft);align-items:baseline}
+.grow:last-child{border-bottom:none}
+@media (max-width:640px){.grow{grid-template-columns:1fr;gap:6px}}
+.grow dt{font-family:var(--display);font-weight:600;font-size:16px;color:var(--ink)}
+.grow dd{font-size:14.5px;color:var(--ink-dim);text-wrap:pretty;line-height:1.55}
+.endcta{border-top:1px solid var(--line-soft);padding-block:clamp(50px,6vw,86px)}
+.endcta-card{background:linear-gradient(180deg,var(--bg-1),var(--bg));border:1px solid var(--line);border-radius:20px;padding:clamp(28px,4vw,44px);position:relative;overflow:hidden}
+.endcta-card::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green))}
+.endcta-card h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.6vw,40px);letter-spacing:-0.022em;line-height:1.05}
+.endcta-card p{margin-top:16px;color:var(--ink-dim);font-size:clamp(16px,1.7vw,18px);max-width:62ch;text-wrap:pretty}
+footer{border-top:1px solid var(--line-soft);padding-block:56px;color:var(--ink-faint)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px}
+@media (max-width:760px){.foot-grid{grid-template-columns:1fr;gap:28px}}
+footer .big{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.5vw,44px);letter-spacing:-0.02em;color:var(--ink);line-height:1}
+footer .blurb{margin-top:12px;max-width:38ch;color:var(--ink-faint);font-size:15px}
+footer .fh{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+footer .fcol a,footer .fcol .li{display:block;color:var(--ink-dim);font-size:14px;margin-bottom:9px;transition:color 0.16s}
+footer .fcol a:hover{color:var(--ink)}
+footer .li{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint)}
+footer .legal{font-family:var(--mono);font-size:12px;letter-spacing:0.04em;margin-top:40px;padding-top:22px;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer .legal a.link{color:var(--cyan)}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+@media (pointer:coarse){.btn,nav.toplinks a.cta{min-height:44px}.qa summary{min-height:52px}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="row">
+    <a class="brand" href="https://dec18studios.com/" target="_top" aria-label="Dec. 18 Studios — home"><span class="logo"></span></a>
+    <nav class="toplinks">
+      <a href="../">All tools</a>
+      <a href="./">Look Dev Tools</a>
+      <a href="claude.html" class="current">Agent control</a>
+      <a href="https://dec18studios.com/account/digital-products" target="_top">Account</a>
+      <a href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" class="cta" target="_blank" rel="noopener">Get the Tool Box</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="Hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <p class="eyebrow">Look Dev Tools · agent control guide</p>
+    <h1 class="hero-title">Grade with <em>an agent.</em></h1>
+    <p class="hero-sub">Look Dev Tools can be driven by an AI agent sitting next to Resolve. Here is what that means, how to set it up, and what to say to it. Claude Code is what this was built and tested on, and the examples use it, but nothing here is specific to one agent.</p>
+    <p class="lede">Every Look Dev Tools node can take its parameters from an agent session running on the same machine as Resolve. You describe the look in words, the agent writes the values into the nodes, triggers a re-render, and reads the frame back from the viewer to check its own work. <strong>Nothing runs in the background, nothing phones home, and the whole thing is off unless you switch it on for a session.</strong> This page covers the three pieces involved, the one time setup, and a set of prompts to start from.</p>
+    <div class="hero-cta">
+      <a class="backlink" href="./">← Back to the Look Dev Tools overview</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="shell">
+
+    <!-- ============ TOC ============ -->
+    <nav class="toc" id="toc" aria-label="On this page">
+      <div class="th">On this page</div>
+      <div class="tl">
+        <a href="#how">How it works</a>
+        <a href="#need">What you need</a>
+        <a href="#setup">Setup</a>
+        <a href="#first">Your first session</a>
+        <a href="#prompts">Starter prompts</a>
+        <a href="#rules">Will and will not</a>
+        <a href="#trouble">Troubleshooting</a>
+        <a href="#glossary">Glossary</a>
+      </div>
+    </nav>
+
+    <div class="doc">
+
+      <!-- ============ 1. HOW IT WORKS ============ -->
+      <section id="how" data-screen-label="How it works" style="padding-top:0">
+        <p class="eyebrow">Section 01</p>
+        <h2>How it works</h2>
+        <p>There are three layers, and it helps to know which one is doing what when something looks wrong.</p>
+
+        <div class="cards3">
+          <article class="lcard reveal" style="--accent:var(--magenta);--accent-d:var(--magenta-d)">
+            <span class="n">1 · Control channel</span>
+            <h4>The OFX nodes</h4>
+            <p>Every Look Dev Tools node has a small file based control channel built in. The channel is plain files, so any agent that can read and write them can drive it. When it is armed, each node instance watches a folder in your home directory for a <code>grade.json</code> file, applies the values in it to its real Resolve parameters, and writes back an <code>applied.json</code> echo confirming exactly what it now holds. The values land in the node itself, so they save with the project and coexist with anything you trim by hand. When the channel is not armed the nodes do no file work at all and are ordinary effects.</p>
+          </article>
+          <article class="lcard reveal" style="--accent:var(--cyan);--accent-d:var(--cyan-d)">
+            <span class="n">2 · The nudge, and the eyes</span>
+            <h4>Resolve's MCP server</h4>
+            <p>DaVinci Resolve 21 ships its own MCP server, a small program inside the Resolve install that lets an agent run Python scripts against Resolve. Look Dev Tools uses it for two jobs. First, after a value is written, the agent asks Resolve to re-render the current frame. Resolve does not re-render on its own when a plugin changes a value under it, so this one call is what makes the change show up in the viewer. Second, the same server runs the tap reader that ships in the plugin bundle, so the agent can read the rendered frame back without anything else installed on the machine.</p>
+          </article>
+          <article class="lcard reveal" style="--accent:var(--blue);--accent-d:var(--blue-d)">
+            <span class="n">3 · The brains</span>
+            <h4>The agent session</h4>
+            <p>An agent running on the same machine as Resolve, with file access and a connection to Resolve's MCP server. Claude Code is the reference setup and what the examples on this page use. It reads two guide files that ship inside the plugin bundle, arms the channel, works out which node is which, writes grades, nudges Resolve, and reads the result back through the T1000 Timeline Agent. Two guides ship in the bundle: a wiring contract that spells out exactly how the channel works and which parameters each node accepts, and a grading playbook that covers what each tool does to a picture and how a brief like "warmer, softer, lift the blacks a touch" turns into values. The guides are Markdown, so they read the same to any agent.</p>
+          </article>
+        </div>
+
+        <div class="callout reveal" style="--accent:var(--green);--accent-d:var(--green-d)">
+          <div class="k">The T1000 Timeline Agent, or the Tap</div>
+          <p>One node in the suite does no grading. The T1000 Timeline Agent is a pass through you put at the end of the timeline node graph. While the channel is armed, every frame it renders is also written out as a small float snapshot, at most 512 pixels wide. That is how the agent sees what you see in the viewer, display referred, after the whole look and the display transform.</p>
+          <p>Without it the agent is grading blind. With it, it can read mean RGB, luma percentiles, chroma and per zone warmth off the actual frame and tell you whether the move landed.</p>
+        </div>
+
+      </section>
+
+      <!-- ============ 2. WHAT YOU NEED ============ -->
+      <section id="need" data-screen-label="What you need">
+        <p class="eyebrow">Section 02</p>
+        <h2>What you need</h2>
+        <ul class="checks reveal">
+          <li><span><b>DaVinci Resolve 21 or later.</b> The MCP server ships inside Resolve from 21 onward. Resolve Studio is what this was built and tested on.</span></li>
+          <li><span><b>Look Dev Tools 2.0.2 or later</b>, installed through the Tool Box Manager or from the portable zip. The control channel and the T1000 Timeline Agent have been in the suite since 2.0.0. 2.0.2 carries the current guides.</span></li>
+          <li><span><b>An agent that can reach your files and Resolve's MCP server</b>, on the same machine as Resolve. The control channel is file based, so the session needs to read and write files on the Resolve machine, and it needs to call the MCP server for renders. A coding agent does that; a plain chat window on its own does not. <b>Claude Code</b> is what this was built and tested on, in a terminal, in the Claude desktop app's Code tab, or in the VS Code extension. Any agent with the same two abilities should work the same way.</span></li>
+          <li><span><b>Nothing else.</b> The tap reader that ships in the plugin bundle runs inside Resolve's MCP server, which has its own Python. There is nothing to install beyond the three items above.</span></li>
+          <li><span><b>A Look Dev Tools tree on a clip.</b> At least one Look Dev Tools node on the clip you want to work on, and the T1000 Timeline Agent on the timeline node graph.</span></li>
+        </ul>
+        <div class="callout note reveal">
+          <div class="k">Platform note</div>
+          <p>Everything below was set up and verified on macOS. The plugin works the same way on Windows and Linux, but the file paths differ. Where a path is macOS only it says so.</p>
+        </div>
+      </section>
+
+      <!-- ============ 3. SETUP ============ -->
+      <section id="setup" data-screen-label="Setup">
+        <p class="eyebrow">Section 03</p>
+        <h2>Setup, once</h2>
+        <p>Four steps. After this, starting a session is one prompt.</p>
+
+        <div class="steps">
+          <div class="step reveal">
+            <div class="sh"><span class="n"></span><b>Install Look Dev Tools</b></div>
+            <div class="body">
+              <p>Use the Tool Box Manager, same as the landing page describes. Restart Resolve. Confirm the guides are in place; this is the same check Claude does to discover the plugin:</p>
+              <div class="codeblock">
+                <div class="cb-head"><span class="cb-lbl">Terminal</span><button type="button" class="copybtn">Copy</button></div>
+                <pre><code>ls /Library/OFX/Plugins/LookDevTools.ofx.bundle/Contents/Resources/</code></pre>
+              </div>
+              <p>You should see <code>CLAUDE-CONTROL.md</code>, <code>CLAUDE-LOOKDEV.md</code> and <code>ldt_tap.py</code>. On Windows the bundle lives under <code>C:\Program Files\Common Files\OFX\Plugins\</code>, on Linux under <code>/usr/OFX/Plugins/</code>.</p>
+            </div>
+          </div>
+
+          <div class="step reveal">
+            <div class="sh"><span class="n"></span><b>Turn on external scripting in Resolve</b></div>
+            <div class="body">
+              <p>Resolve's scripting API is off by default. In Resolve open Preferences, then System, then General, and set <strong>External scripting using</strong> to <strong>Local</strong>. Restart Resolve. This is what lets the MCP server talk to the running app.</p>
+            </div>
+          </div>
+
+          <div class="step reveal">
+            <div class="sh"><span class="n"></span><b>Point your agent at Resolve's MCP server</b></div>
+            <div class="body">
+              <p>The server is a single executable inside the Resolve application. On macOS it is:</p>
+              <div class="codeblock">
+                <div class="cb-head"><span class="cb-lbl">Path · macOS</span><button type="button" class="copybtn">Copy</button></div>
+                <pre><code>/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Applications/ResolveMCP</code></pre>
+              </div>
+              <p>Add it to your agent as an MCP server named <code>DaVinci Resolve</code> with that path as the command and no arguments. In Claude Code, from a terminal:</p>
+              <div class="codeblock">
+                <div class="cb-head"><span class="cb-lbl">Terminal · bash</span><button type="button" class="copybtn">Copy</button></div>
+                <pre><code>claude mcp add "DaVinci Resolve" -- "/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Applications/ResolveMCP"</code></pre>
+              </div>
+              <p>Restart the agent. With Resolve running, the server announces itself at the start of a session and the agent gets a <code>run_script</code> tool. That tool is the nudge. Other agents take the same command and path in whatever MCP config they use.</p>
+              <p>The server also carries its own Python, and that is what runs the tap reader from the plugin bundle. You do not need Python on the machine.</p>
+              <div class="callout note" style="margin-top:22px">
+                <div class="k">Platform note</div>
+                <p>The Windows and Linux paths for the ResolveMCP executable are inside the Resolve install in the same way. Check the Resolve 21 documentation for the exact location on your platform.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="step reveal">
+            <div class="sh"><span class="n"></span><b>Put the T1000 Timeline Agent on the timeline</b></div>
+            <div class="body">
+              <p>On the Color page switch the node graph to <strong>Timeline</strong>, add a node at the very end, after everything, and drop <strong>T1000 Timeline Agent</strong> on it from the OpenFX list under Look Dev Tools. Leave its one control, Tap Slot, at 1. It passes pixels through untouched, so it is safe to leave there permanently.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 4. FIRST SESSION ============ -->
+      <section id="first" data-screen-label="First session">
+        <p class="eyebrow">Section 04</p>
+        <h2>Your first session</h2>
+        <p>Open the clip you want to work on in the Color page with the playhead on a representative frame. Start your agent in any folder; the working folder does not matter, the plugin's files live in your home directory. Then paste the session start prompt from the next section.</p>
+
+        <ol class="olist reveal">
+          <li><span><b>The agent reads the two guides</b> out of the plugin bundle. It will tell you it has found them.</span></li>
+          <li><span><b>It arms the channel.</b> That is one empty file, <code>armed</code>, in <code>~/.ofx-lookdevtools/</code>. From this moment the nodes start writing heartbeats and the Tap starts publishing.</span></li>
+          <li><span><b>It works out which node is which.</b> Every armed node on the current clip heartbeats on a render, so the agent nudges Resolve once and watches which folders wake up. Then it sends each one an empty read and gets back its tool tag and every current value. A tree with S1 Balance, 4B Simple Contrast and the rest will show several nodes at once. That is correct.</span></li>
+          <li><span><b>It reads your working spaces and the OpenDRT setup</b> and tells you if anything disagrees with itself before touching the picture.</span></li>
+          <li><span><b>It takes a baseline</b> from the Tap: stats, and a small before preview.</span></li>
+          <li><span><b>You grade in words.</b> Each move is one write, one nudge, one read of the Tap. The nudge and the read both go through Resolve's MCP server, usually in a single call. The agent reports what it changed and what the frame did.</span></li>
+          <li><span><b>You end the session</b> and the agent disarms and cleans up. The nodes keep their values in the project; only the channel goes quiet.</span></li>
+        </ol>
+
+        <div class="callout reveal" style="--accent:var(--cyan);--accent-d:var(--cyan-d)">
+          <div class="k">Your sliders, still yours</div>
+          <p>The values the agent writes are the node's real parameters. Open the node in the inspector and you will see the sliders where it left them. Trim by hand any time; the next read tells the agent what you did.</p>
+        </div>
+      </section>
+
+      <!-- ============ 5. PROMPTS ============ -->
+      <section id="prompts" data-screen-label="Starter prompts">
+        <p class="eyebrow">Section 05</p>
+        <h2>Starter prompts</h2>
+        <p>Copy, paste, adjust. The connect prompts come first because nothing else works until the channel is armed and the nodes are bound. Once the agent is connected, the briefs below are where the real work happens.</p>
+
+        <div class="prompts">
+          <div class="phase reveal"><span class="pk">Step 1</span><span class="pt">Connect the session</span></div>
+          <div class="pgroup">
+            <div class="pgh"><h3>Session start</h3><span class="pill">always first</span></div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Read CLAUDE-CONTROL.md and CLAUDE-LOOKDEV.md from
+/Library/OFX/Plugins/LookDevTools.ofx.bundle/Contents/Resources/ and follow them.
+Arm the control channel, bind every Look Dev Tools node on the current clip, and tell me
+which tools are on it, their working spaces, and the OpenDRT input and display settings.
+Take a baseline from the Tap. Do not change any values yet.</code></pre>
+            </div>
+          </div>
+
+          <div class="pgroup">
+            <div class="pgh"><h3>Session start, layered node graph</h3><span class="pill">the long one</span></div>
+            <p>If your timeline is built in layers, this is the one to use. It tells the agent which layer it owns, which nodes to identify and leave alone, and the exact loop to work in.</p>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>I have an agent control channel built into my LookDevTools OFX suite in DaVinci Resolve. The six look tools plus a timeline Tap node are on the current clip in the correct order. I want you to grade this shot through the channel.
+
+Node graph architecture, respect it strictly:
+
+Node layer 3 is the look dev chain (the six LookDevTools nodes). This is the ONLY layer you write to when building a look. The goal is one shared look: every clip in the timeline will carry these same Level 3 settings.
+Node layer 1 is shot-level balancing and matching (a BalanceX instance plus saturation controls). Its nodes are also channel-enabled, so they WILL show up as extra heartbeats when you bind. Identify them with an empty-params read, note their uuids as off-limits, and do not touch them unless I explicitly ask for a shot-level adjustment.
+Node layer 2 is creative work like power windows, no channel-enabled tools live there. You will not see it on the channel; leave it alone.
+
+Setup, in this order, before touching any parameter:
+
+1. Discover control-enabled plugins: ls /Library/OFX/Plugins/*.ofx.bundle/Contents/Resources/CLAUDE-CONTROL.md
+2. Read the LookDevTools CLAUDE-CONTROL.md fully (the wiring contract), then CLAUDE-LOOKDEV.md fully (the grading playbook). Both live in the same Resources folder along with ldt_tap.py. Do not grade from memory of a previous session, the docs are the source of truth.
+3. Arm and bind: touch ~/.ofx-lookdevtools/armed, snapshot every uuid dir's heartbeat mtime, trigger exactly one re-render through your Resolve scripting access (the Resolve MCP if you have one, otherwise a local Python call into DaVinciResolveScript) with tl.SetCurrentTimecode(tl.GetCurrentTimecode()), then bind every uuid whose heartbeat bumped. Expect one heartbeat per node on the clip, not just one.
+4. Identify each bound uuid with an empty-params read ({"seq": N, "params": {}}). The applied.json echo returns the tool tag and every current value. That echo is also your undo snapshot, keep it. Sort the bound uuids into the look chain (Level 3, writable) and the shot-level nodes (Level 1, read-only for this task) before any grading write.
+5. Verify the facts before taste: working spaces, the OpenDRT input and display config, and any model or engine dropdowns whose value gates other params.
+
+The working loop, no exceptions: one node per seq, write grade.json atomically (mkstemp in the same dir then rename), wait for the applied.json echo, then one nudge, then verify on ldt_tap.py stats --slot 1 --min-seq &lt;S&gt; --wait 3. Pull a PNG only when you need to judge a qualitative word, and only into ~/.ofx-lookdevtools/preview/ with the fixed names. Small moves, read every echo back for clamps and preset rewrites.
+
+Hard rules: never start a daemon of any kind. If a nudge times out, stop and report. Never write to a uuid that has not proven itself by heartbeat this session. At session end, even after a failure, always rm ~/.ofx-lookdevtools/armed and run ldt_tap.py purge.</code></pre>
+            </div>
+          </div>
+
+          <div class="phase reveal"><span class="pk">Step 2</span><span class="pt">Once connected, grade in words</span></div>
+          <p class="phase-note">These are the ones you will actually reuse. They assume the channel is armed, every node is bound, and the agent has a baseline to compare against.</p>
+
+          <div class="pgroup">
+            <div class="pgh"><h3>Build a look from a brief</h3></div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Build me a warm filmic look on this clip. Leave S1 Balance and OpenDRT alone. Work one
+node at a time, read the Tap after each move, and tell me the before and after stats
+for luma, chroma and shadow warmth when you are done.</code></pre>
+            </div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Teal and orange, but keep skin honest. Shadows cool, highlights warm, skin should still
+read as skin on the Tap. Do not touch the display transform.</code></pre>
+            </div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Faded and lifted, a little vintage. Blacks up, whites down, saturation pulled back.
+Keep the neutrals neutral.</code></pre>
+            </div>
+          </div>
+
+          <div class="pgroup">
+            <div class="pgh"><h3>Adjust what is there</h3></div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>More contrast, but roll the highlights off so nothing clips. Read the clip fraction on
+the Tap before and after.</code></pre>
+            </div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Skin is too pink. Fix it in 1F Hue Remix Pro, smallest move that works, and confirm on
+the Tap with a region over the face.</code></pre>
+            </div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>The greens are neon. Calm them down without killing the rest of the palette.</code></pre>
+            </div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Whole image a touch cooler, neutrals included.</code></pre>
+            </div>
+          </div>
+
+          <div class="pgroup">
+            <div class="pgh"><h3>Shot balance</h3></div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Read S1 Balance on this clip and the current values. This shot is under compared to
+the previous one. Bring it up with master gain only, one stop at most, and show me slot
+0 and slot 1 percentiles before and after.</code></pre>
+            </div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Match this shot to the hero shot I just graded. Balance in S1 only: master gain to
+match mid grey, then channel gains to match the neutrals, then offset only if the
+blacks still differ. Two passes maximum, then stop and report.</code></pre>
+            </div>
+          </div>
+
+          <div class="pgroup">
+            <div class="pgh"><h3>Read back and undo</h3></div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Read every node on this clip and give me the full current state as a table, one row per
+parameter that is not at its default.</code></pre>
+            </div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>Put every node back to the values from the baseline you took at the start of the
+session.</code></pre>
+            </div>
+          </div>
+
+          <div class="pgroup">
+            <div class="pgh"><h3>Session end</h3></div>
+            <div class="codeblock reveal">
+              <div class="cb-head"><span class="cb-lbl">Prompt</span><button type="button" class="copybtn">Copy</button></div>
+              <pre><code>We are done. Disarm the control channel, purge the previews, and confirm the root is
+clean.</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout note reveal">
+          <div class="k">The baseline is your undo</div>
+          <p>The agent keeps the baseline echo from the start of the session. That is your undo. If a look goes sideways, ask for the baseline back rather than trying to reverse the moves one by one.</p>
+        </div>
+      </section>
+
+      <!-- ============ 6. WILL / WILL NOT ============ -->
+      <section id="rules" data-screen-label="Will and will not">
+        <p class="eyebrow">Section 06</p>
+        <h2>What the agent will and will not do</h2>
+        <p>The guides in the bundle carry hard rules. They are there so a session cannot leave a mess on your machine or fight Resolve. A reader should know them so nothing looks surprising.</p>
+
+        <div class="wills">
+          <div class="wcol will reveal">
+            <div class="wh">Will</div>
+            <ul>
+              <li><span>Write only the parameters each node has agreed to expose. Anything else is rejected by the node with an error, and a file with one bad key applies nothing at all.</span></li>
+              <li><span>Clamp any value to the node's real range, so an oversized number lands at the limit rather than breaking anything.</span></li>
+              <li><span>Wait for the echo from the node before trusting that a value landed.</span></li>
+              <li><span>Trigger exactly one re-render per write, and read the Tap back, both through the Resolve MCP server. If it ever has to fall back to a shell for the tap reader, it uses the bundled script with the system Python 3, which macOS ships. Windows and Linux readers should not see that fallback.</span></li>
+              <li><span>Keep every preview image in <code>~/.ofx-lookdevtools/preview/</code> under a fixed set of names, never more than a handful of files, and delete them at the end of the session.</span></li>
+              <li><span>Disarm the channel at the end of every session, including one that failed.</span></li>
+              <li><span>Leave OpenDRT alone unless you explicitly bring the display transform into play. The playbook treats the DRT as part of the pipeline, not the look.</span></li>
+            </ul>
+          </div>
+          <div class="wcol wont reveal">
+            <div class="wh">Will not</div>
+            <ul>
+              <li><span>Start any daemon, watcher or background loop. There is one nudge mechanism and it is a single scripting call.</span></li>
+              <li><span>Write to a node it has not identified by heartbeat in the current session.</span></li>
+              <li><span>Keep a tap preview as a deliverable. If you want a still, export it from Resolve.</span></li>
+              <li><span>Write tap images into your project folder, Desktop, Downloads or a repo.</span></li>
+              <li><span>Retry a nudge that timed out. It stops and tells you.</span></li>
+              <li><span>Touch anything when the channel is not armed. Disarmed, the plugin does no file work and the nodes behave like any other effect.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 7. TROUBLESHOOTING ============ -->
+      <section id="trouble" data-screen-label="Troubleshooting">
+        <p class="eyebrow">Section 07</p>
+        <h2>Troubleshooting</h2>
+
+        <div class="faq">
+          <details class="qa reveal" open>
+            <summary>The agent says it cannot find the guides.</summary>
+            <div class="ans"><p>The bundle is not installed where the agent looked, or Resolve has not been restarted since the install. Run the <code>ls</code> from Setup step 1 yourself. If the files are there and the agent still cannot see them, the bundle may not be readable by your user; a fresh install through the Tool Box Manager fixes that.</p></div>
+          </details>
+          <details class="qa reveal">
+            <summary>No node heartbeats after the nudge.</summary>
+            <div class="ans"><p>Three usual causes, in order. The channel is not armed. The MCP server is not connected, so the nudge never happened; check that Resolve is running, external scripting is set to Local, and your agent lists the DaVinci Resolve server. Or the playhead is not on a clip that has any Look Dev Tools nodes.</p></div>
+          </details>
+          <details class="qa reveal">
+            <summary>The agent says it cannot find python3.</summary>
+            <div class="ans"><p>It tried to run the tap reader in a shell instead of through Resolve's MCP server. Tell it: "Run ldt_tap.py through the Resolve MCP server's run_script_unsafe tool, not in a shell." No Python install is needed on any platform.</p></div>
+          </details>
+          <details class="qa reveal">
+            <summary>The agent wrote a value, the node echoed it, but the viewer did not change.</summary>
+            <div class="ans"><p>Resolve caches the output of a node graph layer once the current frame has rendered, and a same frame nudge will not re-render a cached node. This shows up on S1 Balance, which lives on the per clip layer. The guides know about this: the agent toggles the node off and on through the scripting API in the same call as the nudge, which invalidates the cache. If you are watching and it seems stuck, ask it to check the node's heartbeat. An unchanged heartbeat means the node never rendered, not that the values were wrong.</p></div>
+          </details>
+          <details class="qa reveal">
+            <summary>The Tap stats look like a different frame.</summary>
+            <div class="ans"><p>Resolve renders thumbnails through the same nodes, so the Tap can briefly publish a frame from another time. The agent checks the frame time in the Tap metadata against the playhead before it trusts a number. If you moved the playhead mid session, say so and it will retake the baseline.</p></div>
+          </details>
+          <details class="qa reveal">
+            <summary>Several nodes answered when I only expected one.</summary>
+            <div class="ans"><p>Every Look Dev Tools node on the clip heartbeats on every render, and the T1000 on the timeline does too. That is how it should be. The agent reads each one to learn which tool it is.</p></div>
+          </details>
+          <details class="qa reveal">
+            <summary>OpenDRT values reset after the agent re-armed.</summary>
+            <div class="ans"><p>Known behaviour. If a session re-arms mid way, re-send the OpenDRT settings you had confirmed. The playbook lists this as a trap and the agent will re-read the node.</p></div>
+          </details>
+          <details class="qa reveal">
+            <summary>I want to stop everything right now.</summary>
+            <div class="ans"><p>Delete the <code>armed</code> file in <code>~/.ofx-lookdevtools/</code> or ask the agent to disarm. Nothing else is running. The nodes keep whatever values they have and behave normally.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ============ 8. GLOSSARY ============ -->
+      <section id="glossary" data-screen-label="Glossary">
+        <p class="eyebrow">Section 08</p>
+        <h2>Glossary</h2>
+        <dl class="gloss reveal">
+          <div class="grow"><dt>Control channel</dt><dd>The file based link between an agent session and a Look Dev Tools node. Lives in <code>~/.ofx-lookdevtools/</code>. Active only while <code>armed</code> exists there.</dd></div>
+          <div class="grow"><dt>Armed</dt><dd>The channel is on. A single empty file. Remove it and everything stops.</dd></div>
+          <div class="grow"><dt>Bind</dt><dd>How the agent works out which folder belongs to which node: nudge once, see which heartbeats moved, read each one's tool tag.</dd></div>
+          <div class="grow"><dt>Nudge</dt><dd>One Resolve scripting call that re-renders the current frame. Made through the Resolve MCP server. The only re-render trigger the agent uses.</dd></div>
+          <div class="grow"><dt>MCP</dt><dd>Model Context Protocol. The standard way a tool like Resolve exposes functions to an agent session. Resolve 21 ships its own MCP server, with its own Python, and Look Dev Tools uses it both to trigger renders and to run the bundled tap reader.</dd></div>
+          <div class="grow"><dt>Echo</dt><dd>The <code>applied.json</code> a node writes after a grade lands, listing every value it now holds. The agent never assumes a write worked without it.</dd></div>
+          <div class="grow"><dt>Tap, T1000 Timeline Agent</dt><dd>The pass through node on the timeline that publishes the frame the viewer is showing. Slot 1 is the default and is the frame to judge a look from.</dd></div>
+          <div class="grow"><dt>Slot 0</dt><dd>A reference tap: while armed, S1 Balance publishes its own input here, so the agent can balance shots against what came in rather than what came out.</dd></div>
+          <div class="grow"><dt>Baseline</dt><dd>The full state read and Tap stats the agent takes at the start of a session. Your undo.</dd></div>
+          <div class="grow"><dt>Working space</dt><dd>Each node's declaration of what the footage actually is. The first thing the agent reads and the last thing it changes.</dd></div>
+        </dl>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ CLOSING CTA ============ -->
+<section class="endcta" data-screen-label="Closing CTA">
+  <div class="wrap">
+    <div class="endcta-card reveal">
+      <h2>Nothing extra to download.</h2>
+      <p>Look Dev Tools installs in a couple of clicks through the Tool Box Manager. The agent guides are already inside the bundle; there is nothing extra to download.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Get the Tool Box Manager →</a>
+        <a class="btn" href="./">Back to Look Dev Tools</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="big">Dec. 18 Studios</div>
+        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote — serving Southern CA, Los Angeles, and beyond.</p>
+      </div>
+      <div class="fcol">
+        <div class="fh">Explore</div>
+        <a href="../">Color Grading Tools</a>
+        <a href="./">Look Dev Tools</a>
+        <a href="../photochemist/">Photo Chemist</a>
+        <a href="../technicolordrt/">Technicolor DRT</a>
+        <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
+      </div>
+      <div class="fcol">
+        <div class="fh">Contact</div>
+        <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
+        <a href="tel:+17084763598">(708) 476-3598</a>
+        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
+      <a class="link" href="https://dec18studios.com" target="_top">dec18studios.com →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* copy buttons */
+document.querySelectorAll(".codeblock").forEach(function(cb){
+  var btn=cb.querySelector(".copybtn"),code=cb.querySelector("code");
+  if(!btn||!code) return;
+  btn.addEventListener("click",function(){
+    var t=code.innerText;
+    function done(){btn.textContent="Copied";btn.classList.add("done");setTimeout(function(){btn.textContent="Copy";btn.classList.remove("done");},1600);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,fallback);}else{fallback();}
+    function fallback(){
+      var ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";
+      document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+});
+
+/* TOC active state */
+(function(){
+  var links=Array.prototype.slice.call(document.querySelectorAll("#toc a"));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute("href"));}).filter(Boolean);
+  if(!secs.length||!("IntersectionObserver" in window)) return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      links.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+en.target.id);});
+    });
+  },{rootMargin:"-25% 0px -65% 0px",threshold:0});
+  secs.forEach(function(s){io.observe(s);});
+})();
+
+/* scroll reveal */
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var els=document.querySelectorAll(".reveal");
+  function showAll(){els.forEach(function(e){e.style.transition="none";e.classList.add("in");});}
+  if(reduce||!("IntersectionObserver" in window)){showAll();return;}
+  var seen=0;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add("in");seen++;io.unobserve(en.target);}});
+  },{threshold:0.08,rootMargin:"0px 0px -6% 0px"});
+  els.forEach(function(e){io.observe(e);});
+  setTimeout(function(){if(seen===0) showAll();},1400);
+})();
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+    <defs><linearGradient id="ldtg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a63d8" /><stop offset="1" stop-color="#3fb7d6" /></linearGradient></defs>
+    <rect width="100" height="100" rx="22" fill="url(#ldtg)" />
+    <g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round">
+      <path d="M32 38h36" opacity="0.95" /><path d="M32 52h22" opacity="0.75" /><path d="M32 66h30" opacity="0.55" />
+    </g>
+  </svg>
+</template>
+
+</body>
+</html>
