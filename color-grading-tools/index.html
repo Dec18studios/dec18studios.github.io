@@ -529,7 +529,7 @@
       var dlUrl = free && (t.dlUrl ||
         (t.repo && t.dlAsset ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest/download/" + t.dlAsset :
         (t.repo ? "https://github.com/Dec18studios/" + t.repo + "/releases/latest" : null)));
-      // Reusable demo hook for premium tools: demo:true → detail page #demo
+      // Reusable free-edition hook for premium tools: demo:true → detail page #demo (rendered as "Try Lite")
       // (multi-platform downloads + gate live there); demo:"<url>" → direct link.
       var demoUrl = (!free && t.demo) ? (t.demo === true ? dest + "#demo" : t.demo) : null;
       var interactive = dlUrl || demoUrl;
@@ -544,7 +544,7 @@
       var goRow = dlUrl
         ? '<div class="go-row"><span class="go">View →</span><a class="dl" href="' + dlUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Download →</a></div>'
         : demoUrl
-        ? '<div class="go-row"><span class="go">View →</span><a class="demo" href="' + demoUrl + '" onclick="event.stopPropagation()">Try demo →</a></div>'
+        ? '<div class="go-row"><span class="go">View →</span><a class="demo" href="' + demoUrl + '" onclick="event.stopPropagation()">Try Lite →</a></div>'
         : '<span class="go">View →</span>';
       el.innerHTML =
         '<div class="top"><span class="sw" style="background:var(--' + esc(t.color || "cyan") + ');"></span>' +
