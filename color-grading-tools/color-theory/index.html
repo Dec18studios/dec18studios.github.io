@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Color Theory &middot; Free OFX for Resolve &middot; Dec. 18 Studios</title>
-<meta name="description" content="Color Theory is a free OFX for Resolve that generates colour vision illusions on the timeline, with a burned in commentary overlay, a Reveal wipe and a Simulate Appearance mode. Metal on macOS, CUDA on Windows and Linux." />
+<meta name="description" content="Color Theory is a free OFX for Resolve that generates colour vision illusions on the timeline, with a burned in commentary overlay, a Reveal wipe, a Simulate Appearance mode, a Perceived Luminance Visualizer and real scene linear test images for checking your colour pipeline. Metal on macOS, CUDA on Windows and Linux." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -346,8 +346,8 @@
           <a class="btn" href="https://github.com/Dec18studios/Color-Theory-OFX/releases" target="_blank" rel="noopener">All releases</a>
         </div>
         <div class="hero-meta">
-          <div class="m"><b>13</b><span>generated illusions</span></div>
-          <div class="m"><b>3</b><span>modes for your footage</span></div>
+          <div class="m"><b>14</b><span>generated illusions</span></div>
+          <div class="m"><b>6</b><span>pipeline test images</span></div>
           <div class="m"><b>$0</b><span>free, always</span></div>
         </div>
       </div>
@@ -448,12 +448,12 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">Mode list</p>
-      <h2>Seventeen demonstrations in one node.</h2>
+      <h2>Twenty three demonstrations in one node.</h2>
       <p>Pick a group, pick a mode, then drive the parameters. Every figure exposes its own controls, so you can set up the exact version you want to teach from.</p>
     </div>
 
     <div class="group reveal">
-      <div class="group-head">Generated illusions &middot; 13</div>
+      <div class="group-head">Generated illusions &middot; 14</div>
       <p class="gl">These draw their own image, so you can drop the node on any clip or a solid and it takes over the frame.</p>
       <div class="mode-grid">
         <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Simultaneous Contrast</b><p>Two identical patches read light or dark depending on the surround they sit in.</p></div>
@@ -469,6 +469,7 @@
         <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Gradient Lightness</b><p>A flat bar laid on a gradient appears to ramp even though it never changes.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Shared Texture Discs</b><p>Discs sharing one texture, read as different materials depending on their context.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Overlapping Squares</b><p>Two squares that overlap, where the join tells you which one is in front and what colour it is.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Perceived Luminance Visualizer</b><p>A hue sweep behind grey ramp shutters. Where the border melts away, the colour and the grey share one luminance. Markers, a swatch and a live readout show the number. Keyframe the hue and watch them ride the ramp.</p></div>
       </div>
     </div>
 
@@ -483,10 +484,15 @@
     </div>
 
     <div class="group reveal">
-      <div class="group-head">Pipeline test images &middot; 1</div>
-      <p class="gl">A known reference you can push through the whole chain to check it comes out where it went in.</p>
+      <div class="group-head">Pipeline test images &middot; 6</div>
+      <p class="gl">Known references you push through the whole chain. The four photographs ship inside the plugin as scene linear frames and leave the node untouched by default, no clamp and no encode. Put a Colour Space Transform after the node, tell it the stored space, and judge what your pipeline does to the hard parts. The commentary on each one says what to look for.</p>
       <div class="mode-grid">
         <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Grey Reference Card</b><p>A clean grey card with a chip row, for checking exposure, neutrality and transform behaviour.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>RGB Chips</b><p>Primaries, secondaries and ramps on one chart, so you can see exactly which chip a transform moved and where it went.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Blue Bar</b><p>A bar lit hard in blue, linear Rec.709. Watch the blue lighting on the ceiling and the neon signs. A good pipeline rolls those excursions off to white instead of clamping them flat.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Red Christmas Lights</b><p>Saturated red emitters on a dark field, linear Rec.709. Do the bulb cores keep their shape, and does skin under the red spill still read as skin?</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Light Saber</b><p>A glowing blade at eleven stops over mid grey, linear sRGB. Look at the core, and whether the colour feels like it is emitting and lighting the scene rather than painted on.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Camera Frame, Wide Gamut 4</b><p>A diver straight off the camera, linear ARRI Wide Gamut 4. Watch how the reds attenuate across his face and how the flare sits against the blue background.</p></div>
       </div>
     </div>
   </div>
@@ -603,7 +609,7 @@
       <div>
         <p class="eyebrow">It's free, always</p>
         <h2>No licence, no subscription, no catch.</h2>
-        <p>Color Theory costs nothing. Use it in class, in a video, in a client session, on as many machines as you like. If it earns a place in how you teach, tell someone about it.</p>
+        <p>Color Theory costs nothing. Use it in class, in a video, in a client session, on as many machines as you like. If it earns a place in how you teach, tell someone about it. Questions, requests and test images of your own go in the <a class="inline" href="https://discord.gg/kAsjNZru9c" target="_blank" rel="noopener">Dec18 Studios Discord</a>, and there is a Join the Discord button at the bottom of the plugin panel.</p>
       </div>
       <a class="btn mag" href="#download">Download it &rarr;</a>
     </div>
