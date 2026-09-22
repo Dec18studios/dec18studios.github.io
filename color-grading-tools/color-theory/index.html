@@ -391,25 +391,22 @@
 
       <div class="scope reveal">
         <div class="scope-head">
-          <span class="lbl">Colour assimilation</span>
-          <span class="live">Stripes change the read</span>
+          <span class="lbl">Pinwheel transparency</span>
+          <span class="live">Paint or clear layer</span>
         </div>
         <div class="scope-plot">
-          <svg viewBox="0 0 360 200" aria-label="One orange field crossed by cool stripes on the left and warm stripes on the right.">
-            <rect x="0" y="0" width="360" height="200" fill="#d2762f" />
-            <g fill="#2f4fd2">
-              <rect x="0" y="10" width="180" height="10" /><rect x="0" y="40" width="180" height="10" />
-              <rect x="0" y="70" width="180" height="10" /><rect x="0" y="100" width="180" height="10" />
-              <rect x="0" y="130" width="180" height="10" /><rect x="0" y="160" width="180" height="10" />
+          <svg viewBox="0 0 360 200" aria-label="An opaque pink disc on flat grey on the left, and a translucent pink disc over a grey wedge mosaic on the right.">
+            <defs><clipPath id="pw-right"><rect x="180" y="0" width="180" height="200" /></clipPath></defs>
+            <rect x="0" y="0" width="180" height="200" fill="#bdbdbd" />
+            <circle cx="90" cy="108" r="58" fill="#cbb8b8" />
+            <g clip-path="url(#pw-right)">
+              <polygon points="270,108 646,245 439,471" fill="#a9a9a9" /><polygon points="270,108 439,471 133,484" fill="#7c7c7c" /><polygon points="270,108 133,484 -93,277" fill="#8f8f8f" /><polygon points="270,108 -93,277 -106,-29" fill="#e2e2e2" /><polygon points="270,108 -106,-29 101,-255" fill="#b8b8b8" /><polygon points="270,108 101,-255 407,-268" fill="#6f6f6f" /><polygon points="270,108 407,-268 633,-61" fill="#9c9c9c" /><polygon points="270,108 633,-61 646,245" fill="#d4d4d4" />
+              <circle cx="270" cy="108" r="58" fill="#e08a86" fill-opacity="0.55" />
             </g>
-            <g fill="#f2e24a">
-              <rect x="180" y="10" width="180" height="10" /><rect x="180" y="40" width="180" height="10" />
-              <rect x="180" y="70" width="180" height="10" /><rect x="180" y="100" width="180" height="10" />
-              <rect x="180" y="130" width="180" height="10" /><rect x="180" y="160" width="180" height="10" />
-            </g>
+            <rect x="179" y="0" width="2" height="200" fill="#8a8a8a" />
           </svg>
         </div>
-        <p class="scope-cap">The background is one single orange across the whole frame. The stripes pull it toward themselves, and the two halves stop looking like the same colour.</p>
+        <p class="scope-cap">Left is opaque paint on a flat field. Right is the same idea over a wedge mosaic. Dial the layer colour and transmittance until the two discs match, and most people need a see through layer to get there, which means the left disc was never reading as paint either.</p>
       </div>
     </div>
   </div>
