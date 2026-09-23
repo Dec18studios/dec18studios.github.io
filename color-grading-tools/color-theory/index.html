@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Color Theory &middot; Free OFX for Resolve &middot; Dec. 18 Studios</title>
-<meta name="description" content="Color Theory is a free OFX for Resolve that generates colour vision illusions on the timeline, with a burned in commentary overlay, a Reveal wipe, a Simulate Appearance mode, a Perceived Luminance Visualizer and pipeline test charts for checking your colour pipeline. Metal on macOS, CUDA on Windows and Linux." />
+<meta name="description" content="Color Theory is a free OFX for Resolve that generates colour vision illusions on the timeline, with a burned in commentary overlay, a Reveal wipe, a Simulate Appearance mode, a Perceived Luminance Visualizer and real scene linear test images, with a DaVinci Wide Gamut / Intermediate output, for checking your colour pipeline. Metal on macOS, CUDA on Windows and Linux." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -347,7 +347,7 @@
         </div>
         <div class="hero-meta">
           <div class="m"><b>14</b><span>generated illusions</span></div>
-          <div class="m"><b>2</b><span>pipeline test charts</span></div>
+          <div class="m"><b>6</b><span>pipeline test images</span></div>
           <div class="m"><b>$0</b><span>free, always</span></div>
         </div>
       </div>
@@ -444,7 +444,7 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">Mode list</p>
-      <h2>Nineteen demonstrations in one node.</h2>
+      <h2>Twenty three demonstrations in one node.</h2>
       <p>Pick a group, pick a mode, then drive the parameters. Every figure exposes its own controls, so you can set up the exact version you want to teach from.</p>
     </div>
 
@@ -475,16 +475,20 @@
       <div class="mode-grid">
         <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Histogram Compression</b><p>Squeeze the range of the picture and watch how much of it your eye puts straight back.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Two Colour Method</b><p>Rebuild the shot from two colour records and see how much of a full picture survives.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Palette Reconstruction</b><p>Reduce the image to a small palette and show how few colours a picture really needs.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Palette Reconstruction</b><p>Reduce the image to a small palette and show how few colours a picture really needs. The Sampled From Image preset reads the frame and fills the palette in coverage order, most common colour first.</p></div>
       </div>
     </div>
 
     <div class="group reveal">
-      <div class="group-head">Pipeline test charts &middot; 2</div>
-      <p class="gl">Known references you push through the whole chain. The four photographs ship inside the plugin as scene linear frames and leave the node untouched by default, no clamp and no encode. Put a Colour Space Transform after the node, tell it the stored space, and judge what your pipeline does to the hard parts. The commentary on each one says what to look for.</p>
+      <div class="group-head">Pipeline test images &middot; 6</div>
+      <p class="gl">Known references you push through the whole chain. The four photographs ship inside the plugin as scene linear frames and leave the node untouched by default, no clamp and no encode. Put a Colour Space Transform after the node, tell it the stored space, and judge what your pipeline does to the hard parts. Or switch Image Options to DaVinci Wide Gamut / Intermediate and the node converts the primaries and applies the Intermediate curve itself, ready for a DWG/I timeline. The commentary on each one names its colour space and says where a poor picture formation breaks the image.</p>
       <div class="mode-grid">
         <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Grey Reference Card</b><p>A clean grey card with a chip row, for checking exposure, neutrality and transform behaviour.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>RGB Chips</b><p>Hue rows against exposure columns that double around mid grey, the same chart as the RGB Chips DCTL with every control: hues, columns, saturation, clamp, gray ramp, gaps, HSV or spherical model, continuous modes. Values leave the node raw, so hang a CST after it and watch what moves.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Blue Bar</b><p>A bar lit hard in blue, linear Rec.709. Watch the blue ceiling light and the neon. A poor picture formation clamps them into flat cyan or magenta slabs instead of rolling them toward white.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Red Christmas Lights</b><p>Saturated red emitters on a dark field, linear Rec.709. Watch the bulb cores and the red spill. A poor picture formation turns the bulbs into flat orange discs and the spill into one red with no detail.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Light Saber</b><p>A glowing blade many stops over mid grey, linear sRGB. Watch the blade core and its spill. A poor picture formation leaves a flat coloured stick with a hard edge and the scene looks painted.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Diver</b><p>A diver straight off the camera, linear ARRI Wide Gamut 4. Watch the red across the face and the orange flare against blue. A poor picture formation piles the skin into one red tone and turns the flare edge muddy grey.</p></div>
       </div>
     </div>
   </div>
