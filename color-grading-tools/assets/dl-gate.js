@@ -50,16 +50,16 @@
     var wrap = document.createElement('div');
     wrap.innerHTML =
       '<div id="dlModal" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;padding:20px">' +
-        '<div id="dlBackdrop" style="position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px)"></div>' +
-        '<div style="position:relative;background:#13151c;border:1px solid #2a2d3a;border-radius:14px;padding:36px 32px;max-width:400px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.6)">' +
-          '<button id="dlClose" type="button" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#555;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;transition:color .15s" title="Close">✕</button>' +
-          '<h3 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#e8eaf0">One quick thing</h3>' +
-          '<p style="margin:0 0 24px;font-size:14px;color:#888;line-height:1.65">Drop your email and we might send you a few setup tips and let you know when a new version drops. We don\'t send many — just helpful tips and release notes when something changes.</p>' +
+        '<div id="dlBackdrop" style="position:absolute;inset:0;background:rgba(34,29,24,.62)"></div>' +
+        '<div style="position:relative;background:#efe6d2;border:2px solid #221d18;border-radius:0;padding:34px 30px 26px;max-width:420px;width:100%;box-shadow:8px 8px 0 #c7372c;color:#221d18;font-family:\'Hanken Grotesk\',system-ui,sans-serif">' +
+          '<button id="dlClose" type="button" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#221d18;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;transition:color .15s" title="Close">✕</button>' +
+          '<h3 style="margin:0 0 8px;font-family:Archivo,\'Archivo Narrow\',Impact,sans-serif;font-stretch:75%;font-size:30px;font-weight:900;text-transform:uppercase;letter-spacing:-.01em;line-height:.95;color:#221d18">One quick thing</h3>' +
+          '<p style="margin:0 0 24px;font-size:15px;color:#4a4038;line-height:1.6">Drop your email and we might send you a few setup tips and let you know when a new version drops. We don\'t send many, just helpful tips and release notes when something changes.</p>' +
           '<form id="dlForm" autocomplete="on">' +
-            '<input id="dlEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com" required style="width:100%;background:#1a1d24;border:1px solid #2a2d3a;color:#e8eaf0;border-radius:8px;padding:11px 14px;font-size:14px;font-family:inherit;margin-bottom:10px;outline:none;transition:border-color .15s;box-sizing:border-box">' +
-            '<button type="submit" style="width:100%;background:#4a8aff;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s">Download</button>' +
-            '<p id="dlErr" style="margin:10px 0 0;font-size:12px;color:#e04040;display:none"></p>' +
-            '<button type="button" id="dlDismiss" style="display:block;width:100%;margin-top:10px;background:none;border:none;color:#444;font-size:12px;cursor:pointer;padding:6px;transition:color .15s">Nah, I don\'t want it</button>' +
+            '<input id="dlEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com" required style="width:100%;background:#fbf6ea;border:2px solid #221d18;color:#221d18;border-radius:0;padding:11px 14px;font-size:15px;font-family:\'Courier Prime\',ui-monospace,monospace;margin-bottom:10px;outline:none;transition:border-color .15s;box-sizing:border-box">' +
+            '<button type="submit" style="width:100%;background:#221d18;color:#efe6d2;border:2px solid #221d18;border-radius:0;padding:12px 20px;font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;box-shadow:4px 4px 0 #c7372c;font-family:inherit;cursor:pointer;transition:opacity .15s">Download</button>' +
+            '<p id="dlErr" style="margin:10px 0 0;font-size:12px;color:#c7372c;font-weight:700;display:none"></p>' +
+            '<button type="button" id="dlDismiss" style="display:block;width:100%;margin-top:10px;background:none;border:none;color:#6b6055;font-size:12px;cursor:pointer;padding:6px;text-decoration:underline;font-family:\'Courier Prime\',ui-monospace,monospace;transition:color .15s">Nah, I don\'t want it</button>' +
           '</form>' +
         '</div>' +
       '</div>';

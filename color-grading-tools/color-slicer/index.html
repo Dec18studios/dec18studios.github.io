@@ -3,446 +3,232 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Color Slicer — Dec. 18 Studios</title>
+<title>Color Slicer · Dec. 18 Studios</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/d18-print.css" />
 <style>
+  /* page-specific rules only; everything else comes from d18-print.css */
   :root {
-    --bg:        oklch(0.165 0.012 264);
-    --bg-1:      oklch(0.195 0.013 264);
-    --bg-2:      oklch(0.225 0.014 264);
-    --bg-3:      oklch(0.255 0.015 264);
-    --line:      oklch(0.32 0.013 264);
-    --line-soft: oklch(0.27 0.012 264);
-
-    --ink:       oklch(0.95 0.006 264);
-    --ink-dim:   oklch(0.72 0.010 264);
-    --ink-faint: oklch(0.55 0.010 264);
-
-    --red:     oklch(0.64 0.205 25);
-    --yellow:  oklch(0.84 0.150 92);
-    --green:   oklch(0.74 0.165 148);
-    --cyan:    oklch(0.80 0.110 200);
-    --blue:    oklch(0.62 0.165 262);
-    --magenta: oklch(0.65 0.205 332);
-
-    --red-d:     oklch(0.64 0.205 25 / 0.16);
-    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
-    --green-d:   oklch(0.74 0.165 148 / 0.16);
-    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
-    --blue-d:    oklch(0.62 0.165 262 / 0.18);
-    --magenta-d: oklch(0.65 0.205 332 / 0.16);
-
-    /* three rotation engines — consistent everywhere */
-    --oklab:    oklch(0.80 0.115 210);
-    --tetra:    oklch(0.64 0.205 25);
-    --gravity:  oklch(0.81 0.150 80);
-    --oklab-d:   oklch(0.80 0.115 210 / 0.15);
-    --tetra-d:   oklch(0.64 0.205 25 / 0.15);
-    --gravity-d: oklch(0.81 0.150 80 / 0.15);
-
-    --maxw: 1180px;
-    --pad: clamp(20px, 5vw, 64px);
-
-    --sans: "Hanken Grotesk", system-ui, sans-serif;
-    --display: "Bricolage Grotesque", system-ui, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, monospace;
+    /* vector colours used by color-slicer.js (var(--yellow) etc.) */
+    --yellow: var(--p-yellow); --green: var(--p-green); --cyan: var(--p-cyan); --magenta: var(--p-magenta);
+    /* the three rotation engines, as print inks */
+    --oklab: var(--p-cyan); --tetra: var(--red); --gravity: #b8861b;
+    --oklab-d: rgba(59, 143, 163, 0.14); --tetra-d: rgba(199, 55, 44, 0.12); --gravity-d: rgba(227, 178, 60, 0.22);
+    /* names the inline diagrams still reference */
+    --bg: var(--view); --ink-faint: var(--ink-3); --mono: var(--type); --line: #555;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg); color: var(--ink); font-family: var(--sans);
-    font-size: 17px; line-height: 1.6;
-    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
-  }
-  ::selection { background: oklch(0.80 0.115 210 / 0.35); }
-  a { color: inherit; text-decoration: none; }
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+  /* ---- secondary in-page nav ---- */
+  .subnav { display: flex; gap: 20px; flex-wrap: wrap; padding: 8px 0; border-bottom: 1px solid var(--ink); }
+  .subnav a { font-family: var(--type); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; color: var(--ink-2); padding: 4px 0; }
+  .subnav a:hover { color: var(--ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  @media (max-width: 760px) { .subnav { flex-wrap: nowrap; overflow-x: auto; gap: 16px; } .subnav a { white-space: nowrap; font-size: 12.5px; } }
 
-  .eyebrow {
-    font-family: var(--mono); font-size: 12px; font-weight: 500;
-    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
-  }
-
-  /* ============ TOP BAR ============ */
-  header.topbar {
-    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
-    background: oklch(0.165 0.012 264 / 0.78); border-bottom: 1px solid var(--line-soft);
-  }
-  .topbar .row {
-    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
-    display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  }
-  .brand { display: flex; align-items: center; }
-  .brand .logo {
-    display: block; height: clamp(44px, 5.2vw, 58px); aspect-ratio: 862 / 380;
-    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
-    -webkit-mask: url("assets/logo-full.png") left center / contain no-repeat;
-            mask: url("assets/logo-full.png") left center / contain no-repeat;
-  }
-  nav.toplinks { display: flex; gap: 30px; align-items: center; }
-  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
-  nav.toplinks a:hover { color: var(--ink); }
-  nav.toplinks a.cta {
-    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
-    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
-  }
-  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
-  @media (max-width: 880px) {
-    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
-    nav.toplinks {
-      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-      padding-bottom: 2px; scrollbar-width: none;
-      -webkit-mask: linear-gradient(90deg, #000 86%, transparent); mask: linear-gradient(90deg, #000 86%, transparent);
-    }
-    nav.toplinks::-webkit-scrollbar { display: none; }
-    nav.toplinks a { white-space: nowrap; font-size: 13px; }
-  }
-
-  /* ============ HERO ============ */
-  .hero { position: relative; padding-top: clamp(48px, 7vw, 96px); padding-bottom: clamp(40px, 6vw, 80px); overflow: hidden; }
-  .hero-glow {
-    position: absolute; top: -14%; right: -10%; width: 760px; height: 760px;
-    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
-    border-radius: 50%; filter: blur(140px); opacity: 0.14; pointer-events: none; z-index: 0;
-  }
-  .hero .wrap { position: relative; z-index: 1; }
-  .hero-grid { display: grid; grid-template-columns: 0.93fr 1.07fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  /* ---- hero ---- */
+  .hero-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 5vw, 60px); align-items: start; margin-top: clamp(24px, 4vw, 40px); }
   @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+  .badge-resolve { display: inline-flex; align-items: center; gap: 8px; font-family: var(--type); font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 3px 10px; }
+  .badge-resolve .d { width: 9px; height: 9px; background: var(--oklab); border: 1px solid var(--ink); }
+  .hero-grid h1.title { font-size: clamp(50px, 7vw, 100px); margin-top: 16px; max-width: 12ch; }
+  .hero-grid h1.title em { font-style: normal; color: var(--red); }
+  .hero-grid .lede { margin-top: 20px; max-width: 50ch; }
+  .meta { flex-wrap: wrap; }
+  .meta .m b { font-size: 30px; }
+  .shots { display: grid; gap: 18px; }
+  .shots .viewer { margin-top: 0; }
+  .shot-cap { font-family: var(--type); font-size: 12.5px; line-height: 1.5; color: var(--ink-3); }
+  .slate .d { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: middle; border: 1px solid #e6e6e6; }
 
-  .badge-resolve {
-    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 4px;
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--ink-dim); border: 1px solid var(--line); border-radius: 99px; padding: 6px 13px;
-  }
-  .badge-resolve .d { width: 8px; height: 8px; border-radius: 50%; background: var(--oklab); }
-
-  h1.hero-title {
-    font-family: var(--display); font-weight: 700;
-    font-size: clamp(42px, 6vw, 76px); line-height: 0.99; letter-spacing: -0.02em; margin: 20px 0 0;
-  }
-  h1.hero-title em {
-    font-style: normal;
-    background: linear-gradient(96deg, var(--gravity), var(--tetra) 42%, var(--magenta) 66%, var(--oklab));
-    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .hero-sub { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--ink-dim); max-width: 48ch; text-wrap: pretty; }
-  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-  .btn {
-    font-family: var(--sans); font-weight: 600; font-size: 15px; padding: 12px 20px; border-radius: 10px;
-    border: 1px solid var(--line); color: var(--ink); background: var(--bg-2); cursor: pointer; transition: all 0.18s;
-    display: inline-flex; align-items: center; gap: 9px;
-  }
-  .btn:hover { background: var(--bg-3); border-color: oklch(0.42 0.013 264); }
-  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-  .btn.primary:hover { background: oklch(0.86 0.006 264); }
-  .hero-meta { display: flex; gap: 26px; margin-top: 38px; flex-wrap: wrap; }
-  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 26px; display: block; }
-  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
-
-  /* ============ WHEEL CARD ============ */
-  .wheel-card { background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line-soft); border-radius: 20px; padding: 26px; }
-  /* hero lab row: live wheel + controls panel side by side, matched heights */
-  .lab-row { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 16px; margin-top: clamp(28px, 3.5vw, 48px); align-items: stretch; }
+  /* ---- lab row: live wheel + controls panel ---- */
+  .lab-row { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 20px; margin-top: clamp(28px, 3.5vw, 48px); align-items: stretch; }
   @media (max-width: 940px) { .lab-row { grid-template-columns: 1fr; } }
-  .wheel-card.lab { display: flex; flex-direction: column; justify-content: center; }
-  .wheel-card.lab .wheel-stage { max-width: 272px; }
-  .controls-card { position: relative; border-radius: 20px; border: 1px solid var(--line-soft); overflow: hidden; background: #28282e; display: flex; align-items: center; justify-content: center; }
-  .controls-card img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .wheel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-  .live-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--oklab); border: 1px solid oklch(0.80 0.115 210 / 0.4); border-radius: 5px; padding: 3px 8px; }
-  .wheel-stage { position: relative; aspect-ratio: 1; max-width: 300px; margin: 0 auto; }
+  .wheel-card { border: 2px solid var(--ink); background: var(--paper-2); padding: clamp(18px, 3vw, 26px); box-shadow: 6px 6px 0 var(--ink); scroll-margin-top: 90px; min-width: 0; }
+  .wheel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); margin-bottom: 16px; }
+  .live-tag { font-family: var(--type); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); background: var(--red); padding: 2px 8px; }
+  .wheel-view { background: var(--view); border: 1px solid var(--ink); padding: 18px; }
+  .wheel-stage { position: relative; aspect-ratio: 1; max-width: 272px; margin: 0 auto; }
   .wheel-stage canvas { width: 100%; height: 100%; display: block; border-radius: 50%; }
-  .slice-marker { position: absolute; width: 15px; height: 15px; border-radius: 50%; transform: translate(-50%,-50%); border: 2px solid var(--bg); box-shadow: 0 0 0 1px oklch(1 0 0 / 0.25), 0 3px 8px oklch(0 0 0 / 0.55); pointer-events: none; transition: left 0.25s, top 0.25s; }
-  .wheel-caption { margin-top: 14px; font-family: var(--mono); font-size: 10.5px; line-height: 1.5; color: var(--ink-faint); text-align: center; text-wrap: pretty; }
-
-  .vlegend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 18px; }
-  .vchip { display: flex; align-items: center; gap: 7px; padding: 8px 8px; border-radius: 8px; background: var(--bg-2); border: 1px solid transparent; cursor: pointer; transition: all 0.15s; font-size: 11.5px; font-family: var(--mono); color: var(--ink-dim); }
-  .vchip:hover { border-color: var(--line); color: var(--ink); }
-  .vchip.on { border-color: var(--ink-faint); color: var(--ink); background: var(--bg-3); }
-  .vchip .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-
+  .slice-marker { position: absolute; width: 15px; height: 15px; border-radius: 50%; transform: translate(-50%, -50%); border: 2px solid #121212; box-shadow: 0 0 0 1.5px #e6e6e6; pointer-events: none; transition: left 0.25s, top 0.25s; }
+  .wheel-caption { margin-top: 12px; font-family: var(--type); font-size: 12px; line-height: 1.5; color: var(--view-text); text-align: center; }
+  .vlegend { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 16px; }
+  @media (max-width: 420px) { .vlegend { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .vchip { display: flex; align-items: center; gap: 7px; min-height: 38px; padding: 6px 8px; background: var(--paper); border: 1.5px solid var(--ink); cursor: pointer; font-family: var(--type); font-size: 12.5px; font-weight: 700; color: var(--ink); text-align: left; }
+  .vchip:hover { background: rgba(227, 178, 60, 0.25); }
+  .vchip.on { background: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 var(--red); }
+  .vchip .sw { width: 11px; height: 11px; flex: none; border: 1px solid var(--ink); }
+  .vchip.on .sw { border-color: var(--paper); }
   .ctl { margin-top: 18px; }
-  .ctl-label { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em; color: var(--ink-dim); margin-bottom: 8px; }
-  .ctl-label b { color: var(--ink); font-weight: 500; }
-  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 99px; background: var(--line); outline: none; cursor: pointer; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 17px; height: 17px; border-radius: 50%; background: var(--ink); border: 3px solid var(--bg-1); box-shadow: 0 2px 8px oklch(0 0 0 / 0.5); }
-  input[type=range]::-moz-range-thumb { width: 17px; height: 17px; border-radius: 50%; background: var(--ink); border: 3px solid var(--bg-1); }
-  .ctl-row { display: flex; gap: 10px; align-items: center; margin-top: 18px; }
-  .toggle { font-family: var(--mono); font-size: 12px; padding: 9px 13px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-2); color: var(--ink-dim); cursor: pointer; transition: all 0.16s; }
-  .toggle[aria-pressed="true"] { background: var(--oklab-d); border-color: var(--oklab); color: var(--oklab); }
-  .toggle:hover { color: var(--ink); border-color: oklch(0.42 0.013 264); }
-  .seg { flex: 1; display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
-  .seg select { font-family: var(--mono); font-size: 12px; color: var(--ink); background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer; }
+  .ctl-label { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-family: var(--type); font-size: 13px; color: var(--ink-2); margin-bottom: 8px; }
+  .ctl-label b { color: var(--ink); font-weight: 700; }
+  .ctl input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; background: linear-gradient(var(--ink), var(--ink)) center / 100% 3px no-repeat; outline: none; cursor: pointer; }
+  .ctl input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--paper); border: 2.5px solid var(--ink); box-shadow: 2px 2px 0 var(--red); }
+  .ctl input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 0; background: var(--paper); border: 2.5px solid var(--ink); box-shadow: 2px 2px 0 var(--red); }
+  .ctl input[type=range]:focus-visible { outline: 2px dashed var(--blue); outline-offset: 2px; }
+  .ctl-row { display: flex; gap: 12px; align-items: center; margin-top: 18px; flex-wrap: wrap; }
+  .ctl-row .hint { font-family: var(--type); font-size: 12.5px; color: var(--ink-3); flex: 1; min-width: 12ch; }
+  .toggle { font-family: var(--type); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 9px 14px; min-height: 42px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); cursor: pointer; box-shadow: 3px 3px 0 var(--ink); }
+  .toggle:hover { background: rgba(227, 178, 60, 0.25); }
+  .toggle[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 var(--oklab); }
+  .controls-view { display: flex; flex-direction: column; margin-top: 0; min-width: 0; }
+  .controls-view .pane { flex: 1; display: flex; align-items: center; justify-content: center; background: var(--view-2); min-height: 0; }
+  .controls-view img { aspect-ratio: auto; max-height: 560px; width: auto; max-width: 100%; background: transparent; }
 
-  /* ============ PRODUCT SHOTS ============ */
-  .shot-card { background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line-soft); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
-  /* align the results card top with the first line of the headline (drops it past the badge) */
-  @media (min-width: 941px) { .shot-card { margin-top: 56px; } }
-  .shot-cap { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); letter-spacing: 0.03em; text-align: center; text-wrap: pretty; }
-  .shot-tag { position: absolute; top: 10px; left: 10px; z-index: 3; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: oklch(0.165 0.012 264 / 0.78); border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; backdrop-filter: blur(6px); }
-  .shot-tag .d { display: inline-block; width: 7px; height: 7px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
-
-  /* before/after compare slider */
-  .compare { position: relative; border-radius: 13px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/9; touch-action: none; user-select: none; cursor: ew-resize; background: var(--bg-2); }
-  .compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-  .compare .after-wrap { position: absolute; inset: 0; overflow: hidden; width: 50%; will-change: width; }
-  .compare .after-wrap img { width: auto; height: 100%; max-width: none; }
-  .compare .ba-label { position: absolute; bottom: 10px; z-index: 4; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: oklch(0.165 0.012 264 / 0.74); border-radius: 6px; padding: 3px 8px; pointer-events: none; }
-  .compare .ba-label.l { left: 10px; }
-  .compare .ba-label.r { right: 10px; }
-  .compare .handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink); z-index: 5; transform: translateX(-1px); pointer-events: none; box-shadow: 0 0 0 1px oklch(0 0 0 / 0.35); }
-  .compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; background: var(--ink); border: 2px solid var(--bg); box-shadow: 0 3px 12px oklch(0 0 0 / 0.55); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23202430' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 14 L11 20 L17 26'/%3E%3Cpath d='M23 14 L29 20 L23 26'/%3E%3C/g%3E%3C/svg%3E"); }
-
-  /* lower shots: stacked full-width */
-  .shot-stack { display: flex; flex-direction: column; gap: 12px; }
-  .shot { position: relative; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; background: var(--bg-2); }
-  .shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .shot.effected { aspect-ratio: 16/9; }
-  .shot.controls { background: oklch(0.12 0.008 264); }
-  .shot.controls img { object-fit: contain; height: auto; padding: 14px 18px; }
-
-  /* ============ SECTION SCAFFOLD ============ */
-  section { padding-block: clamp(54px, 8vw, 108px); position: relative; }
-  .sec-head { max-width: 60ch; margin-bottom: clamp(34px, 5vw, 58px); }
-  .sec-head h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.6vw, 50px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
-  .sec-head p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; }
-  .sec-head.center { margin-inline: auto; text-align: center; }
-  .divider { height: 1px; background: var(--line-soft); }
-  .bordered { border-top: 1px solid var(--line-soft); }
-
-  .callout { margin-top: 26px; border-radius: 14px; padding: 20px 22px; background: var(--bg-2); border: 1px solid transparent; position: relative; overflow: hidden; }
-  .callout::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--oklab); }
-  .callout .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--oklab); font-weight: 600; }
-  .callout p { margin-top: 8px; font-size: 15.5px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
-
-  /* ============ PITCH / BEFORE-AFTER ============ */
+  /* ---- pitch ---- */
   .pitch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 820px) { .pitch-grid { grid-template-columns: 1fr; } }
-  .cmp { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-  .cmp .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
-  .cmp .tag.bad { color: var(--ink-faint); }
-  .cmp .tag.good { color: var(--oklab); }
-  .cmp .fig { height: 180px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line-soft); overflow: hidden; }
-  .cmp h4 { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.01em; }
-  .cmp p { font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .cmp { border: 2px solid var(--ink); background: var(--paper); padding: clamp(18px, 3vw, 24px); display: flex; flex-direction: column; gap: 14px; }
+  .cmp.good { border-style: solid; box-shadow: 6px 6px 0 var(--ink); background: var(--paper-2); }
+  .cmp .tag { font-family: var(--type); font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .cmp .tag.bad { color: var(--ink-3); }
+  .cmp .tag.good { color: var(--red); }
+  .cmp .fig { height: 180px; background: var(--view); border: 1px solid var(--ink); overflow: hidden; }
+  .cmp h4 { font-family: var(--display); font-stretch: 100%; font-weight: 800; text-transform: uppercase; font-size: 20px; line-height: 1.1; }
+  .cmp p { font-size: 15px; color: var(--ink-2); }
 
-  /* ============ TWO-AXIS FIELD ============ */
-  .axis-wrap { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: clamp(28px, 4vw, 52px); align-items: start; }
-  @media (max-width: 940px) { .axis-wrap { grid-template-columns: 1fr; } }
-  .field-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 22px; }
-  .field-stage { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line-soft); }
-  .field-stage canvas { display: block; width: 100%; height: auto; }
-  .field-axis-x, .field-axis-y { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
-  .field-axis-x { text-align: center; margin-top: 10px; }
-  .field-axis-y { position: absolute; left: -6px; top: 50%; transform: rotate(-90deg) translateX(-50%); transform-origin: left; white-space: nowrap; }
-  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; margin-top: 22px; }
-  .field-grid .seg { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 12px; }
-  .subpoints { display: grid; gap: 14px; }
-  .subpoint { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 13px; padding: 16px 18px; }
-  .subpoint .ic { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex: none; }
-  .subpoint b { font-size: 15px; }
-  .subpoint p { margin-top: 3px; font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
-
-  /* ============ MODE CARDS ============ */
-  .modes-intro { font-family: var(--display); font-weight: 500; font-size: clamp(20px, 2.6vw, 28px); color: var(--ink); letter-spacing: -0.01em; max-width: 32ch; margin-bottom: clamp(30px, 4vw, 48px); text-wrap: pretty; }
-  .modes-intro span { color: var(--ink-faint); }
-  .modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  /* ---- modes ---- */
+  .modes-intro { font-family: var(--display); font-stretch: 100%; font-weight: 700; font-size: clamp(20px, 2.6vw, 28px); line-height: 1.2; max-width: 34ch; margin-bottom: clamp(28px, 4vw, 44px); }
+  .modes-intro span { color: var(--ink-3); }
+  .modes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
   @media (max-width: 940px) { .modes-grid { grid-template-columns: 1fr; } }
-  .mode { --accent: var(--oklab); --accent-d: var(--oklab-d); background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; }
+  .mode { --accent: var(--oklab); --accent-d: var(--oklab-d); border: 2px solid var(--ink); border-top: 8px solid var(--accent); background: var(--paper); padding: clamp(18px, 3vw, 24px); display: flex; flex-direction: column; box-shadow: 4px 4px 0 var(--rule); }
   .mode .mhead { display: flex; align-items: center; gap: 11px; }
-  .mode .mchip { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 9px; padding: 6px 13px; border-radius: 99px; border: 1px solid color-mix(in oklab, var(--accent) 45%, transparent); background: var(--accent-d); }
-  .mode .mchip .d { width: 9px; height: 9px; border-radius: 3px; background: var(--accent); }
-  .mode .verb { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.04em; }
-  .mode h3 { font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: -0.01em; margin: 18px 0 0; }
-  .mode .mlede { margin-top: 10px; font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; min-height: 4.4em; }
-  .mode-fig { position: relative; aspect-ratio: 1; width: 100%; max-width: 300px; margin: 18px auto 4px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line-soft); overflow: hidden; display: grid; place-items: center; }
+  .mode .mchip { font-family: var(--type); font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); display: inline-flex; align-items: center; gap: 8px; padding: 3px 10px; border: 1.5px solid var(--ink); background: var(--accent-d); }
+  .mode .mchip .d { width: 10px; height: 10px; background: var(--accent); border: 1px solid var(--ink); }
+  .mode .verb { margin-left: auto; font-family: var(--type); font-size: 13px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .mode h3 { font-family: var(--display); font-stretch: 75%; font-weight: 900; text-transform: uppercase; font-size: clamp(26px, 2.6vw, 32px); line-height: 0.95; margin-top: 16px; }
+  .mode .mlede { margin-top: 10px; font-size: 15px; color: var(--ink-2); min-height: 4.4em; }
+  .mode-fig { position: relative; aspect-ratio: 1; width: 100%; max-width: 300px; margin: 18px auto 4px; background: var(--view); border: 1px solid var(--ink); overflow: hidden; display: grid; place-items: center; }
   .mode-fig svg { width: 100%; height: 100%; display: block; position: relative; z-index: 2; }
-  .mode .readout { display: flex; align-items: baseline; justify-content: space-between; margin-top: 14px; font-family: var(--mono); }
-  .mode .readout .k { font-size: 11px; letter-spacing: 0.06em; color: var(--ink-faint); }
-  .mode .readout .v { font-size: 18px; color: var(--accent); font-weight: 500; }
-  .mode .mtail { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-soft); font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
-  .mode .mtail b { color: var(--ink); font-weight: 600; }
-
-  /* oklab disc + hue ring helpers */
+  .mode .readout { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 6px 0; border-block: 1px solid var(--ink); font-family: var(--type); }
+  .mode .readout .k { font-size: 12.5px; color: var(--ink-2); }
+  .mode .readout .v { font-size: 20px; font-weight: 700; color: var(--accent); }
+  .mode .mtail { margin-top: 14px; font-size: 14.5px; color: var(--ink-2); }
+  .mode .mtail b { color: var(--ink); }
   .oklab-disc { position: absolute; inset: 14%; border-radius: 50%; background: conic-gradient(from 0deg, oklch(0.7 0.18 30), oklch(0.82 0.15 95), oklch(0.78 0.16 150), oklch(0.8 0.12 210), oklch(0.64 0.18 280), oklch(0.7 0.2 340), oklch(0.7 0.18 30)); }
-  .oklab-disc::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at center, var(--bg) 0%, transparent 62%); }
+  .oklab-disc::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at center, var(--view) 0%, transparent 62%); }
   .hue-ring { position: absolute; inset: 8%; border-radius: 50%; background: conic-gradient(from 0deg, oklch(0.7 0.18 30), oklch(0.82 0.15 95), oklch(0.78 0.16 150), oklch(0.8 0.12 210), oklch(0.64 0.18 280), oklch(0.7 0.2 340), oklch(0.7 0.18 30)); -webkit-mask: radial-gradient(circle at center, transparent 0 56%, #000 57.5% 80%, transparent 81%); mask: radial-gradient(circle at center, transparent 0 56%, #000 57.5% 80%, transparent 81%); }
-  .cube-t { fill: oklch(0.42 0.06 30); stroke: var(--line); stroke-width: 1.5; }
-  .cube-l { fill: oklch(0.30 0.05 30); stroke: var(--line); stroke-width: 1.5; }
-  .cube-r { fill: oklch(0.36 0.055 30); stroke: var(--line); stroke-width: 1.5; }
+  .cube-t { fill: #6b3a2f; stroke: #555; stroke-width: 1.5; }
+  .cube-l { fill: #45261f; stroke: #555; stroke-width: 1.5; }
+  .cube-r { fill: #573028; stroke: #555; stroke-width: 1.5; }
 
-  /* ============ MENTAL MODEL ============ */
-  .meta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 52px); }
-  @media (max-width: 760px) { .meta-row { grid-template-columns: 1fr; gap: 36px; } }
-  .meta-card { --accent: var(--oklab); display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
-  .meta-icon { width: clamp(120px, 16vw, 170px); height: clamp(120px, 16vw, 170px); }
-  .meta-name { font-family: var(--display); font-weight: 700; font-size: 28px; letter-spacing: -0.01em; color: var(--accent); }
-  .meta-verb { font-family: var(--mono); font-size: 14px; letter-spacing: 0.06em; color: var(--ink-dim); }
-
-  /* ============ WHIP / DENSITY ============ */
-  .shape-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(28px, 4vw, 52px); align-items: stretch; }
+  /* ---- whip & density ---- */
+  .shape-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(24px, 4vw, 48px); align-items: stretch; }
   @media (max-width: 940px) { .shape-grid { grid-template-columns: 1fr; } }
-  .plot-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 24px; }
-  .plot-card svg { width: 100%; height: auto; display: block; }
-  .plot-card .axis { stroke: var(--line); stroke-width: 1.5; }
-  .plot-card .grid-l { stroke: var(--line-soft); stroke-width: 1; }
-  .plot-card .tk { font-family: var(--mono); font-size: 13px; fill: var(--ink-faint); }
-  .density-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 16px; }
-  .density-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
-  .density-card p { font-size: 14.5px; color: var(--ink-dim); text-wrap: pretty; }
-  .dye-strip { height: 56px; border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: repeat(6, 1fr); }
+  .plot-card { border: 2px solid var(--ink); background: var(--paper-2); padding: clamp(16px, 3vw, 24px); box-shadow: 6px 6px 0 var(--ink); min-width: 0; }
+  .plot-card svg { width: 100%; height: auto; display: block; background: var(--paper); border: 1px solid var(--ink); }
+  .plot-card .axis { stroke: var(--ink); stroke-width: 2; }
+  .plot-card .grid-l { stroke: var(--rule); stroke-width: 1.5; }
+  .plot-card .tk { font-family: var(--type); font-size: 13px; fill: var(--ink-2); }
+  .density-card { border: 2px solid var(--ink); background: var(--paper); padding: clamp(18px, 3vw, 26px); display: flex; flex-direction: column; gap: 14px; }
+  .density-card h4 { font-family: var(--display); font-stretch: 100%; font-weight: 800; text-transform: uppercase; font-size: 22px; line-height: 1.1; }
+  .density-card p { font-size: 15px; color: var(--ink-2); }
+  .density-card p strong, .density-card p em { color: var(--ink); }
+  .dye-strip { height: 56px; display: grid; grid-template-columns: repeat(6, 1fr); border: 2px solid var(--ink); }
   .dye-strip span { display: block; }
+  .dye-note { font-family: var(--type); font-size: 12.5px; color: var(--ink-3) !important; }
 
-  /* ============ SKIN WORKFLOW ============ */
-  .skin-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: clamp(28px, 4vw, 52px); align-items: start; }
-  @media (max-width: 940px) { .skin-grid { grid-template-columns: 1fr; } }
-  .workflow { display: grid; gap: 12px; counter-reset: step; }
-  .wstep { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px; }
-  .wstep .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--gravity); width: 30px; height: 30px; border-radius: 8px; border: 1px solid color-mix(in oklab, var(--gravity) 40%, transparent); background: var(--gravity-d); display: grid; place-items: center; flex: none; }
-  .wstep .n::before { content: counter(step, decimal-leading-zero); }
-  .wstep b { font-size: 15.5px; }
-  .wstep p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
-  .wstep .pill { font-family: var(--mono); font-size: 12px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 1px 7px; color: var(--gravity); }
-  .skin-fig { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 18px; padding: 22px; }
-  .skin-fig .field-stage { margin-bottom: 0; }
-  .skin-fig .cap { margin-top: 14px; font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.04em; text-align: center; text-wrap: pretty; }
-
-  /* ============ SHOW EFFECTED ============ */
-  .diag-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 4vw, 52px); align-items: center; }
-  @media (max-width: 820px) { .diag-grid { grid-template-columns: 1fr; } }
-  .checker-fig { aspect-ratio: 16/10; border-radius: 16px; border: 1px solid var(--line-soft); position: relative; overflow: hidden; background: var(--bg); }
-  .checker-fig .ckr { position: absolute; inset: 0; background-image: linear-gradient(45deg, oklch(0.80 0.115 210 / 0.55) 25%, transparent 25%), linear-gradient(-45deg, oklch(0.80 0.115 210 / 0.55) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, oklch(0.80 0.115 210 / 0.55) 75%), linear-gradient(-45deg, transparent 75%, oklch(0.80 0.115 210 / 0.55) 75%); background-size: 26px 26px; background-position: 0 0, 0 13px, 13px -13px, -13px 0; -webkit-mask: radial-gradient(ellipse 38% 54% at 58% 46%, #000 38%, transparent 72%); mask: radial-gradient(ellipse 38% 54% at 58% 46%, #000 38%, transparent 72%); }
-
-  /* ============ FEATURE GRID ============ */
-  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  /* ---- features ---- */
+  .feat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--ink); border-left: 2px solid var(--ink); }
   @media (max-width: 880px) { .feat-grid { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 540px) { .feat-grid { grid-template-columns: 1fr; } }
-  .feat { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 20px; }
+  .feat { padding: 18px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); background: var(--paper); }
+  .feat:hover { background: rgba(227, 178, 60, 0.13); }
   .feat .ft { display: flex; align-items: center; gap: 10px; }
-  .feat .dot { width: 9px; height: 9px; border-radius: 3px; flex: none; }
-  .feat b { font-size: 15.5px; }
-  .feat p { margin-top: 8px; font-size: 13.5px; color: var(--ink-dim); text-wrap: pretty; }
+  .feat .dot { width: 12px; height: 12px; flex: none; border: 1px solid var(--ink); }
+  .feat b { font-family: var(--display); font-stretch: 100%; font-weight: 800; text-transform: uppercase; font-size: 16px; line-height: 1.15; }
+  .feat p { margin-top: 6px; font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
 
-  /* ============ MEMBERSHIP ============ */
-  .sub { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
-  .sub-grid { display: grid; grid-template-columns: 1fr 0.92fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
-  @media (max-width: 940px) { .sub-grid { grid-template-columns: 1fr; } }
-  .sub-copy h2 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -0.02em; line-height: 1.02; margin-top: 14px; }
-  .sub-copy p { margin-top: 18px; color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 19px); text-wrap: pretty; max-width: 52ch; }
-  .sub-copy p strong { color: var(--ink); font-weight: 600; }
-  .sub-copy .free-note { margin-top: 24px; border-radius: 14px; padding: 18px 20px; background: var(--oklab-d); position: relative; overflow: hidden; }
-  .sub-copy .free-note::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--oklab); }
-  .sub-copy .free-note .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--oklab); font-weight: 600; }
-  .sub-copy .free-note p { margin-top: 8px; font-size: 15px; color: var(--ink); max-width: none; }
-  .price-card { position: relative; background: linear-gradient(180deg, var(--bg-1), var(--bg)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(28px, 4vw, 40px); overflow: hidden; }
-  .price-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta)); }
-  .price-card .plan { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gravity); }
-  .price-card .amt { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
-  .price-card .amt b { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 72px); line-height: 1; letter-spacing: -0.03em; }
-  .price-card .amt span { font-family: var(--mono); font-size: 14px; color: var(--ink-faint); }
-  .price-card .note { margin-top: 12px; color: var(--ink-dim); font-size: 15.5px; text-wrap: pretty; }
-  .price-list { list-style: none; margin: 22px 0 0; display: grid; gap: 12px; }
-  .price-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; color: var(--ink); }
-  .price-list li::before { content: "✓"; color: var(--green); font-weight: 700; font-family: var(--mono); flex: none; margin-top: 1px; }
-  .price-card .btn { margin-top: 26px; width: 100%; justify-content: center; }
-  .price-foot { margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); text-align: center; letter-spacing: 0.03em; }
+  /* ---- get it / membership ---- */
+  .free-note { margin-top: 18px; border: 1.5px dashed var(--ink); border-left: 6px solid var(--blue); padding: 12px 14px; background: var(--paper); }
+  .free-note .k { font-family: var(--type); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); }
+  .free-note p { margin-top: 4px; font-size: 15px; }
+  .coupon .note { margin-bottom: 4px; }
+  .coupon .send { display: block; text-align: center; margin-top: 22px; }
+  .coupon .plan.free { color: var(--red); }
+  section.sub { scroll-margin-top: 20px; }
 
-  /* ============ INSTALL ============ */
-  .install { border-top: 1px solid var(--line-soft); scroll-margin-top: 80px; }
-  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 56px); align-items: start; }
+  /* ---- install ---- */
+  .install-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(28px, 5vw, 56px); align-items: start; }
   @media (max-width: 940px) { .install-grid { grid-template-columns: 1fr; } }
-  .steps { display: grid; gap: 12px; counter-reset: step; }
-  .step { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: flex-start; background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 20px; }
-  .step .n { counter-increment: step; font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--green); width: 30px; height: 30px; border-radius: 8px; border: 1px solid oklch(0.74 0.165 148 / 0.4); background: var(--green-d); display: grid; place-items: center; flex: none; }
-  .step .n::before { content: counter(step, decimal-leading-zero); }
-  .step .st b { font-weight: 600; font-size: 15.5px; }
-  .step .st p { margin-top: 4px; font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
-  .step .st code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 7px; color: var(--oklab); }
-  .step .st a.inline { color: var(--oklab); border-bottom: 1px solid oklch(0.80 0.115 210 / 0.4); }
-  .install-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
-  .manager-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; }
-  .manager-card .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); }
-  .manager-card h4 { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-top: 10px; }
-  .manager-card p { margin-top: 10px; color: var(--ink-dim); font-size: 14.5px; text-wrap: pretty; }
-  .manager-card .btn { margin-top: 18px; width: 100%; justify-content: center; }
-  .note-card { background: var(--gravity-d); border: 1px solid transparent; border-radius: 16px; padding: 20px 22px; position: relative; overflow: hidden; }
-  .note-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gravity); }
-  .note-card .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gravity); font-weight: 600; }
-  .note-card p { margin-top: 8px; font-size: 14px; color: var(--ink); line-height: 1.55; text-wrap: pretty; }
+  .steps { counter-reset: step; border-top: 2px solid var(--ink); }
+  .steps .step { display: grid; grid-template-columns: 48px 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .steps .step .n { font-family: var(--type); font-weight: 700; font-size: 14px; border: 1.5px solid var(--ink); text-align: center; align-self: start; padding: 2px 0; counter-increment: step; }
+  .steps .step .n::before { content: counter(step, decimal-leading-zero); }
+  .steps .st b { font-family: var(--display); font-stretch: 100%; font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .steps .st p { margin-top: 4px; font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+  .steps .st p b { font-family: inherit; font-size: inherit; text-transform: none; letter-spacing: 0; color: var(--ink); }
+  .steps .st code { font-family: var(--type); font-size: 13.5px; font-weight: 700; background: var(--paper-2); border: 1px solid var(--ink); padding: 0 6px; }
+  a.inline { color: var(--blue); font-weight: 600; text-underline-offset: 3px; }
+  .install-aside { display: flex; flex-direction: column; gap: 20px; }
+  .manager-card { border: 2px solid var(--ink); background: var(--paper-2); padding: 22px; box-shadow: 6px 6px 0 var(--ink); }
+  .manager-card .badge { font-family: var(--type); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+  .manager-card h4 { font-family: var(--display); font-stretch: 100%; font-weight: 800; text-transform: uppercase; font-size: 24px; line-height: 1.1; margin-top: 6px; }
+  .manager-card p { margin-top: 8px; color: var(--ink-2); font-size: 15px; }
+  .manager-card .send { display: block; text-align: center; margin-top: 18px; }
+  .note-card { border: 1.5px dashed var(--ink); border-left: 6px solid var(--p-yellow); padding: 16px 18px; background: var(--paper); }
+  .note-card .k { font-family: var(--type); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .note-card p { margin-top: 6px; font-size: 15px; line-height: 1.55; }
 
-  /* ============ FOOTER ============ */
-  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
-  .foot-cta { text-align: center; padding-bottom: 48px; border-bottom: 1px solid var(--line-soft); margin-bottom: 44px; }
-  .foot-cta .big { font-family: var(--display); font-weight: 700; font-size: clamp(32px, 6vw, 64px); letter-spacing: -0.025em; line-height: 1.0; color: var(--ink); }
-  .foot-cta .big em { font-style: normal; background: linear-gradient(96deg, var(--gravity), var(--tetra) 50%, var(--oklab)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  .foot-cta p { margin-top: 18px; color: var(--ink-dim); font-size: 17px; }
-  .foot-cta .btn { margin-top: 26px; }
-  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
-  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
-  footer .brandbig { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
-  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
-  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
-  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
-  footer .fcol a:hover { color: var(--ink); }
-  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
-  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  footer .legal a.link { color: var(--oklab); }
+  /* ---- closing call to action ---- */
+  .foot-cta { text-align: center; }
+  .foot-cta .big { font-family: var(--display); font-stretch: 62%; font-weight: 900; text-transform: uppercase; font-size: clamp(44px, 7vw, 88px); line-height: 0.88; }
+  .foot-cta .big em { font-style: normal; color: var(--red); }
+  .foot-cta p { margin: 16px auto 0; color: var(--ink-2); max-width: 56ch; }
+  .foot-cta .send { margin-top: 24px; }
 
-  /* ============ REVEAL ============ */
-  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  /* ---- scroll reveal ---- */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
-  /* ============ TOUCH HARDENING ============ */
+  /* ---- touch ---- */
   @media (pointer: coarse) {
-    input[type=range] { height: 42px; background: linear-gradient(var(--line), var(--line)) center / 100% 6px no-repeat; }
-    input[type=range]::-webkit-slider-thumb { width: 26px; height: 26px; border-width: 4px; }
-    input[type=range]::-moz-range-track { background: transparent; height: 6px; }
-    input[type=range]::-moz-range-thumb { width: 26px; height: 26px; border-width: 4px; }
-    .toggle, .seg select, .btn, nav.toplinks a.cta { min-height: 44px; }
-    .vchip { padding: 12px 8px; }
-    nav.toplinks a { padding-block: 4px; }
+    .ctl input[type=range] { height: 42px; }
+    .ctl input[type=range]::-webkit-slider-thumb { width: 26px; height: 26px; }
+    .ctl input[type=range]::-moz-range-thumb { width: 22px; height: 22px; }
+    .vchip { min-height: 44px; }
+    .toggle { min-height: 44px; }
   }
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="row">
-    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios — home">
-      <span class="logo"></span>
-    </a>
-    <nav class="toplinks">
-      <a href="../">All tools</a>
+<!-- ============ TOP BAR + HERO ============ -->
+<header class="mast">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="https://dec18studios.com/" target="_top" aria-label="Dec. 18 Studios home"><span class="logo"></span></a>
+      <nav class="toplinks">
+        <a href="https://dec18studios.com/projects" target="_top">Portfolio</a>
+        <a href="../" class="current">All tools</a>
+        <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
+        <a href="https://dec18studios.com/account/digital-products" target="_top">Account</a>
+        <a href="#subscribe" class="cta">Get the tools · $47.34</a>
+      </nav>
+    </div>
+    <nav class="subnav" aria-label="On this page">
       <a href="#modes">Three modes</a>
+      <a href="#shape">Whip &amp; Density</a>
       <a href="#features">Features</a>
       <a href="#getit">Download · Free</a>
-      <a href="https://dec18studios.com/account/digital-products" target="_top">Account</a>
-      <a href="#subscribe" class="cta">Get the tools · $47.34</a>
+      <a href="#install">Install</a>
     </nav>
-  </div>
-</header>
 
-<a id="top"></a>
+    <a id="top"></a>
 
-<!-- ============ HERO ============ -->
-<section class="hero" data-screen-label="Hero">
-  <div class="hero-glow"></div>
-  <div class="wrap">
-    <div class="hero-grid">
+    <div class="hero-grid" data-screen-label="Hero">
       <div>
         <span class="badge-resolve"><span class="d"></span>For DaVinci Resolve</span>
-        <h1 class="hero-title">Surgical hue control.<br /><em>Three ways to move colour.</em></h1>
-        <p class="hero-sub">Color Slicer isolates exactly one hue, gated by both colour and brightness, then reshapes it three different ways. Pick a vector, slice it out, and grade only what's inside the selection.</p>
-        <div class="hero-cta">
-          <!-- NOTE: confirm the Color Slicer release URL — placeholder repo for now. -->
-          <a class="btn primary dl" data-slug="colorslice" data-name="Color Slicer" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest/download/Color-Slicer-DCTL-v2.0.zip" target="_blank" rel="noopener">Download Color Slicer · Free →</a>
-          <a class="btn" href="#modes">See the three modes</a>
+        <h1 class="title">Surgical hue control.<br /><em>Three ways to move colour.</em></h1>
+        <p class="lede">Color Slicer isolates exactly one hue, gated by both colour and brightness, then reshapes it three different ways. Pick a vector, slice it out, and grade only what's inside the selection.</p>
+        <div class="btns">
+          <!-- NOTE: confirm the Color Slicer release URL, placeholder repo for now. -->
+          <a class="send dl" data-slug="colorslice" data-name="Color Slicer" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest/download/Color-Slicer-DCTL-v2.0.zip" target="_blank" rel="noopener">Download Color Slicer · Free →</a>
+          <a class="send ghost" href="#modes">See the three modes</a>
         </div>
-        <div class="hero-meta">
+        <div class="meta">
           <div class="m"><b>7</b><span>hue vectors</span></div>
           <div class="m"><b>2-axis</b><span>hue × luma mask</span></div>
           <div class="m"><b>3</b><span>rotation engines</span></div>
@@ -450,66 +236,77 @@
       </div>
 
       <!-- results: real frames from Resolve, before/after + show effected -->
-      <div class="shot-card reveal">
-        <div class="compare" id="baCompare" data-shot="still-original">
-          <span class="shot-tag"><span class="d" style="background:var(--blue)"></span>Color Slicer · Blue</span>
-          <img src="assets/still-before.jpg" alt="Ungraded original frame" />
-          <div class="after-wrap" id="baAfter">
-            <img src="assets/still-graded.jpg" alt="Graded frame with Color Slicer" />
+      <div class="shots reveal">
+        <figure class="viewer" data-shot="still-original">
+          <div class="compare" style="--split:50%">
+            <img class="before" src="assets/still-before.jpg" width="1920" height="1080" alt="Ungraded original frame" />
+            <img class="after" src="assets/still-graded.jpg" width="1920" height="1080" alt="Graded frame with Color Slicer" />
+            <span class="tag l">Before</span><span class="tag r">After</span>
+            <span class="handle"></span>
+            <input type="range" min="0" max="100" value="50" step="0.1" aria-label="Drag to compare before and after Color Slicer" />
           </div>
-          <div class="handle" id="baHandle"></div>
-          <span class="ba-label l">Before</span>
-          <span class="ba-label r">After</span>
-        </div>
-        <div class="shot effected" data-shot="still-effected">
-          <span class="shot-tag"><span class="d" style="background:var(--oklab)"></span>Show Effected</span>
-          <img src="assets/show-effected-blue.jpg" alt="Show Effected mode isolating the blue selection against black" />
-        </div>
-        <div class="shot-cap">Real grade: Blue vector, Tetrahedral Remix. Drag the slider to compare; below, the isolated selection in Show Effected.</div>
+          <figcaption class="slate">
+            <span><span class="d" style="background:var(--blue)"></span>Color Slicer · Blue</span>
+            <span>
+              <a href="assets/still-before.jpg" data-full="assets/still-before.jpg" data-cap="Color Slicer · before">Before full res ↗</a>
+              &nbsp;&nbsp;
+              <a href="assets/still-graded.jpg" data-full="assets/still-graded.jpg" data-cap="Color Slicer · Blue vector, Tetrahedral Remix">After full res ↗</a>
+            </span>
+          </figcaption>
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        </figure>
+        <figure class="viewer" data-shot="still-effected">
+          <img src="assets/show-effected-blue.jpg" width="1920" height="1080" alt="Show Effected mode isolating the blue selection against black" data-full="assets/show-effected-blue.jpg" data-cap="Color Slicer · Show Effected, Blue" />
+          <figcaption class="slate"><span><span class="d" style="background:var(--oklab)"></span>Show Effected</span><a href="assets/show-effected-blue.jpg" data-full="assets/show-effected-blue.jpg" data-cap="Color Slicer · Show Effected, Blue">Full res ↗</a></figcaption>
+        </figure>
+        <p class="shot-cap">Real grade: Blue vector, Tetrahedral Remix. Drag the slider to compare; below, the isolated selection in Show Effected.</p>
       </div>
     </div>
 
     <!-- lab: live slice interaction beside the real controls panel -->
     <div class="lab-row reveal">
-      <div class="wheel-card lab" id="diagnostic" style="scroll-margin-top:90px;">
+      <div class="wheel-card" id="diagnostic">
         <div class="wheel-head">
           <p class="eyebrow">Live · Slice one colour out</p>
           <span class="live-tag">Try it</span>
         </div>
-        <div class="wheel-stage">
-          <canvas id="sliceWheel"></canvas>
-          <div class="slice-marker" id="sliceMarker"></div>
+        <div class="wheel-view">
+          <div class="wheel-stage">
+            <canvas id="sliceWheel"></canvas>
+            <div class="slice-marker" id="sliceMarker"></div>
+          </div>
+          <div class="wheel-caption">Pick a vector, set the width, toggle Show Effected.</div>
         </div>
-        <div class="wheel-caption">Pick a vector, set the width, toggle Show Effected.</div>
 
         <div class="vlegend" id="wheelVectors"></div>
 
         <div class="ctl">
           <div class="ctl-label"><span>Hue Width</span><b id="wheelWidthOut">26°</b></div>
-          <input type="range" id="wheelWidth" min="6" max="80" step="1" value="26" />
+          <input type="range" id="wheelWidth" min="6" max="80" step="1" value="26" aria-label="Hue Width" />
         </div>
         <div class="ctl-row">
-          <button class="toggle" id="wheelShow" aria-pressed="false">Show Effected</button>
-          <span style="font-family:var(--mono); font-size:11px; color:var(--ink-faint); text-wrap:pretty;">Everything outside the slice drops to black.</span>
+          <button class="toggle" id="wheelShow" type="button" aria-pressed="false">Show Effected</button>
+          <span class="hint">Everything outside the slice drops to black.</span>
         </div>
       </div>
 
-      <div class="controls-card">
-        <span class="shot-tag">Controls · Blue / Tetrahedral</span>
-        <img src="assets/controls-panel.png" alt="Color Slicer controls panel targeting Blue with Tetrahedral Remix" />
-      </div>
+      <figure class="viewer controls-view">
+        <div class="pane">
+          <img src="assets/controls-panel.png" width="794" height="760" alt="Color Slicer controls panel targeting Blue with Tetrahedral Remix" data-full="assets/controls-panel.png" data-cap="Color Slicer · Controls, Blue / Tetrahedral" />
+        </div>
+        <figcaption class="slate"><span>Controls · Blue / Tetrahedral</span><a href="assets/controls-panel.png" data-full="assets/controls-panel.png" data-cap="Color Slicer · Controls, Blue / Tetrahedral">Full res ↗</a></figcaption>
+      </figure>
     </div>
   </div>
-</section>
+  <div class="bars" aria-hidden="true" style="margin-top:clamp(36px,5vw,56px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</header>
 
 <!-- ============ SHOW EFFECTED section removed: live wheel moved into the hero, real Show Effected still lives in the hero shot-card ============ -->
 
-<div class="wrap"><div class="divider"></div></div>
-
 <!-- ============ THE PITCH ============ -->
-<section id="pitch" data-screen-label="The pitch">
+<section class="part" id="pitch" data-screen-label="The pitch">
   <div class="wrap">
-    <div class="sec-head reveal">
+    <div class="part-head reveal">
       <p class="eyebrow">The problem</p>
       <h2>Qualifiers are broad. Hue curves are fiddly.</h2>
       <p>Resolve's built-in qualifiers and hue curves smear across wide bands and take constant babysitting. Color Slicer isolates a single hue, gated by both colour <em>and</em> brightness, so your move lands only where you mean it.</p>
@@ -524,29 +321,29 @@
                 <stop offset="0" stop-color="oklch(0.66 0.18 30)"/><stop offset="0.5" stop-color="oklch(0.78 0.15 95)"/><stop offset="1" stop-color="oklch(0.74 0.16 150)"/>
               </linearGradient>
             </defs>
-            <rect x="0" y="0" width="360" height="180" fill="oklch(0.20 0.01 264)"/>
-            <rect x="40" y="34" width="240" height="112" rx="10" fill="url(#hueband)" opacity="0.5"/>
-            <g fill="oklch(0.95 0 0 / 0.65)">
+            <rect x="0" y="0" width="360" height="180" fill="#121212"/>
+            <rect x="40" y="34" width="240" height="112" fill="url(#hueband)" opacity="0.5"/>
+            <g fill="rgba(242,242,242,0.65)">
               <circle cx="70" cy="60" r="3"/><circle cx="120" cy="120" r="3"/><circle cx="200" cy="50" r="3"/><circle cx="250" cy="130" r="3"/><circle cx="300" cy="70" r="3"/><circle cx="160" cy="150" r="3"/><circle cx="320" cy="120" r="3"/>
             </g>
-            <text x="180" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="oklch(0.55 0.01 264)">bleeds across neighbours · grabs the wrong tones</text>
+            <text x="180" y="170" text-anchor="middle" font-family="Courier Prime, Courier New, monospace" font-size="11" fill="#a6a6a6">bleeds across neighbours · grabs the wrong tones</text>
           </svg>
         </div>
         <h4>Spills where you don't want it</h4>
         <p>A wide selection catches skin, wood and warm highlights all at once. You fight it with extra windows and keys.</p>
       </div>
-      <div class="cmp">
+      <div class="cmp good">
         <span class="tag good">Color Slicer</span>
         <div class="fig">
           <svg viewBox="0 0 360 180" width="100%" height="100%" preserveAspectRatio="none">
-            <rect x="0" y="0" width="360" height="180" fill="oklch(0.20 0.01 264)"/>
+            <rect x="0" y="0" width="360" height="180" fill="#121212"/>
             <ellipse cx="200" cy="86" rx="58" ry="44" fill="oklch(0.66 0.16 35)" opacity="0.42"/>
             <ellipse cx="200" cy="86" rx="40" ry="30" fill="oklch(0.7 0.18 35)" opacity="0.55"/>
-            <g fill="oklch(0.95 0 0 / 0.5)">
+            <g fill="rgba(242,242,242,0.5)">
               <circle cx="70" cy="60" r="3"/><circle cx="120" cy="120" r="3"/><circle cx="300" cy="70" r="3"/><circle cx="320" cy="120" r="3"/>
             </g>
             <g fill="oklch(0.92 0.14 60)"><circle cx="190" cy="80" r="3.4"/><circle cx="214" cy="92" r="3.4"/><circle cx="200" cy="100" r="3.4"/></g>
-            <text x="180" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="oklch(0.55 0.01 264)">one hue · gated by light · nothing else moves</text>
+            <text x="180" y="170" text-anchor="middle" font-family="Courier Prime, Courier New, monospace" font-size="11" fill="#a6a6a6">one hue · gated by light · nothing else moves</text>
           </svg>
         </div>
         <h4>Lands on exactly one tone</h4>
@@ -557,9 +354,9 @@
 </section>
 
 <!-- ============ THE THREE MODES ============ -->
-<section id="modes" class="bordered" data-screen-label="Three modes">
+<section class="part" id="modes" data-screen-label="Three modes">
   <div class="wrap">
-    <div class="sec-head reveal">
+    <div class="part-head reveal">
       <p class="eyebrow">The headline feature</p>
       <h2>Three rotation modes.</h2>
     </div>
@@ -577,8 +374,8 @@
         <div class="mode-fig" id="okStage">
           <div class="oklab-disc"></div>
           <svg viewBox="0 0 260 260">
-            <line x1="30" y1="130" x2="230" y2="130" stroke="oklch(1 0 0 / 0.18)" stroke-width="1.2"/>
-            <line x1="130" y1="30" x2="130" y2="230" stroke="oklch(1 0 0 / 0.18)" stroke-width="1.2"/>
+            <line x1="30" y1="130" x2="230" y2="130" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+            <line x1="130" y1="30" x2="130" y2="230" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
             <g id="okDots">
               <circle cx="130" cy="56" r="10" fill="oklch(0.7 0.15 330)" stroke="var(--bg)" stroke-width="2.5"/>
               <circle cx="196" cy="96" r="10" fill="oklch(0.68 0.17 35)" stroke="var(--bg)" stroke-width="2.5"/>
@@ -586,7 +383,7 @@
               <circle cx="96" cy="192" r="10" fill="oklch(0.74 0.15 150)" stroke="var(--bg)" stroke-width="2.5"/>
               <circle cx="60" cy="104" r="10" fill="oklch(0.62 0.16 255)" stroke="var(--bg)" stroke-width="2.5"/>
             </g>
-            <circle cx="130" cy="130" r="4" fill="var(--ink-faint)"/>
+            <circle cx="130" cy="130" r="4" fill="#a6a6a6"/>
           </svg>
         </div>
         <div class="readout"><span class="k">Hue Rotate θ</span><span class="v" id="okTheta">+0°</span></div>
@@ -606,11 +403,11 @@
             <polygon class="cube-t" points="300,80 430,155 300,230 170,155"/>
             <polygon class="cube-l" points="170,155 300,230 300,380 170,305"/>
             <polygon class="cube-r" points="300,230 430,155 430,305 300,380"/>
-            <line id="tetraVec" x1="430" y1="305" x2="430" y2="305" stroke="var(--tetra)" stroke-width="3" stroke-dasharray="4 6"/>
+            <line id="tetraVec" x1="430" y1="305" x2="430" y2="305" stroke="#e6e6e6" stroke-width="3" stroke-dasharray="4 6"/>
             <circle id="tetraP1" data-w="0.7" data-bx="372" data-by="300" cx="372" cy="300" r="9" fill="oklch(0.6 0.18 30)"/>
             <circle id="tetraP2" data-w="0.45" data-bx="345" data-by="270" cx="345" cy="270" r="9" fill="oklch(0.62 0.15 40)"/>
             <circle id="tetraP3" data-w="0.25" data-bx="330" data-by="240" cx="330" cy="240" r="9" fill="oklch(0.64 0.12 48)"/>
-            <circle id="tetraCorner" cx="430" cy="305" r="13" fill="var(--tetra)" stroke="var(--bg)" stroke-width="3"/>
+            <circle id="tetraCorner" cx="430" cy="305" r="13" fill="var(--tetra)" stroke="#e6e6e6" stroke-width="3"/>
           </svg>
         </div>
         <div class="readout"><span class="k">Red → corner shift</span><span class="v" id="tetraRm">0.00</span></div>
@@ -628,7 +425,7 @@
         <div class="mode-fig" id="gravStage">
           <div class="hue-ring"></div>
           <svg viewBox="0 0 260 260" style="overflow:visible;">
-            <circle cx="191.7" cy="56.5" r="9" fill="none" stroke="var(--gravity)" stroke-width="2.4"/>
+            <circle cx="191.7" cy="56.5" r="9" fill="none" stroke="#e6e6e6" stroke-width="2.4"/>
             <circle id="gravD0" cx="130" cy="50" r="9" fill="oklch(0.7 0.13 350)" stroke="var(--bg)" stroke-width="2.4"/>
             <circle id="gravD1" cx="130" cy="50" r="9" fill="oklch(0.68 0.14 20)" stroke="var(--bg)" stroke-width="2.4"/>
             <circle id="gravD2" cx="130" cy="50" r="9" fill="oklch(0.68 0.13 40)" stroke="var(--bg)" stroke-width="2.4"/>
@@ -647,9 +444,9 @@
 </section>
 
 <!-- ============ WHIP & DENSITY ============ -->
-<section id="shape" class="bordered" data-screen-label="Whip & Density">
+<section class="part" id="shape" data-screen-label="Whip &amp; Density">
   <div class="wrap">
-    <div class="sec-head reveal">
+    <div class="part-head reveal">
       <p class="eyebrow">Shape the move</p>
       <h2>Whip &amp; Density.</h2>
       <p>Two controls shape the rotation itself. <em>Whip</em> sets how your most saturated colours move relative to the low-sat ones, and <em>Density</em> shapes how richly the colour builds as it shifts.</p>
@@ -658,9 +455,9 @@
       <div class="plot-card reveal">
         <svg viewBox="0 0 600 300">
           <line class="grid-l" x1="60" y1="145" x2="560" y2="145" stroke-dasharray="4 6"/>
-          <path id="whipArea" d="" fill="var(--gravity)" opacity="0.12"/>
+          <path id="whipArea" d="" fill="var(--gravity)" opacity="0.18"/>
           <path id="whipPath" d="" fill="none" stroke="var(--gravity)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle id="whipHigh" cx="560" cy="145" r="7" fill="var(--gravity)" stroke="var(--bg)" stroke-width="2.5"/>
+          <circle id="whipHigh" cx="560" cy="145" r="7" fill="var(--gravity)" stroke="var(--ink)" stroke-width="2.5"/>
           <line class="axis" x1="60" y1="30" x2="60" y2="250"/>
           <line class="axis" x1="60" y1="250" x2="562" y2="250"/>
           <text x="70" y="44" class="tk" text-anchor="start" font-size="11">↑ leads (faster)</text>
@@ -672,7 +469,7 @@
         </svg>
         <div class="ctl">
           <div class="ctl-label"><span>Whip · <b id="whipBias">uniform rotation</b></span><b id="whipOut">+0.00</b></div>
-          <input type="range" id="whipSlider" min="-1" max="1" step="0.02" value="0" />
+          <input type="range" id="whipSlider" min="-1" max="1" step="0.02" value="0" aria-label="Whip" />
         </div>
       </div>
       <div class="density-card reveal">
@@ -687,16 +484,16 @@
           <span style="background:oklch(0.42 0.15 29)"></span>
           <span style="background:oklch(0.32 0.12 27)"></span>
         </div>
-        <p style="font-family:var(--mono); font-size:11.5px; color:var(--ink-faint);">Subtractive density ramp — colour darkens by pulling all three channels, like dye on film.</p>
+        <p class="dye-note">Subtractive density ramp: colour darkens by pulling all three channels, like dye on film.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ FEATURE GRID ============ -->
-<section id="features" class="bordered" data-screen-label="Features">
+<section class="part" id="features" data-screen-label="Features">
   <div class="wrap">
-    <div class="sec-head reveal">
+    <div class="part-head reveal">
       <p class="eyebrow">Everything in the box</p>
       <h2>The full capability set.</h2>
     </div>
@@ -718,73 +515,81 @@
 </section>
 
 <!-- ============ GET IT (free) ============ -->
-<section class="sub" id="getit" data-screen-label="Get it free">
+<section class="part sub" id="getit" data-screen-label="Get it free">
   <div class="wrap">
-    <div class="sub-grid">
-      <div class="sub-copy reveal">
-        <p class="eyebrow">Get it</p>
-        <h2>It's free. Grab it and start slicing.</h2>
-        <p>Color Slicer is a free DCTL. Download it directly, or let the Tool Box Manager install it and keep it updated alongside the rest of the kit. No membership required.</p>
-        <div class="free-note">
-          <div class="k">Works everywhere Resolve does</div>
-          <p>macOS, Windows and Linux. Apply it on a node as a DCTL, pick a vector and a rotation mode, and you're slicing.</p>
-        </div>
-      </div>
+    <div class="part-head reveal">
+      <p class="eyebrow">Get it</p>
+      <h2>It's free. Grab it and start slicing.</h2>
+    </div>
+    <p class="pitch reveal">Color Slicer is a free DCTL. Download it directly, or let the Tool Box Manager install it and keep it updated alongside the rest of the kit. No membership required.</p>
 
-      <div class="price-card reveal">
-        <div class="plan" style="color:var(--oklab)">Free DCTL</div>
-        <div class="amt"><b>$0</b><span>· no membership</span></div>
+    <div class="coupon reveal">
+      <span class="scissors" aria-hidden="true">&#9986;</span>
+      <div class="stamp">Free</div>
+      <div>
+        <div class="plan free">Free DCTL</div>
+        <div class="amount" style="margin-top:10px"><b>$0</b><span>· no membership</span></div>
         <p class="note">The whole tool: 7 vectors, the two-axis mask, all three rotation modes and Show Effected. Yours to keep.</p>
-        <ul class="price-list">
+        <ul class="ticks">
           <li>Color Slicer, every feature unlocked</li>
           <li>All three rotation modes</li>
           <li>Two-axis hue × luma selection</li>
           <li>Installs &amp; updates with the Tool Box Manager</li>
         </ul>
-        <!-- NOTE: confirm the Color Slicer release URL — placeholder repo for now. -->
-        <a class="btn primary dl" data-slug="colorslice" data-name="Color Slicer" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest/download/Color-Slicer-DCTL-v2.0.zip" target="_blank" rel="noopener">Direct download →</a>
-        <div class="price-foot">Free · macOS · Windows · Linux</div>
+      </div>
+      <div style="align-self:center">
+        <div class="free-note">
+          <div class="k">Works everywhere Resolve does</div>
+          <p>macOS, Windows and Linux. Apply it on a node as a DCTL, pick a vector and a rotation mode, and you're slicing.</p>
+        </div>
+        <!-- NOTE: confirm the Color Slicer release URL, placeholder repo for now. -->
+        <a class="send dl" data-slug="colorslice" data-name="Color Slicer" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest/download/Color-Slicer-DCTL-v2.0.zip" target="_blank" rel="noopener">Direct download →</a>
+        <p class="fine">Free · macOS · Windows · Linux</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ MEMBERSHIP ============ -->
-<section class="sub" id="subscribe" data-screen-label="Membership">
+<section class="part sub" id="subscribe" data-screen-label="Membership">
   <div class="wrap">
-    <div class="sub-grid">
-      <div class="sub-copy reveal">
-        <p class="eyebrow">The premium tools</p>
-        <h2>Color Slicer is free. Buy the premium tools to get everything else.</h2>
-        <p>You don't need to pay for Color Slicer. But if it earns a spot in your kit, the premium tools unlock every paid tool on the channel — plus every update and new release — as a <strong>Happy Little Noder</strong>. Your price locks in the day you join and stays locked, even if you take a year or two off. We may raise it for new members later, but <em>never</em> for you.</p>
-        <div class="free-note">
-          <div class="k">What you actually get</div>
-          <p>Photo Chemist, the Hue Tools, Technicolor DRT and the whole premium kit, all in one purchase. New tools land here first.</p>
-        </div>
-      </div>
+    <div class="part-head reveal">
+      <p class="eyebrow">The premium tools</p>
+      <h2>Color Slicer is free. Buy the premium tools to get everything else.</h2>
+    </div>
+    <p class="pitch reveal">You don't need to pay for Color Slicer. But if it earns a spot in your kit, the premium tools unlock every paid tool on the channel, plus every update and new release, as a <strong>Happy Little Noder</strong>. Your price locks in the day you join and stays locked, even if you take a year or two off. We may raise it for new members later, but <em>never</em> for you.</p>
 
-      <div class="price-card reveal">
+    <div class="coupon reveal">
+      <span class="scissors" aria-hidden="true">&#9986;</span>
+      <div class="stamp">Price locked</div>
+      <div>
         <div class="plan">Happy Little Noders</div>
-        <div class="amt"><b>$47.34</b><span>/ year</span></div>
+        <div class="amount" style="margin-top:10px"><b>$47.34</b><span>/ year</span></div>
         <p class="note">Everything you see on YouTube, plus every update, for less than a single film stock LUT pack.</p>
-        <ul class="price-list">
+        <ul class="ticks">
           <li>Every premium DCTL &amp; OFX plugin in the Tool Box</li>
           <li>Photo Chemist, the Hue Tools, Technicolor DRT &amp; more</li>
           <li>All future tools &amp; updates included</li>
           <li>Plus the free tools like Color Slicer, kept up to date</li>
           <li>Locked-in price, even if you take time off</li>
         </ul>
-        <a class="btn primary" href="https://dec18studios.com/clients?join=1" target="_top">Get the premium tools →</a>
-        <div class="price-foot">One annual payment · price locked</div>
+      </div>
+      <div style="align-self:center">
+        <div class="free-note">
+          <div class="k">What you actually get</div>
+          <p>Photo Chemist, the Hue Tools, Technicolor DRT and the whole premium kit, all in one purchase. New tools land here first.</p>
+        </div>
+        <a class="send" href="https://dec18studios.com/clients?join=1" target="_top">Get the premium tools →</a>
+        <p class="fine">One annual payment · price locked</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ INSTALL ============ -->
-<section class="install" id="install" data-screen-label="Install">
+<section class="part install" id="install" data-screen-label="Install">
   <div class="wrap">
-    <div class="sec-head reveal">
+    <div class="part-head reveal">
       <p class="eyebrow">Getting started</p>
       <h2>Install in a couple of clicks.</h2>
       <p>The Tool Box Manager installs Color Slicer, keeps it organized, and updates it for you alongside the rest of the kit. Works on <strong>macOS, Windows and Linux</strong>, no manual file-copying.</p>
@@ -818,48 +623,66 @@
           <span class="badge">Recommended</span>
           <h4>The Tool Box Manager</h4>
           <p>Install, organize and auto-update Color Slicer and every other Dec. 18 tool from one app. New stuff lands here first.</p>
-          <a class="btn primary dl" data-slug="plugin-manager" data-name="Tool Box Manager" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
+          <a class="send dl" data-slug="plugin-manager" data-name="Tool Box Manager" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box →</a>
         </div>
         <div class="note-card reveal">
           <div class="k">Tip · start with Show Effected</div>
-          <p>Before you grade, flip on Show Effected and tune the two-axis mask first. Get the slice right, then move the hue. Stuck? Email <a class="inline" href="mailto:create@dec18studios.com" style="color:var(--gravity)">create@dec18studios.com</a> and I'll help.</p>
+          <p>Before you grade, flip on Show Effected and tune the two-axis mask first. Get the slice right, then move the hue. Stuck? Email <a class="inline" href="mailto:create@dec18studios.com">create@dec18studios.com</a> and I'll help.</p>
         </div>
       </aside>
     </div>
   </div>
 </section>
 
+<!-- ============ CLOSING CTA ============ -->
+<section class="part foot-cta" data-screen-label="Download">
+  <div class="wrap">
+    <div class="big">Surgical hue control.<br /><em>Three ways to move colour.</em></div>
+    <p>Slice one hue out, gated by light, and reshape it your way. Free for DaVinci Resolve.</p>
+    <!-- NOTE: confirm the Color Slicer release URL, placeholder repo for now. -->
+    <a class="send dl" data-slug="colorslice" data-name="Color Slicer" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest/download/Color-Slicer-DCTL-v2.0.zip" target="_blank" rel="noopener">Download Color Slicer · Free →</a>
+  </div>
+</section>
+
+<div class="bars thin" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
 <!-- ============ FOOTER ============ -->
 <footer data-screen-label="Footer">
   <div class="wrap">
-    <div class="foot-cta">
-      <div class="big">Surgical hue control.<br /><em>Three ways to move colour.</em></div>
-      <p>Slice one hue out, gated by light, and reshape it your way. Free for DaVinci Resolve.</p>
-      <!-- NOTE: confirm the Color Slicer release URL — placeholder repo for now. -->
-      <a class="btn primary dl" data-slug="colorslice" data-name="Color Slicer" href="https://github.com/Dec18studios/Color-Slicer-DCTL/releases/latest/download/Color-Slicer-DCTL-v2.0.zip" target="_blank" rel="noopener">Download Color Slicer · Free →</a>
-    </div>
-    <div class="foot-grid">
+    <div class="foot">
       <div>
-        <div class="brandbig">Dec. 18 Studios</div>
-        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
+        <div class="big">Dec. 18<br />Studios</div>
+        <p style="margin-top:10px">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
       </div>
-      <div class="fcol">
+      <div>
         <div class="fh">Explore</div>
+        <a href="https://dec18studios.com/projects" target="_top">Portfolio</a>
         <a href="../">Color Grading Tools</a>
         <a href="../hue-tools/">Hue Tools</a>
         <a href="../photochemist/">Photo Chemist</a>
-        <a href="https://dec18studios.com/color-grading-tools/technicolordrt">Technicolor DRT</a>
-        <a href="https://dec18studios.com/hire-us">Book Now</a>
+        <a href="https://dec18studios.com/color-grading-tools/technicolordrt" target="_top">Technicolor DRT</a>
+        <a href="https://dec18studios.com/joy-of-colourgrading" target="_top">Happy Little Node Trees</a>
+        <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
       </div>
-      <div class="fcol">
+      <div>
         <div class="fh">Contact</div>
         <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
         <a href="tel:+17084763598">(708) 476-3598</a>
-        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <span class="li">Mon to Fri · 08:00 to 17:00 PST</span>
         <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
         <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
+
+    <div class="buttons">
+      <a class="b88 resolve" href="../#tools" title="Best viewed in DaVinci Resolve"><span>BEST VIEWED IN</span><span class="big8">RESOLVE</span></a>
+      <a class="b88 mgr dl" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" data-slug="plugin-manager" data-name="Tool Box Manager" target="_top" rel="noopener" title="Download the Tool Box Manager"><span>GET THE</span><span class="big8">MANAGER</span></a>
+      <a class="b88 disc dl" href="https://discord.gg/cGsHvs8KAF" data-slug="discord-invite" data-name="Discord Server" target="_top" rel="noopener" title="Join the Discord"><span>JOIN THE</span><span class="big8">DISCORD</span></a>
+      <a class="b88 yt" href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener" title="YouTube"><span>WATCH ON</span><span class="big8">YOUTUBE</span></a>
+      <a class="b88 ig" href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener" title="Instagram"><span>FOLLOW ON</span><span class="big8">INSTAGRAM</span></a>
+      <a class="b88 bars8" href="#top" title="Back to the top"><span class="big8">BARS &amp;</span><span class="big8">TONE</span></a>
+    </div>
+
     <div class="legal">
       <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
       <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
@@ -867,19 +690,19 @@
   </div>
 </footer>
 
-<!-- ── Download email capture modal (ported from the tools index, same gate) ── -->
+<!-- Download email capture modal (ported from the tools index, same gate) -->
 <div id="dlModal" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;padding:20px">
-  <div id="dlBackdrop" style="position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px)"></div>
-  <div style="position:relative;background:#13151c;border:1px solid #2a2d3a;border-radius:14px;padding:36px 32px;max-width:400px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.6)">
-    <button id="dlClose" type="button" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#555;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;transition:color .15s" title="Close">✕</button>
-    <h3 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#e8eaf0">One quick thing</h3>
-    <p style="margin:0 0 24px;font-size:14px;color:#888;line-height:1.65">Drop your email and we'll let you know when a new version drops. We don't send many — just release notes when something changes.</p>
+  <div id="dlBackdrop" style="position:absolute;inset:0;background:rgba(18,18,18,.72)"></div>
+  <div style="position:relative;background:var(--paper);border:2px solid var(--ink);padding:36px 32px 28px;max-width:400px;width:100%;box-shadow:8px 8px 0 var(--ink);color:var(--ink)">
+    <button id="dlClose" type="button" style="position:absolute;top:10px;right:10px;background:none;border:1.5px solid var(--ink);color:var(--ink);font-size:16px;line-height:1;cursor:pointer;padding:6px 9px;font-family:var(--type)" title="Close">✕</button>
+    <h3 style="margin:0 0 8px;font-family:var(--display);font-stretch:75%;font-weight:900;text-transform:uppercase;font-size:30px;line-height:1">One quick thing</h3>
+    <p style="margin:0 0 20px;font-size:15px;color:var(--ink-2);line-height:1.6">Drop your email and we'll let you know when a new version drops. We don't send many, just release notes when something changes.</p>
     <form id="dlForm" autocomplete="on">
       <input id="dlEmail" type="email" name="email" autocomplete="email" placeholder="your@email.com" required
-        style="width:100%;background:#1a1d24;border:1px solid #2a2d3a;color:#e8eaf0;border-radius:8px;padding:11px 14px;font-size:14px;font-family:inherit;margin-bottom:10px;outline:none;transition:border-color .15s;box-sizing:border-box">
-      <button type="submit" style="width:100%;background:#4a8aff;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s">Download</button>
-      <p id="dlErr" style="margin:10px 0 0;font-size:12px;color:#e04040;display:none"></p>
-      <button type="button" id="dlDismiss" style="display:block;width:100%;margin-top:10px;background:none;border:none;color:#444;font-size:12px;cursor:pointer;padding:6px;transition:color .15s">Nah, I don't want it</button>
+        style="width:100%;background:var(--paper-2);border:2px solid var(--ink);color:var(--ink);border-radius:0;padding:11px 14px;font-size:15px;font-family:var(--type);margin-bottom:12px;outline:none;box-sizing:border-box">
+      <button type="submit" class="send" style="width:100%;text-align:center">Download</button>
+      <p id="dlErr" style="margin:10px 0 0;font-family:var(--type);font-size:13px;color:var(--red);display:none"></p>
+      <button type="button" id="dlDismiss" style="display:block;width:100%;margin-top:12px;background:none;border:none;color:var(--ink-3);font-family:var(--type);font-size:13px;text-decoration:underline;cursor:pointer;padding:6px">Nah, I don't want it</button>
     </form>
   </div>
 </div>
@@ -961,5 +784,6 @@
 </script>
 
 <script src="color-slicer.js"></script>
+<script src="../assets/d18-viewer.js" defer></script>
 </body>
 </html>

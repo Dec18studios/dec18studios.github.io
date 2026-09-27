@@ -3,317 +3,240 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PhotoChemist, Complete Guide, Dec. 18 Studios</title>
+<title>PhotoChemist · Complete Guide · Dec. 18 Studios</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../assets/d18-print.css" />
 <style>
+  /* page aliases for colour names used in markup / scripts */
   :root {
-    --bg:        oklch(0.165 0.012 264);
-    --bg-1:      oklch(0.195 0.013 264);
-    --bg-2:      oklch(0.225 0.014 264);
-    --bg-3:      oklch(0.255 0.015 264);
-    --line:      oklch(0.32 0.013 264);
-    --line-soft: oklch(0.27 0.012 264);
+    --cyan: var(--p-cyan); --green: var(--p-green); --yellow: var(--p-yellow); --magenta: var(--p-magenta);
+    --ink-dim: var(--ink-2); --bg-2: var(--paper-2);
+  }
+  html { scroll-padding-top: 16px; }
 
-    --ink:       oklch(0.95 0.006 264);
-    --ink-dim:   oklch(0.72 0.010 264);
-    --ink-faint: oklch(0.55 0.010 264);
-
-    --red:     oklch(0.64 0.205 25);
-    --yellow:  oklch(0.84 0.150 92);
-    --green:   oklch(0.74 0.165 148);
-    --cyan:    oklch(0.80 0.110 200);
-    --blue:    oklch(0.62 0.165 262);
-    --magenta: oklch(0.65 0.205 332);
-
-    --red-d:     oklch(0.64 0.205 25 / 0.16);
-    --yellow-d:  oklch(0.84 0.150 92 / 0.16);
-    --green-d:   oklch(0.74 0.165 148 / 0.16);
-    --cyan-d:    oklch(0.80 0.110 200 / 0.16);
-    --blue-d:    oklch(0.62 0.165 262 / 0.18);
-    --magenta-d: oklch(0.65 0.205 332 / 0.16);
-
-    --maxw: 1180px;
-    --pad: clamp(20px, 5vw, 64px);
-
-    --sans: "Hanken Grotesk", system-ui, sans-serif;
-    --display: "Bricolage Grotesque", system-ui, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, monospace;
+  /* secondary nav strip: page-specific links */
+  .subnav {
+    display: flex; gap: 6px 20px; flex-wrap: wrap; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--rule);
+    font-family: var(--type); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .subnav a { text-decoration: none; color: var(--ink-2); }
+  .subnav a:hover, .subnav a.current { color: var(--ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .subnav a.back { color: var(--red); }
+  .subnav .sep { width: 2px; align-self: stretch; background: var(--rule); }
+  @media (max-width: 760px) {
+    .subnav { flex-wrap: nowrap; overflow-x: auto; gap: 16px; }
+    .subnav a { white-space: nowrap; font-size: 12px; }
+    .subnav .sep { display: none; }
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg); color: var(--ink); font-family: var(--sans);
-    font-size: 17px; line-height: 1.62;
-    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
-  }
-  ::selection { background: oklch(0.64 0.205 25 / 0.35); }
-  a { color: inherit; text-decoration: none; }
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--pad); }
+  .mast .eyebrow { margin-top: clamp(22px, 3vw, 34px); }
+  .mast h1.title { margin-top: 12px; font-size: clamp(46px, 7.4vw, 104px); }
+  .mast .lede { max-width: 62ch; margin-top: 18px; }
+  a.inline { color: var(--blue); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a.inline:hover { color: var(--red); }
 
-  .eyebrow {
-    font-family: var(--mono); font-size: 12px; font-weight: 500;
-    letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  code {
+    font-family: var(--type); font-size: 0.9em; background: var(--paper-2);
+    border: 1px solid var(--rule); padding: 0 5px; word-break: break-word;
   }
 
-  /* ============ TOP BAR ============ */
-  header.topbar {
-    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
-    background: oklch(0.165 0.012 264 / 0.82); border-bottom: 1px solid var(--line-soft);
+  /* callouts: print slip with a spot-colour bar */
+  .callout {
+    --accent: var(--p-cyan);
+    margin: 22px 0; padding: 14px 18px 14px 22px; background: var(--paper-2);
+    border: 2px solid var(--ink); border-left: 8px solid var(--accent); box-shadow: 4px 4px 0 var(--ink);
   }
-  .topbar .row {
-    max-width: var(--maxw); margin: 0 auto; padding: 16px var(--pad);
-    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  .callout .k {
+    display: inline-block; font-family: var(--type); font-weight: 700; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--accent); color: var(--paper); padding: 2px 8px; margin-bottom: 8px;
   }
-  .brand { display: flex; align-items: center; }
-  .brand .logo {
-    display: block;
-    height: clamp(44px, 5.2vw, 58px);
-    aspect-ratio: 862 / 380;
-    background: linear-gradient(96deg, var(--red), var(--magenta) 30%, var(--blue) 54%, var(--cyan) 76%, var(--green));
-    -webkit-mask: url("../assets/logo-full.png") left center / contain no-repeat;
-            mask: url("../assets/logo-full.png") left center / contain no-repeat;
-  }
-  nav.toplinks { display: flex; gap: 30px; align-items: center; }
-  nav.toplinks a { font-size: 15.5px; color: var(--ink-dim); font-weight: 500; transition: color 0.18s; }
-  nav.toplinks a:hover { color: var(--ink); }
-  nav.toplinks a.cta {
-    color: var(--bg); background: var(--ink); border: 1px solid var(--ink); font-weight: 600;
-    border-radius: 8px; padding: 8px 15px; transition: all 0.18s; white-space: nowrap;
-  }
-  nav.toplinks a.cta:hover { background: oklch(0.86 0.006 264); }
-  @media (max-width: 880px) {
-    .topbar .row { flex-wrap: wrap; row-gap: 10px; padding-bottom: 10px; }
-    nav.toplinks {
-      order: 3; width: 100%; gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-      padding-bottom: 2px; scrollbar-width: none;
-    }
-    nav.toplinks::-webkit-scrollbar { display: none; }
-    nav.toplinks a { white-space: nowrap; font-size: 13px; }
-  }
+  .callout p { margin: 0 0 8px; color: var(--ink); font-size: 16px; line-height: 1.6; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout.tip { --accent: var(--p-green); }
+  .callout.warn { --accent: var(--p-yellow); }
+  .callout.warn .k { color: var(--ink); }
+  .callout.note { --accent: var(--blue); }
+  .callout.key { --accent: var(--red); }
 
-  /* ============ HERO ============ */
-  .hero { position: relative; padding-top: clamp(44px, 6vw, 82px); padding-bottom: clamp(30px, 4vw, 52px); overflow: hidden; }
-  .hero-glow {
-    position: absolute; top: -30%; right: -14%; width: 720px; height: 720px;
-    background: conic-gradient(from 0deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--blue), var(--magenta), var(--red));
-    border-radius: 50%; filter: blur(150px); opacity: 0.12; pointer-events: none; z-index: 0;
+  /* guide series cards */
+  section.next { padding: clamp(40px, 5vw, 64px) 0; border-top: 3px solid var(--ink); }
+  .next-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 14px; }
+  @media (max-width: 860px) { .next-grid { grid-template-columns: 1fr; } }
+  .next-card {
+    --accent: var(--red);
+    display: flex; flex-direction: column; gap: 8px; padding: 20px 20px 18px; text-decoration: none; color: var(--ink);
+    background: var(--paper); border: 2px solid var(--ink); border-top: 8px solid var(--accent); box-shadow: 5px 5px 0 var(--ink);
+    transition: transform .08s, box-shadow .08s;
   }
-  .hero .wrap { position: relative; z-index: 1; }
-  h1.hero-title {
-    font-family: var(--display); font-weight: 700;
-    font-size: clamp(38px, 5.6vw, 64px); line-height: 1.0; letter-spacing: -0.02em; margin: 18px 0 0; max-width: 18ch;
-  }
-  h1.hero-title em {
-    font-style: normal;
-    background: linear-gradient(96deg, var(--red), var(--magenta) 32%, var(--blue) 58%, var(--cyan) 80%, var(--green));
-    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .hero-sub { margin-top: 20px; font-size: clamp(16px, 1.9vw, 19px); color: var(--ink-dim); max-width: 66ch; text-wrap: pretty; }
-  .hero-sub strong { color: var(--ink); font-weight: 600; }
-  .hero-sub a.inline { color: var(--cyan); border-bottom: 1px solid oklch(0.80 0.110 200 / 0.4); }
-  .hero-meta { display: flex; gap: 26px; margin-top: 30px; flex-wrap: wrap; }
-  .hero-meta .m b { font-family: var(--display); font-weight: 700; font-size: 24px; display: block; }
-  .hero-meta .m span { font-size: 13px; color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.04em; }
+  a.next-card:hover { transform: translate(2px, 2px); box-shadow: 3px 3px 0 var(--ink); }
+  .next-card .idx { font-family: var(--type); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+  .next-card h4 { font-family: var(--display); font-stretch: 75%; font-weight: 900; text-transform: uppercase; font-size: 28px; line-height: 0.95; }
+  .next-card p { font-size: 15px; color: var(--ink-2); }
+  .next-card .go { margin-top: auto; padding-top: 6px; font-family: var(--type); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .next-card.now { background: var(--paper-2); }
+  .next-card.now .idx { color: var(--red); font-weight: 700; }
+  .next-card.soon { opacity: 0.7; box-shadow: 5px 5px 0 var(--ink-3); border-color: var(--ink-3); border-top-color: var(--accent); }
 
-  /* ============ DOC LAYOUT ============ */
-  .doc { border-top: 1px solid var(--line-soft); }
-  .doc .wrap { display: grid; grid-template-columns: 246px minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start;
-    padding-top: clamp(30px, 4vw, 52px); padding-bottom: clamp(52px, 7vw, 92px); }
-  @media (max-width: 940px) { .doc .wrap { grid-template-columns: 1fr; gap: 0; } }
+  /* .reveal / .in are still toggled by the page script; print style keeps text static and always visible */
 
-  /* --- TOC --- */
-  .toc { position: sticky; top: 90px; align-self: start; }
-  .toc .toc-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
-  .toc ol { list-style: none; counter-reset: toc; display: flex; flex-direction: column; gap: 1px; border-left: 1px solid var(--line-soft); }
+  /* back to top */
+  .totop {
+    position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 46px; height: 46px; cursor: pointer;
+    font-family: var(--type); font-weight: 700; font-size: 20px; color: var(--paper); background: var(--ink);
+    border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--red);
+    opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s, transform .2s;
+  }
+  .totop.show { opacity: 1; pointer-events: auto; transform: none; }
+  .totop:hover { background: var(--red); }
+
+  /* ===== long-form reading layout ===== */
+  .doc { padding: clamp(30px, 4vw, 52px) 0 clamp(48px, 6vw, 84px); }
+  .doc > .wrap { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: clamp(28px, 4.5vw, 72px); align-items: start; }
+
+  /* TOC: index card */
+  .toc {
+    position: sticky; top: 18px; max-height: calc(100vh - 36px); overflow: auto;
+    background: var(--paper-2); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  }
+  .toc summary {
+    display: none; cursor: pointer; list-style: none;
+    font-family: var(--type); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 12px 14px; background: var(--ink); color: var(--paper);
+  }
+  .toc summary::-webkit-details-marker { display: none; }
+  .toc summary::after { content: "+"; float: right; }
+  .toc[open] summary::after { content: "−"; }
+  .toc-k {
+    font-family: var(--type); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    background: var(--ink); color: var(--paper); padding: 8px 12px;
+  }
+  .toc ol { list-style: none; counter-reset: toc; padding: 6px 0 8px; }
   .toc li { counter-increment: toc; }
   .toc a {
-    display: flex; gap: 9px; align-items: baseline; padding: 5px 12px; font-size: 13px; color: var(--ink-faint);
-    border-left: 2px solid transparent; margin-left: -1px; transition: color 0.16s, border-color 0.16s; line-height: 1.35; text-wrap: pretty;
+    display: grid; grid-template-columns: 26px 1fr; gap: 4px; padding: 5px 12px 5px 8px;
+    text-decoration: none; font-size: 14px; line-height: 1.35; color: var(--ink-2); border-left: 4px solid transparent;
   }
-  .toc a::before { content: counter(toc, decimal-leading-zero); font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); opacity: 0.6; flex: none; }
-  .toc a:hover { color: var(--ink-dim); }
-  .toc a.active { color: var(--ink); border-left-color: var(--red); }
-  .toc a.active::before { color: var(--red); opacity: 1; }
-  @media (max-width: 940px) {
-    .toc { position: static; margin-bottom: 30px; }
-    .toc.as-details { border: 1px solid var(--line-soft); border-radius: 12px; background: var(--bg-1); overflow: hidden; }
-    .toc summary { cursor: pointer; padding: 15px 18px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--ink-dim); list-style: none; display: flex; justify-content: space-between; align-items: center; }
-    .toc summary::-webkit-details-marker { display: none; }
-    .toc summary::after { content: "+"; font-size: 17px; color: var(--ink-faint); }
-    .toc[open] summary::after { content: "–"; }
-    .toc .toc-k { display: none; }
-    .toc ol { padding: 4px 12px 14px; }
+  .toc a::before { content: counter(toc, decimal-leading-zero); font-family: var(--type); font-size: 12px; color: var(--ink-3); padding-top: 2px; }
+  .toc a:hover { color: var(--ink); background: rgba(34, 29, 24, 0.05); }
+  .toc a.active { color: var(--ink); font-weight: 700; border-left-color: var(--red); background: var(--paper); }
+  .toc a.active::before { color: var(--red); }
+
+  /* content column */
+  .content { min-width: 0; max-width: 74ch; }
+  .content > section { padding-bottom: clamp(34px, 4vw, 52px); margin-bottom: clamp(34px, 4vw, 52px); border-bottom: 1px solid var(--rule); scroll-margin-top: 16px; }
+  .content > section:last-child { border-bottom: 0; margin-bottom: 0; }
+  .content h2 {
+    font-family: var(--display); font-stretch: 75%; font-weight: 900; text-transform: uppercase;
+    font-size: clamp(30px, 3.6vw, 44px); line-height: 0.95; letter-spacing: -0.005em;
+    padding-bottom: 10px; border-bottom: 3px solid var(--ink); margin-bottom: 18px;
   }
+  .content h3 { font-family: var(--display); font-stretch: 90%; font-weight: 800; font-size: clamp(21px, 2vw, 25px); line-height: 1.15; margin: 32px 0 10px; }
+  .content h4 { font-family: var(--type); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; margin: 26px 0 8px; padding-left: 10px; border-left: 4px solid var(--red); }
+  .content p { margin: 0 0 14px; line-height: 1.7; }
+  .content strong { font-weight: 700; }
 
-  /* --- content --- */
-  .content { min-width: 0; }
-  .content > section { scroll-margin-top: 90px; padding: 0 0 clamp(36px, 5vw, 56px); }
-  .content > section + section { padding-top: clamp(30px, 4vw, 46px); border-top: 1px solid var(--line-soft); }
-  .sec-num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--red); font-weight: 600; display: inline-flex; align-items: center; gap: 10px; }
-  .sec-num::before { content: ""; width: 22px; height: 2px; background: var(--red); }
-  .content h2 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -0.02em; line-height: 1.05; margin-top: 12px; }
-  .content h3 { font-family: var(--display); font-weight: 600; font-size: clamp(19px, 2.1vw, 23px); letter-spacing: -0.01em; margin-top: 30px; }
-  .content h4 { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); margin-top: 24px; }
-  .content p { margin-top: 15px; color: var(--ink-dim); font-size: 16px; text-wrap: pretty; }
-  .content p strong { color: var(--ink); font-weight: 600; }
-  .content p code, .content li code, td code { font-family: var(--mono); font-size: 0.86em; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 5px; padding: 1.5px 6px; color: var(--cyan); }
-  .content ul.bul { list-style: none; margin: 16px 0 0; display: grid; gap: 10px; }
-  .content ul.bul li { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; color: var(--ink-dim); text-wrap: pretty; }
-  .content ul.bul li strong { color: var(--ink); font-weight: 600; }
-  .content ul.bul li::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--accent, var(--red)); flex: none; margin-top: 8px; }
-  .content ol.steps-ol { margin: 18px 0 0; padding: 0; list-style: none; counter-reset: sn; display: grid; gap: 12px; }
-  .content ol.steps-ol li { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: flex-start; font-size: 15.5px; color: var(--ink-dim); text-wrap: pretty; }
-  .content ol.steps-ol li strong { color: var(--ink); font-weight: 600; }
-  .content ol.steps-ol li::before { counter-increment: sn; content: counter(sn, decimal-leading-zero); font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--red);
-    width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--red-d); background: var(--red-d); display: grid; place-items: center; flex: none; }
+  ul.bul { list-style: none; margin: 4px 0 18px; display: grid; gap: 8px; }
+  ul.bul li { display: grid; grid-template-columns: 18px 1fr; line-height: 1.65; }
+  ul.bul li::before { content: ""; width: 8px; height: 8px; background: var(--red); margin-top: 0.65em; }
+  ol.steps-ol { list-style: none; counter-reset: st; margin: 6px 0 20px; border-top: 2px solid var(--ink); }
+  ol.steps-ol li { counter-increment: st; display: grid; grid-template-columns: 46px 1fr; gap: 8px; padding: 11px 0; border-bottom: 1px solid var(--rule); line-height: 1.65; }
+  ol.steps-ol li::before { content: counter(st, decimal-leading-zero); font-family: var(--display); font-stretch: 62%; font-weight: 900; font-size: 28px; line-height: 1; color: var(--red); }
 
-  /* --- tables --- */
-  .tbl-wrap { margin-top: 20px; border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden; overflow-x: auto; }
-  table.ptable { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 540px; }
-  table.ptable thead th { background: var(--bg-2); text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding: 11px 15px; border-bottom: 1px solid var(--line); }
-  table.ptable td { padding: 12px 15px; border-bottom: 1px solid var(--line-soft); color: var(--ink-dim); vertical-align: top; text-wrap: pretty; }
-  table.ptable tr:last-child td { border-bottom: none; }
-  table.ptable td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
-  table.ptable td.mono, table.ptable td:nth-child(2).num, table.ptable .m { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
-  table.ptable td strong { color: var(--ink); font-weight: 600; }
-  table.ptable.wide { min-width: 640px; }
-  /* comparison 2-col */
-  table.ptable.cmp td:first-child { color: var(--ink-dim); font-weight: 400; white-space: normal; }
+  /* parameter tables: printed spec sheet */
+  .tbl-wrap { margin: 20px 0 22px; border: 2px solid var(--ink); background: var(--paper); overflow-x: auto; box-shadow: 4px 4px 0 var(--ink); }
+  table.ptable { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; min-width: 520px; }
+  table.ptable.wide { min-width: 620px; }
+  table.ptable thead th {
+    background: var(--ink); color: var(--paper); text-align: left; font-family: var(--type); font-weight: 700;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 9px 12px; white-space: nowrap;
+  }
+  table.ptable td { padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink-2); }
+  table.ptable tr:last-child td { border-bottom: 0; }
+  table.ptable tbody tr:nth-child(even) td { background: rgba(185, 169, 136, 0.14); }
+  table.ptable tbody tr:hover td { background: rgba(227, 178, 60, 0.22); }
+  table.ptable td:first-child { color: var(--ink); font-weight: 600; }
+  table.ptable td.m { font-family: var(--type); font-size: 14px; color: var(--ink); white-space: nowrap; }
+  table.ptable td strong { color: var(--ink); }
+  table.ptable.cmp td:first-child { font-weight: 400; color: var(--ink-2); }
   table.ptable.cmp td:last-child { color: var(--ink); }
+  table.ptable.cmp th:first-child { background: var(--ink-3); }
+  table.ptable.cmp th:last-child { background: var(--red); }
 
-  /* --- callouts --- */
-  .callout { margin-top: 22px; border-radius: 14px; padding: 16px 20px; background: var(--accent-d, var(--cyan-d)); position: relative; overflow: hidden; }
-  .callout::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent, var(--cyan)); }
-  .callout .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent, var(--cyan)); font-weight: 600; }
-  .callout p { margin-top: 7px; font-size: 14.5px; color: var(--ink); line-height: 1.55; }
-  .callout p:first-child { margin-top: 0; }
-  .callout.tip { --accent: var(--green); --accent-d: var(--green-d); }
-  .callout.warn { --accent: var(--yellow); --accent-d: var(--yellow-d); }
-  .callout.note { --accent: var(--blue); --accent-d: var(--blue-d); }
-  .callout.key { --accent: var(--red); --accent-d: var(--red-d); }
-
-  /* --- screenshot figure --- */
-  .shot { display: block; margin-top: 22px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line-soft); background: var(--bg-1); box-shadow: 0 30px 80px -50px oklch(0 0 0 / 0.85); transition: border-color 0.18s; }
-  .shot:hover { border-color: var(--line); }
-  .shot img { display: block; width: 100%; height: auto; }
-  .shot .cap { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); padding: 10px 14px; border-top: 1px solid var(--line-soft); text-wrap: pretty; }
-
-  /* --- screenshot placeholder --- */
-  .shotph { margin-top: 22px; position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 1px solid var(--line-soft); background: var(--bg-1); }
-  .shotph .fill { position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
-    background-image: repeating-linear-gradient(45deg, oklch(0.215 0.014 264) 0 13px, oklch(0.195 0.013 264) 13px 26px); }
-  .shotph .pc { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 22px; }
-  .shotph .ic { width: 46px; height: 46px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-2); display: grid; place-items: center; }
-  .shotph .ic span { width: 18px; height: 18px; border-radius: 4px; background: linear-gradient(135deg, var(--magenta), var(--blue)); }
-  .shotph .play { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: oklch(0 0 0 / 0.35); border: 1px solid oklch(1 0 0 / 0.22); }
-  .shotph .play::before { content: ""; width: 0; height: 0; margin-left: 4px; border-left: 16px solid var(--ink); border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
-  .shotph .cap { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink); font-weight: 500; }
-  .shotph .sub { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
-  .shotph .tag { position: absolute; left: 12px; top: 12px; z-index: 3; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 10px; border-radius: 6px; background: oklch(0 0 0 / 0.5); color: #fff; }
-
-  /* --- faq accordion --- */
-  details.faq { margin-top: 10px; border: 1px solid var(--line-soft); border-radius: 12px; background: var(--bg-1); overflow: hidden; }
-  details.faq summary { cursor: pointer; padding: 15px 18px; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--ink);
-    list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  /* FAQ accordions */
+  details.faq { margin-top: 10px; border: 2px solid var(--ink); background: var(--paper); }
+  details.faq summary {
+    cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 14px; align-items: baseline;
+    padding: 12px 16px; font-weight: 700; font-size: 16px; line-height: 1.4;
+  }
   details.faq summary::-webkit-details-marker { display: none; }
-  details.faq summary::after { content: "+"; font-family: var(--mono); font-size: 16px; color: var(--ink-faint); flex: none; }
-  details.faq[open] summary::after { content: "–"; }
-  details.faq .fb { padding: 0 18px 16px; }
-  details.faq .fb p { margin-top: 0; font-size: 14.5px; }
+  details.faq summary::after { content: "+"; font-family: var(--type); font-weight: 700; font-size: 20px; line-height: 1; color: var(--red); flex: none; }
+  details.faq[open] summary { border-bottom: 1px solid var(--rule); background: var(--paper-2); }
+  details.faq[open] summary::after { content: "−"; }
+  details.faq summary:hover { background: var(--paper-2); }
+  details.faq .fb { padding: 12px 16px 14px; }
+  details.faq .fb p { margin: 0; }
 
-  /* --- pill row --- */
-  .modes { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  @media (max-width: 720px) { .modes { grid-template-columns: 1fr; } }
-  .mode { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 12px; padding: 16px 18px; }
-  .mode .mn { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent, var(--red)); font-weight: 600; }
-  .mode b { display: block; font-family: var(--display); font-weight: 600; font-size: 17px; margin-top: 7px; }
-  .mode p { margin-top: 6px; font-size: 13.5px; color: var(--ink-dim); }
+  /* screenshots in the neutral viewer, full panel visible */
+  .content figure.viewer { margin: 24px 0; }
+  .content figure.viewer img { aspect-ratio: auto; }
 
-  /* ============ NEXT / SERIES ============ */
-  .next { border-top: 1px solid var(--line-soft); }
-  .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  @media (max-width: 820px) { .next-grid { grid-template-columns: 1fr; } }
-  .next-card { background: var(--bg-1); border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.18s, transform 0.18s; position: relative; overflow: hidden; }
-  .next-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--accent, var(--magenta)); opacity: 0.9; }
-  .next-card:hover { border-color: var(--line); transform: translateY(-2px); }
-  .next-card .idx { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
-  .next-card h4 { font-family: var(--display); font-weight: 700; font-size: 21px; letter-spacing: -0.01em; }
-  .next-card p { font-size: 14px; color: var(--ink-dim); text-wrap: pretty; }
-  .next-card .go { margin-top: auto; font-family: var(--mono); font-size: 12px; color: var(--accent, var(--magenta)); letter-spacing: 0.04em; }
-  .next-card.now { background: linear-gradient(180deg, var(--bg-2), var(--bg-1)); }
-  .next-card.now .idx { color: var(--green); }
-  .next-card.soon { opacity: 0.72; } .next-card.soon .go { color: var(--ink-faint); }
-
-  /* ============ FOOTER ============ */
-  footer { border-top: 1px solid var(--line-soft); padding-block: 56px; color: var(--ink-faint); }
-  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
-  @media (max-width: 760px) { .foot-grid { grid-template-columns: 1fr; gap: 28px; } }
-  footer .big { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.5vw, 44px); letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
-  footer .blurb { margin-top: 12px; max-width: 38ch; color: var(--ink-faint); font-size: 15px; }
-  footer .fh { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
-  footer .fcol a, footer .fcol .li { display: block; color: var(--ink-dim); font-size: 14px; margin-bottom: 9px; transition: color 0.16s; }
-  footer .fcol a:hover { color: var(--ink); }
-  footer .li { font-family: var(--mono); font-size: 12.5px; color: var(--ink-faint); }
-  footer .legal { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  footer .legal a.link { color: var(--cyan); }
-
-  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.in { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
-
-  .totop { position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 44px; height: 44px; border-radius: 12px;
-    background: var(--bg-2); border: 1px solid var(--line); color: var(--ink); display: grid; place-items: center; cursor: pointer;
-    opacity: 0; pointer-events: none; transition: opacity 0.2s, background 0.16s; font-size: 18px; }
-  .totop.show { opacity: 1; pointer-events: auto; }
-  .totop:hover { background: var(--bg-3); }
-
-  @media (pointer: coarse) {
-    nav.toplinks a { padding-block: 4px; }
-    nav.toplinks a.cta { min-height: 44px; }
+  @media (max-width: 940px) {
+    .doc > .wrap { grid-template-columns: 1fr; }
+    .toc { position: relative; top: 0; max-height: none; }
+    .toc summary { display: block; }
+    .toc-k { display: none; }
     .toc a { padding-block: 8px; }
+    .content { max-width: none; }
+  }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    .content > section { scroll-margin-top: 8px; }
   }
 </style>
 </head>
-<body>
+<body id="top">
 
-<header class="topbar">
-  <div class="row">
-    <a class="brand" href="https://dec18studios.com/" aria-label="Dec. 18 Studios, home">
-      <span class="logo"></span>
-    </a>
-    <nav class="toplinks">
-      <a href="../">← PhotoChemist</a>
+<!-- ============ TOP BAR + HERO ============ -->
+<header class="mast">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="https://dec18studios.com/" target="_top" aria-label="Dec. 18 Studios home"><span class="logo"></span></a>
+      <nav class="toplinks">
+        <a href="https://dec18studios.com/projects" target="_top">Portfolio</a>
+        <a href="../../" class="current">Tools</a>
+        <a href="../../#tools">All tools</a>
+        <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
+        <a href="https://dec18studios.com/account/digital-products" target="_top">Account</a>
+        <a href="../#subscribe" class="cta">Get it · $47.34</a>
+      </nav>
+    </div>
+    <nav class="subnav" aria-label="PhotoChemist guides">
+      <a href="../" class="back">← PhotoChemist</a>
       <a href="../quickstart/">Quick Start</a>
+      <a href="./" class="current">Complete Guide</a>
       <a href="../Workflows/">Workflows</a>
+      <span class="sep" aria-hidden="true"></span>
       <a href="#quick-processing">Controls</a>
       <a href="#fse">Editors</a>
       <a href="#faq">FAQ</a>
-      <a href="../#subscribe" class="cta">Get it · $47.34</a>
     </nav>
-  </div>
-</header>
 
-<a id="top"></a>
-
-<!-- ============ HERO ============ -->
-<section class="hero" data-screen-label="Complete Guide hero">
-  <div class="hero-glow"></div>
-  <div class="wrap">
-    <p class="eyebrow">Complete Guide · PhotoChemist</p>
-    <h1 class="hero-title">Every control, the <em>whole film chain.</em></h1>
-    <p class="hero-sub">The authoritative reference for PhotoChemist, a physically-based spectral film-emulation plugin for DaVinci Resolve. It explains what every on-screen control group does, how the simulated film chain flows through them, and how to make grading decisions with them. New here? Read the <a class="inline" href="../quickstart/">Quick Start</a> first for a five-minute path to a look. This is the deep reference.</p>
-    <div class="hero-meta">
+    <section data-screen-label="Complete Guide hero">
+      <p class="eyebrow">Complete Guide · PhotoChemist</p>
+      <h1 class="title" style="max-width:14ch">Every control, the <span class="r">whole film chain.</span></h1>
+      <p class="lede">The authoritative reference for PhotoChemist, a physically-based spectral film-emulation plugin for DaVinci Resolve. It explains what every on-screen control group does, how the simulated film chain flows through them, and how to make grading decisions with them. New here? Read the <a class="inline" href="../quickstart/">Quick Start</a> first for a five-minute path to a look. This is the deep reference.</p>
+      <div class="meta">
       <div class="m"><b>43-band</b><span>spectral engine</span></div>
       <div class="m"><b>17+</b><span>stage film chain</span></div>
       <div class="m"><b>2</b><span>factories in the bundle</span></div>
-    </div>
+      </div>
+    </section>
   </div>
-</section>
+  <div class="bars" aria-hidden="true" style="margin-top:clamp(30px,4vw,48px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</header>
 
 <!-- ============ DOC ============ -->
 <div class="doc">
@@ -351,20 +274,18 @@
 
       <!-- 1 -->
       <section id="what" class="reveal" data-screen-label="What it is">
-        <span class="sec-num">01</span>
         <h2>What PhotoChemist is</h2>
         <p>PhotoChemist is a physically-based, spectral simulation of the analog film photochemistry chain, running as a per-pixel OpenFX render inside DaVinci Resolve. It does not approximate the film look with a 3D LUT, an S-curve, or a channel-mixer matrix. Instead it reconstructs the actual chemical and optical events that happen when light exposes a negative, that negative is developed into subtractive cyan/magenta/yellow (CMY) dye, the negative is printed onto a print stock, and the print is shone through a projector bulb.</p>
-        <p>Internally it works in a <strong>43-band spectral representation</strong> (360–780 nm at 10 nm steps): your image becomes spectra, those spectra drive real physical events, and only at the very ends does it return to RGB. The film look you want emerges from physics, overlapping curves talking to each other, rather than being baked into a fixed transfer.</p>
+        <p>Internally it works in a <strong>43-band spectral representation</strong> (360 to 780 nm at 10 nm steps): your image becomes spectra, those spectra drive real physical events, and only at the very ends does it return to RGB. The film look you want emerges from physics, overlapping curves talking to each other, rather than being baked into a fixed transfer.</p>
         <p>The plugin ships as a bundle with <strong>two factories</strong>:</p>
         <ul class="bul">
           <li><span><strong>PhotoChemist</strong>, the main film-emulation effect (this whole guide, except the feeder section).</span></li>
-          <li><span><strong>PhotoChemist Printer Lights</strong>, a companion generator/trim node that produces per-pixel printer-light maps, wired into PhotoChemist's optional Printer Link input. See <a class="inline" href="#printer-lights" style="color:var(--cyan)">that section</a>.</span></li>
+          <li><span><strong>PhotoChemist Printer Lights</strong>, a companion generator/trim node that produces per-pixel printer-light maps, wired into PhotoChemist's optional Printer Link input. See <a class="inline" href="#printer-lights">that section</a>.</span></li>
         </ul>
       </section>
 
       <!-- 2 -->
       <section id="spectral" class="reveal" data-screen-label="Spectral not a LUT">
-        <span class="sec-num">02</span>
         <h2>Spectral, not a LUT, why it matters</h2>
         <p>A film-look LUT is <strong>a recording of an outcome</strong>. Someone shot a chart on a stock, scanned it, and froze the RGB-in → RGB-out relationship into a cube. It is fast and often looks good because the destination is real, but it is a photograph of a <em>result</em>, not the <em>process</em> that made it. A LUT only knows the one illuminant, one exposure, and one print condition it was baked under. Push outside that operating point and it has nothing to fall back on.</p>
         <p>PhotoChemist simulates the chemistry instead, so the look re-derives whenever you change anything:</p>
@@ -390,7 +311,6 @@
 
       <!-- 3 -->
       <section id="chain" class="reveal" data-screen-label="The film chain">
-        <span class="sec-num">03</span>
         <h2>The film chain, mapped to the controls</h2>
         <p>The full <strong>Neg to Print</strong> path, in plain language, with the control group that governs each step:</p>
         <ol class="steps-ol">
@@ -398,7 +318,7 @@
           <li><span><strong>Latent image</strong>, silver forms by the law <code>P = 1 − exp(−k·H)</code> (exposure <code>H</code>, per-layer rate <code>k</code>).</span></li>
           <li><span><strong>Grain (pre-curve)</strong>, grain is injected into the latent signal <em>before</em> the characteristic curve, in density space, because real grain is a property of the developed silver, not a post overlay. <em>(Textures → Grain.)</em></span></li>
           <li><span><strong>H&amp;D characteristic curve</strong>, the latent fraction is shaped into dye concentration; this is the stock's contrast personality (toe, gamma, shoulder), run <strong>per layer</strong>. <em>(Neg HD Curve.)</em></span></li>
-          <li><span><strong>Dye formation + spectral integration</strong>, the three layers drive subtractive CMY dye; densities combine via Beer–Lambert. <em>(Negative dye colors.)</em></span></li>
+          <li><span><strong>Dye formation + spectral integration</strong>, the three layers drive subtractive CMY dye; densities combine via Beer-Lambert. <em>(Negative dye colors.)</em></span></li>
           <li><span><strong>Developer competition / interimage</strong>, real cross-channel coupling from shared developer. <em>(Film Development → Negative.)</em></span></li>
           <li><span><strong>Negative halation</strong>, bright sources bloom around themselves, in density space. <em>(Textures → Halation.)</em></span></li>
           <li><span><strong>Scan</strong>, the negative is digitized under scanner illumination. <em>(Neg Scan mode stops here.)</em></span></li>
@@ -426,7 +346,6 @@
 
       <!-- 4 -->
       <section id="apply" class="reveal" data-screen-label="Applying it">
-        <span class="sec-num">04</span>
         <h2>Applying PhotoChemist in Resolve</h2>
         <p>Add PhotoChemist on a serial node <strong>after</strong> your basic balance, treat it as the <em>film stage</em>, not a primary corrector. Find it in the OpenFX / effects library under <strong>Film Look Tools - Dec. 18 Studios</strong>.</p>
         <p>Two setup controls (both in Input/Output Config, mirrored conceptually at the top of your workflow):</p>
@@ -438,7 +357,6 @@
 
       <!-- 5 -->
       <section id="quick-processing" class="reveal" data-screen-label="Quick Processing">
-        <span class="sec-num">05</span>
         <h2>Quick Processing</h2>
         <p>The main grading surface: printer lights, calibration, projector lamp, screen sim, the film-stock preset dropdowns, and the two editor-launch buttons. Open by default.</p>
         <div class="callout key">
@@ -450,12 +368,12 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Printer Light</td><td class="m">0–50</td><td class="m">25</td><td>Overall printer light for all three channels, applied equally. Lower it to print brighter.</td></tr>
-              <tr><td>Red / Green / Blue Printer Points</td><td class="m">0–50</td><td class="m">25</td><td>Per-channel printer light, your color balance / timing knob. 25 = calibrated baseline.</td></tr>
+              <tr><td>Printer Light</td><td class="m">0 to 50</td><td class="m">25</td><td>Overall printer light for all three channels, applied equally. Lower it to print brighter.</td></tr>
+              <tr><td>Red / Green / Blue Printer Points</td><td class="m">0 to 50</td><td class="m">25</td><td>Per-channel printer light, your color balance / timing knob. 25 = calibrated baseline.</td></tr>
               <tr><td>Projector Bulb</td><td class="m">preset</td><td class="m">Neutral</td><td>Picks a calibrated R/G/B triplet for the projector color sliders (Neutral, Carbon Arc, Xenon, etc.). Editing any projector color slider flips it back to <strong>Custom</strong>. Does not touch Projector Power.</td></tr>
-              <tr><td>Projector Power</td><td class="m">0–10</td><td class="m">1.0</td><td>Overall projector intensity, the light through the emulsions onto the screen.</td></tr>
-              <tr><td>Projector R / G / B Light</td><td class="m">0–5</td><td class="m">1.0</td><td>Per-channel projector intensity (the viewing-lamp color).</td></tr>
-              <tr><td>Theater Screen Sim</td><td class="m">0.01–0.2</td><td class="m">0.040</td><td>Print <strong>base density (Dmin)</strong>, the black-point floor. Higher = lifted, milkier blacks; lower = deeper blacks. The label is cosmetic; not a screen-reflectance model.</td></tr>
+              <tr><td>Projector Power</td><td class="m">0 to 10</td><td class="m">1.0</td><td>Overall projector intensity, the light through the emulsions onto the screen.</td></tr>
+              <tr><td>Projector R / G / B Light</td><td class="m">0 to 5</td><td class="m">1.0</td><td>Per-channel projector intensity (the viewing-lamp color).</td></tr>
+              <tr><td>Theater Screen Sim</td><td class="m">0.01 to 0.2</td><td class="m">0.040</td><td>Print <strong>base density (Dmin)</strong>, the black-point floor. Higher = lifted, milkier blacks; lower = deeper blacks. The label is cosmetic; not a screen-reflectance model.</td></tr>
             </tbody>
           </table>
         </div>
@@ -496,7 +414,6 @@
 
       <!-- 6 -->
       <section id="printer-calibration" class="reveal" data-screen-label="Printer Calibration">
-        <span class="sec-num">06</span>
         <h2>Printer Calibration</h2>
         <p>A subgroup of Quick Processing (closed by default). A calibration layer <strong>separate</strong> from the grading printer lights: the calibration offsets ride <strong>additively</strong> on the printer lights (<code>effective = light + (calib − 25)</code>), so you balance mid-grey once per stock without spending grading points.</p>
         <div class="tbl-wrap">
@@ -504,9 +421,9 @@
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
               <tr><td>Mid-Grey Test Pattern</td><td class="m">on/off</td><td class="m">off</td><td>Overrides the input with a pristine neutral 3-band patch (−1 stop / 0.18 mid-grey / +1 stop) that runs the whole pipeline. Read it on a waveform, then balance the R/G/B Calibration until the centre band is neutral.</td></tr>
-              <tr><td>Red / Green / Blue Calibration</td><td class="m">0–50</td><td class="m">25</td><td>Mid-grey calibration offset per channel; rides additively on the corresponding Printer Points.</td></tr>
-              <tr><td>Lamp Ceiling</td><td class="m">20–80</td><td class="m">50</td><td>How high a single printer light can shine before it rolls back toward white (50 = valve full open; 25 = ceiling pinned at neutral white). Models one white lamp split into R/G/B valves.</td></tr>
-              <tr><td>Ceiling Softness</td><td class="m">0–0.9</td><td class="m">0.5</td><td>How gently light rolls into the Lamp Ceiling (0 = hard clip at white; higher = softer/earlier roll).</td></tr>
+              <tr><td>Red / Green / Blue Calibration</td><td class="m">0 to 50</td><td class="m">25</td><td>Mid-grey calibration offset per channel; rides additively on the corresponding Printer Points.</td></tr>
+              <tr><td>Lamp Ceiling</td><td class="m">20 to 80</td><td class="m">50</td><td>How high a single printer light can shine before it rolls back toward white (50 = valve full open; 25 = ceiling pinned at neutral white). Models one white lamp split into R/G/B valves.</td></tr>
+              <tr><td>Ceiling Softness</td><td class="m">0 to 0.9</td><td class="m">0.5</td><td>How gently light rolls into the Lamp Ceiling (0 = hard clip at white; higher = softer/earlier roll).</td></tr>
             </tbody>
           </table>
         </div>
@@ -518,19 +435,18 @@
 
       <!-- 7 -->
       <section id="input-condition" class="reveal" data-screen-label="Input Condition">
-        <span class="sec-num">07</span>
         <h2>Input Condition</h2>
         <p>Technicolor-style dynamic-range rescaling that maps the scene's stops into the film stock's optimal exposure window <strong>before</strong> the spectral pipeline. Closed by default.</p>
         <div class="tbl-wrap">
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Enable Dynamic Rescaling</td><td class="m">0–1</td><td class="m">1 (on)</td><td>Turn the rescaler on/off.</td></tr>
-              <tr><td>Input Range (stops)</td><td class="m">8–20</td><td class="m">16</td><td>Scene dynamic range in stops (typical HDR 12–16).</td></tr>
-              <tr><td>Target Range (stops)</td><td class="m">4–12</td><td class="m">6</td><td>Film-stock optimal exposure range in stops (typical 6–8).</td></tr>
-              <tr><td>Rescaling Pivot</td><td class="m">0.01–1.0</td><td class="m">0.18</td><td>Pivot point for rescaling (18% grey = 0.18).</td></tr>
-              <tr><td>Exposure Offset (stops)</td><td class="m">−15–15</td><td class="m">0</td><td>Additional exposure offset in stops.</td></tr>
-              <tr><td>Saturation Awareness</td><td class="m">0–1</td><td class="m">1</td><td>Preserve color relationships during rescaling (0 = off, 1 = full).</td></tr>
+              <tr><td>Enable Dynamic Rescaling</td><td class="m">0 to 1</td><td class="m">1 (on)</td><td>Turn the rescaler on/off.</td></tr>
+              <tr><td>Input Range (stops)</td><td class="m">8 to 20</td><td class="m">16</td><td>Scene dynamic range in stops (typical HDR 12 to 16).</td></tr>
+              <tr><td>Target Range (stops)</td><td class="m">4 to 12</td><td class="m">6</td><td>Film-stock optimal exposure range in stops (typical 6 to 8).</td></tr>
+              <tr><td>Rescaling Pivot</td><td class="m">0.01 to 1.0</td><td class="m">0.18</td><td>Pivot point for rescaling (18% grey = 0.18).</td></tr>
+              <tr><td>Exposure Offset (stops)</td><td class="m">−15 to 15</td><td class="m">0</td><td>Additional exposure offset in stops.</td></tr>
+              <tr><td>Saturation Awareness</td><td class="m">0 to 1</td><td class="m">1</td><td>Preserve color relationships during rescaling (0 = off, 1 = full).</td></tr>
             </tbody>
           </table>
         </div>
@@ -539,7 +455,6 @@
 
       <!-- 8 -->
       <section id="development" class="reveal" data-screen-label="Film Development">
-        <span class="sec-num">08</span>
         <h2>Film Development</h2>
         <p>Push/pull, bleach bypass, developer competition/inhibition, and enhanced interimage saturation effects, negative and print stages independently.</p>
         <h3>Negative Development</h3>
@@ -547,10 +462,10 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Push/Pull</td><td class="m">−2–2</td><td class="m">0</td><td>Negative development push/pull, in stops.</td></tr>
-              <tr><td>Bleach Bypass</td><td class="m">0–2</td><td class="m">0.10</td><td>Bleach-bypass strength (retained silver → denser, desaturated, contrastier neg).</td></tr>
-              <tr><td>Developer Competition</td><td class="m">0–2</td><td class="m">0.1</td><td>Silver-halide developer competition strength.</td></tr>
-              <tr><td>Dye Inhibition</td><td class="m">0–2</td><td class="m">0.05</td><td>Cross-channel dye inhibition strength.</td></tr>
+              <tr><td>Push/Pull</td><td class="m">−2 to 2</td><td class="m">0</td><td>Negative development push/pull, in stops.</td></tr>
+              <tr><td>Bleach Bypass</td><td class="m">0 to 2</td><td class="m">0.10</td><td>Bleach-bypass strength (retained silver → denser, desaturated, contrastier neg).</td></tr>
+              <tr><td>Developer Competition</td><td class="m">0 to 2</td><td class="m">0.1</td><td>Silver-halide developer competition strength.</td></tr>
+              <tr><td>Dye Inhibition</td><td class="m">0 to 2</td><td class="m">0.05</td><td>Cross-channel dye inhibition strength.</td></tr>
             </tbody>
           </table>
         </div>
@@ -559,11 +474,11 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Midtone Expansion</td><td class="m">0–1</td><td class="m">0</td><td>Per-channel midtone boost (stronger for green).</td></tr>
-              <tr><td>Chroma Expansion</td><td class="m">0–2</td><td class="m">0</td><td>Opponent-space saturation expansion (hue-preserving).</td></tr>
-              <tr><td>Weak Channel Protection</td><td class="m">0–1</td><td class="m">0</td><td>Additive floor for weak channels (prevents color loss).</td></tr>
-              <tr><td>Spectral Sharpening</td><td class="m">0–1</td><td class="m">0</td><td>43-band spectral peak tightening (reduces hue bleed).</td></tr>
-              <tr><td>nRed / nGreen / nBlue Bias</td><td class="m">0–2</td><td class="m">0</td><td>Per-layer <strong>retained-silver weight</strong> for the bleach-bypass look. Fine-tunes how much silver each layer adds to the neutral-density crossover. Builds on top of Negative Bleach Bypass. Advanced.</td></tr>
+              <tr><td>Midtone Expansion</td><td class="m">0 to 1</td><td class="m">0</td><td>Per-channel midtone boost (stronger for green).</td></tr>
+              <tr><td>Chroma Expansion</td><td class="m">0 to 2</td><td class="m">0</td><td>Opponent-space saturation expansion (hue-preserving).</td></tr>
+              <tr><td>Weak Channel Protection</td><td class="m">0 to 1</td><td class="m">0</td><td>Additive floor for weak channels (prevents color loss).</td></tr>
+              <tr><td>Spectral Sharpening</td><td class="m">0 to 1</td><td class="m">0</td><td>43-band spectral peak tightening (reduces hue bleed).</td></tr>
+              <tr><td>nRed / nGreen / nBlue Bias</td><td class="m">0 to 2</td><td class="m">0</td><td>Per-layer <strong>retained-silver weight</strong> for the bleach-bypass look. Fine-tunes how much silver each layer adds to the neutral-density crossover. Builds on top of Negative Bleach Bypass. Advanced.</td></tr>
             </tbody>
           </table>
         </div>
@@ -572,10 +487,10 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Push/Pull</td><td class="m">−2–2</td><td class="m">0</td><td>Print development push/pull, in stops.</td></tr>
-              <tr><td>Bleach Bypass</td><td class="m">0–2</td><td class="m">0</td><td>Bleach-bypass strength on the print.</td></tr>
-              <tr><td>Developer Competition</td><td class="m">0–2</td><td class="m">0.1</td><td>Silver-halide competition strength.</td></tr>
-              <tr><td>Dye Inhibition</td><td class="m">0–2</td><td class="m">0.05</td><td>Cross-channel dye inhibition strength.</td></tr>
+              <tr><td>Push/Pull</td><td class="m">−2 to 2</td><td class="m">0</td><td>Print development push/pull, in stops.</td></tr>
+              <tr><td>Bleach Bypass</td><td class="m">0 to 2</td><td class="m">0</td><td>Bleach-bypass strength on the print.</td></tr>
+              <tr><td>Developer Competition</td><td class="m">0 to 2</td><td class="m">0.1</td><td>Silver-halide competition strength.</td></tr>
+              <tr><td>Dye Inhibition</td><td class="m">0 to 2</td><td class="m">0.05</td><td>Cross-channel dye inhibition strength.</td></tr>
             </tbody>
           </table>
         </div>
@@ -584,11 +499,11 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Midtone Expansion</td><td class="m">0–1</td><td class="m">0</td><td>Per-channel midtone boost.</td></tr>
-              <tr><td>Chroma Expansion</td><td class="m">0–2</td><td class="m">0</td><td>Opponent-space saturation expansion.</td></tr>
-              <tr><td>Weak Channel Protection</td><td class="m">0–1</td><td class="m">0</td><td>Additive floor for weak channels.</td></tr>
-              <tr><td>Spectral Sharpening</td><td class="m">0–1</td><td class="m">0</td><td>43-band spectral peak tightening.</td></tr>
-              <tr><td>pRed / pGreen / pBlue Bias</td><td class="m">0–2</td><td class="m">0</td><td>Per-layer retained-silver weight on the <em>print</em> stage, same mechanism as the negative Bias controls, building on top of Print Bleach Bypass. Advanced.</td></tr>
+              <tr><td>Midtone Expansion</td><td class="m">0 to 1</td><td class="m">0</td><td>Per-channel midtone boost.</td></tr>
+              <tr><td>Chroma Expansion</td><td class="m">0 to 2</td><td class="m">0</td><td>Opponent-space saturation expansion.</td></tr>
+              <tr><td>Weak Channel Protection</td><td class="m">0 to 1</td><td class="m">0</td><td>Additive floor for weak channels.</td></tr>
+              <tr><td>Spectral Sharpening</td><td class="m">0 to 1</td><td class="m">0</td><td>43-band spectral peak tightening.</td></tr>
+              <tr><td>pRed / pGreen / pBlue Bias</td><td class="m">0 to 2</td><td class="m">0</td><td>Per-layer retained-silver weight on the <em>print</em> stage, same mechanism as the negative Bias controls, building on top of Print Bleach Bypass. Advanced.</td></tr>
             </tbody>
           </table>
         </div>
@@ -600,7 +515,6 @@
 
       <!-- 9 -->
       <section id="textures" class="reveal" data-screen-label="Textures">
-        <span class="sec-num">09</span>
         <h2>Textures</h2>
         <p>The master container for <strong>Grain, Halation, MTF, Film Breath, and Gate Weave</strong>. Closed by default. The three master on/off checkboxes (Grain / Halation / MTF) live up in Quick Processing; the per-format dropdowns are driven from the Textures Editor.</p>
         <div class="tbl-wrap">
@@ -621,12 +535,12 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Amount</td><td class="m">0–15</td><td class="m">0.5</td><td>Grain intensity, scales the grain RMS linearly. The slider reaches 15, but the <strong>useful working range is ≈0–2</strong>: 0.5 = subtle/natural, 1 = pronounced, above ~3 = stylized/heavy.</td></tr>
-              <tr><td>Size</td><td class="m">0.5–2</td><td class="m">1.0</td><td>Grain size relative to the ISO-100 baseline.</td></tr>
-              <tr><td>ISO</td><td class="m">100–3200</td><td class="m">400</td><td>ISO used for the granularity curve.</td></tr>
-              <tr><td>Color / Mono</td><td class="m">0–1</td><td class="m">0.7</td><td>0 = chromatic (independent RGB grain), 1 = monochromatic (shared luma grain).</td></tr>
-              <tr><td>Seed</td><td class="m">0–1000</td><td class="m">0 / 500</td><td>Random seed offset (neg / print).</td></tr>
-              <tr><td>Density Falloff</td><td class="m">0.1–2</td><td class="m">0.8</td><td>How fast grain decays into density.</td></tr>
+              <tr><td>Amount</td><td class="m">0 to 15</td><td class="m">0.5</td><td>Grain intensity, scales the grain RMS linearly. The slider reaches 15, but the <strong>useful working range is ≈0 to 2</strong>: 0.5 = subtle/natural, 1 = pronounced, above ~3 = stylized/heavy.</td></tr>
+              <tr><td>Size</td><td class="m">0.5 to 2</td><td class="m">1.0</td><td>Grain size relative to the ISO-100 baseline.</td></tr>
+              <tr><td>ISO</td><td class="m">100 to 3200</td><td class="m">400</td><td>ISO used for the granularity curve.</td></tr>
+              <tr><td>Color / Mono</td><td class="m">0 to 1</td><td class="m">0.7</td><td>0 = chromatic (independent RGB grain), 1 = monochromatic (shared luma grain).</td></tr>
+              <tr><td>Seed</td><td class="m">0 to 1000</td><td class="m">0 / 500</td><td>Random seed offset (neg / print).</td></tr>
+              <tr><td>Density Falloff</td><td class="m">0.1 to 2</td><td class="m">0.8</td><td>How fast grain decays into density.</td></tr>
             </tbody>
           </table>
         </div>
@@ -635,10 +549,10 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Red / Green / Blue Layer</td><td class="m">0–3</td><td class="m">0.85 / 1.00 / 1.15</td><td>Per-layer grain amount multiplier (red finest, blue coarsest).</td></tr>
-              <tr><td>Red / Green / Blue Falloff</td><td class="m">0.1–2</td><td class="m">0.8</td><td>Per-layer density falloff.</td></tr>
-              <tr><td>Red / Green / Blue Shadow Lift</td><td class="m">0–1</td><td class="m">0</td><td>Shadow-grain lift (0 = toe rolloff, 1 = full grain into deepest shadows).</td></tr>
-              <tr><td>Red / Green / Blue Shadow Reach</td><td class="m">0.02–1</td><td class="m">0.35</td><td>Shadow-grain reach / toe width.</td></tr>
+              <tr><td>Red / Green / Blue Layer</td><td class="m">0 to 3</td><td class="m">0.85 / 1.00 / 1.15</td><td>Per-layer grain amount multiplier (red finest, blue coarsest).</td></tr>
+              <tr><td>Red / Green / Blue Falloff</td><td class="m">0.1 to 2</td><td class="m">0.8</td><td>Per-layer density falloff.</td></tr>
+              <tr><td>Red / Green / Blue Shadow Lift</td><td class="m">0 to 1</td><td class="m">0</td><td>Shadow-grain lift (0 = toe rolloff, 1 = full grain into deepest shadows).</td></tr>
+              <tr><td>Red / Green / Blue Shadow Reach</td><td class="m">0.02 to 1</td><td class="m">0.35</td><td>Shadow-grain reach / toe width.</td></tr>
             </tbody>
           </table>
         </div>
@@ -647,16 +561,16 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Size Variance</td><td class="m">0–4</td><td class="m">1.5</td><td>Ratio between coarse and fine crystal populations (0 = single population; 1.5 ≈ coarse 2.5× fine).</td></tr>
-              <tr><td>Speed Bias</td><td class="m">0–1</td><td class="m">0.4</td><td>Energy balance between populations (0 = fine/slow dominant, 1 = coarse/fast dominant).</td></tr>
-              <tr><td>Layer Correlation</td><td class="m">0–1</td><td class="m">0.35</td><td>How much coarse activation clusters fine crystals together.</td></tr>
+              <tr><td>Size Variance</td><td class="m">0 to 4</td><td class="m">1.5</td><td>Ratio between coarse and fine crystal populations (0 = single population; 1.5 ≈ coarse 2.5× fine).</td></tr>
+              <tr><td>Speed Bias</td><td class="m">0 to 1</td><td class="m">0.4</td><td>Energy balance between populations (0 = fine/slow dominant, 1 = coarse/fast dominant).</td></tr>
+              <tr><td>Layer Correlation</td><td class="m">0 to 1</td><td class="m">0.35</td><td>How much coarse activation clusters fine crystals together.</td></tr>
               <tr><td>Crystal Shape</td><td class="m">R / Sq / T</td><td class="m">Square</td><td>Crystal morphology: Round (globular), Square (cubic), T-Grain (flat tabular platelet).</td></tr>
             </tbody>
           </table>
         </div>
         <div class="callout warn">
           <div class="k">Tell that grain is overdone</div>
-          <p>It stops looking like structure and starts looking like video noise sitting <em>on top</em> of the picture, especially crawling into the blacks. Back off Amount toward 0.5–1.</p>
+          <p>It stops looking like structure and starts looking like video noise sitting <em>on top</em> of the picture, especially crawling into the blacks. Back off Amount toward 0.5 to 1.</p>
         </div>
 
         <h3>Halation</h3>
@@ -666,11 +580,11 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Remjet Strength</td><td class="m">0–1</td><td class="m">0.5</td><td>Anti-halation remjet layer (0 = no remjet/full scatter, 1 = full remjet/halation suppressed).</td></tr>
-              <tr><td>Neg Radius</td><td class="m">1–20</td><td class="m">7.0</td><td>Negative backscatter radius in pixels (master reach).</td></tr>
-              <tr><td>Neg Threshold</td><td class="m">0–1</td><td class="m">0.85</td><td>Brightness threshold above which halation kicks in.</td></tr>
-              <tr><td>Neg R / G / B Boost</td><td class="m">0–3</td><td class="m">1.2 / 0.6 / 0.2</td><td>Per-channel halation strength (red dominant = the classic red halo).</td></tr>
-              <tr><td>Neg R / G / B Spread</td><td class="m">0–2</td><td class="m">0.88 / 1.0 / 1.18</td><td>Per-channel halo reach (× Neg Radius).</td></tr>
+              <tr><td>Remjet Strength</td><td class="m">0 to 1</td><td class="m">0.5</td><td>Anti-halation remjet layer (0 = no remjet/full scatter, 1 = full remjet/halation suppressed).</td></tr>
+              <tr><td>Neg Radius</td><td class="m">1 to 20</td><td class="m">7.0</td><td>Negative backscatter radius in pixels (master reach).</td></tr>
+              <tr><td>Neg Threshold</td><td class="m">0 to 1</td><td class="m">0.85</td><td>Brightness threshold above which halation kicks in.</td></tr>
+              <tr><td>Neg R / G / B Boost</td><td class="m">0 to 3</td><td class="m">1.2 / 0.6 / 0.2</td><td>Per-channel halation strength (red dominant = the classic red halo).</td></tr>
+              <tr><td>Neg R / G / B Spread</td><td class="m">0 to 2</td><td class="m">0.88 / 1.0 / 1.18</td><td>Per-channel halo reach (× Neg Radius).</td></tr>
             </tbody>
           </table>
         </div>
@@ -679,11 +593,11 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Print Anti-Halation</td><td class="m">0–1</td><td class="m">0.3</td><td>Print anti-halation backing (0 = full scatter, 1 = fully suppressed).</td></tr>
-              <tr><td>Print Radius</td><td class="m">1–20</td><td class="m">5.0</td><td>Print backscatter radius in pixels.</td></tr>
-              <tr><td>Print Threshold</td><td class="m">0–1</td><td class="m">0.85</td><td>Brightness threshold for print halation.</td></tr>
-              <tr><td>Print R / G / B Boost</td><td class="m">0–3</td><td class="m">1.0 / 0.5 / 0.1</td><td>Per-channel strength.</td></tr>
-              <tr><td>Print R / G / B Spread</td><td class="m">0–2</td><td class="m">0.88 / 1.0 / 1.18</td><td>Per-channel halo reach (× Print Radius).</td></tr>
+              <tr><td>Print Anti-Halation</td><td class="m">0 to 1</td><td class="m">0.3</td><td>Print anti-halation backing (0 = full scatter, 1 = fully suppressed).</td></tr>
+              <tr><td>Print Radius</td><td class="m">1 to 20</td><td class="m">5.0</td><td>Print backscatter radius in pixels.</td></tr>
+              <tr><td>Print Threshold</td><td class="m">0 to 1</td><td class="m">0.85</td><td>Brightness threshold for print halation.</td></tr>
+              <tr><td>Print R / G / B Boost</td><td class="m">0 to 3</td><td class="m">1.0 / 0.5 / 0.1</td><td>Per-channel strength.</td></tr>
+              <tr><td>Print R / G / B Spread</td><td class="m">0 to 2</td><td class="m">0.88 / 1.0 / 1.18</td><td>Per-channel halo reach (× Print Radius).</td></tr>
             </tbody>
           </table>
         </div>
@@ -699,12 +613,12 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>MTF Pressure</td><td class="m">0–3</td><td class="m">1.0</td><td>Master strength of the whole MTF effect (1 = as drawn, 0 = off, 3 = strong). Scales acutance and roll-off depth.</td></tr>
-              <tr><td>R / G / B Resolving Power</td><td class="m">10–300 lp/mm</td><td class="m">120 / 80 / 60</td><td>Layer resolving power. Lower lp/mm = softer (blurs sooner).</td></tr>
-              <tr><td>ISO Coupling</td><td class="m">0–1</td><td class="m">0.7</td><td>Links resolving power to the grain ISO (0 = fixed, 1 = full coupling).</td></tr>
-              <tr><td>R / G / B Acutance</td><td class="m">0–1</td><td class="m">0.9</td><td>Edge enhancement from developer diffusion (height of the above-100% mid-frequency bump).</td></tr>
-              <tr><td>R / G / B Bump Width</td><td class="m">1.5–6</td><td class="m">3.0</td><td>Adjacency bump width (tight spike 1.5 → broad hump 6; 3 = film).</td></tr>
-              <tr><td>R / G / B Fine Crispness</td><td class="m">0–0.5</td><td class="m">0</td><td>Fine-detail bite on top of the roll-off (0 = pure datasheet roll-off to zero).</td></tr>
+              <tr><td>MTF Pressure</td><td class="m">0 to 3</td><td class="m">1.0</td><td>Master strength of the whole MTF effect (1 = as drawn, 0 = off, 3 = strong). Scales acutance and roll-off depth.</td></tr>
+              <tr><td>R / G / B Resolving Power</td><td class="m">10 to 300 lp/mm</td><td class="m">120 / 80 / 60</td><td>Layer resolving power. Lower lp/mm = softer (blurs sooner).</td></tr>
+              <tr><td>ISO Coupling</td><td class="m">0 to 1</td><td class="m">0.7</td><td>Links resolving power to the grain ISO (0 = fixed, 1 = full coupling).</td></tr>
+              <tr><td>R / G / B Acutance</td><td class="m">0 to 1</td><td class="m">0.9</td><td>Edge enhancement from developer diffusion (height of the above-100% mid-frequency bump).</td></tr>
+              <tr><td>R / G / B Bump Width</td><td class="m">1.5 to 6</td><td class="m">3.0</td><td>Adjacency bump width (tight spike 1.5 → broad hump 6; 3 = film).</td></tr>
+              <tr><td>R / G / B Fine Crispness</td><td class="m">0 to 0.5</td><td class="m">0</td><td>Fine-detail bite on top of the roll-off (0 = pure datasheet roll-off to zero).</td></tr>
             </tbody>
           </table>
         </div>
@@ -719,9 +633,9 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Global Strength</td><td class="m">0–1</td><td class="m">0.3</td><td>Overall film-breath intensity.</td></tr>
-              <tr><td>Frequency (Hz)</td><td class="m">0.1–2</td><td class="m">0.6</td><td>Breath cycle frequency (0.1 = slow, 2 = fast).</td></tr>
-              <tr><td>Coherence</td><td class="m">0–1</td><td class="m">0.6</td><td>Inter-channel sync (0 = chaotic, 1 = unified pulse).</td></tr>
+              <tr><td>Global Strength</td><td class="m">0 to 1</td><td class="m">0.3</td><td>Overall film-breath intensity.</td></tr>
+              <tr><td>Frequency (Hz)</td><td class="m">0.1 to 2</td><td class="m">0.6</td><td>Breath cycle frequency (0.1 = slow, 2 = fast).</td></tr>
+              <tr><td>Coherence</td><td class="m">0 to 1</td><td class="m">0.6</td><td>Inter-channel sync (0 = chaotic, 1 = unified pulse).</td></tr>
               <tr><td>Enable Negative Mechanical</td><td class="m">on/off</td><td class="m">on</td><td>Printer-bulb flicker during negative exposure.</td></tr>
               <tr><td>Enable Print Mechanical</td><td class="m">on/off</td><td class="m">on</td><td>Projector-bulb flicker during print exposure.</td></tr>
               <tr><td>Enable Chemical Variations</td><td class="m">on/off</td><td class="m">on</td><td>Developer/bleach timing drift.</td></tr>
@@ -729,7 +643,7 @@
             </tbody>
           </table>
         </div>
-        <p>Sub-controls: <strong>Mechanical (Neg / Print)</strong> give per-channel bulb-flicker amounts (0–1); <strong>Chemical Development</strong> gives Developer Variation and Bleach-Fix Variation (0–1, default 0); <strong>Emulsion Spectral Drift</strong> gives Cyan / Magenta / Yellow peak drift (0–1 = 0–2 nm, default 0).</p>
+        <p>Sub-controls: <strong>Mechanical (Neg / Print)</strong> give per-channel bulb-flicker amounts (0 to 1); <strong>Chemical Development</strong> gives Developer Variation and Bleach-Fix Variation (0 to 1, default 0); <strong>Emulsion Spectral Drift</strong> gives Cyan / Magenta / Yellow peak drift (0 to 1 = 0 to 2 nm, default 0).</p>
 
         <h3>Gate Weave</h3>
         <p>Mechanical position wobble from the film gate. Gated by the <strong>Enable Gate Weave</strong> master switch. All default 0.</p>
@@ -737,10 +651,10 @@
           <table class="ptable wide">
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Horizontal Wobble</td><td class="m">0–1</td><td class="m">0</td><td>Left/right position wobble (0–1 = 0–2 px).</td></tr>
-              <tr><td>Vertical Wobble</td><td class="m">0–1</td><td class="m">0</td><td>Up/down wobble (0–1 = 0–2 px).</td></tr>
-              <tr><td>Rotation Wobble</td><td class="m">0–1</td><td class="m">0</td><td>Rotational wobble (0–1 = 0–0.5°).</td></tr>
-              <tr><td>Scale Pump</td><td class="m">0–1</td><td class="m">0</td><td>Zoom wobble from film tension (0–1 = 0–0.3%).</td></tr>
+              <tr><td>Horizontal Wobble</td><td class="m">0 to 1</td><td class="m">0</td><td>Left/right position wobble (0 to 1 = 0 to 2 px).</td></tr>
+              <tr><td>Vertical Wobble</td><td class="m">0 to 1</td><td class="m">0</td><td>Up/down wobble (0 to 1 = 0 to 2 px).</td></tr>
+              <tr><td>Rotation Wobble</td><td class="m">0 to 1</td><td class="m">0</td><td>Rotational wobble (0 to 1 = 0 to 0.5°).</td></tr>
+              <tr><td>Scale Pump</td><td class="m">0 to 1</td><td class="m">0</td><td>Zoom wobble from film tension (0 to 1 = 0 to 0.3%).</td></tr>
             </tbody>
           </table>
         </div>
@@ -748,7 +662,6 @@
 
       <!-- 10 -->
       <section id="preset-manager" class="reveal" data-screen-label="Preset Manager">
-        <span class="sec-num">10</span>
         <h2>Preset Manager</h2>
         <p>Save, update, rename, delete, import, and export readable JSON preset files. Closed by default. Lite loads every built-in preset but can't save or export its own.</p>
         <div class="tbl-wrap">
@@ -771,7 +684,6 @@
 
       <!-- 11 -->
       <section id="film-stock" class="reveal" data-screen-label="Film Stock model">
-        <span class="sec-num">11</span>
         <h2>Negative &amp; Print Film Stock</h2>
         <p>Direct spectral-model authoring for the negative and print stocks. In the shipping build these controls are <strong>hidden</strong> and non-persistent, the <strong>Film Stock Editor owns them</strong>, and you should author stocks there rather than dialing raw doubles. This section documents them at reference altitude so you understand what the FSE is manipulating under the hood.</p>
         <p>Each stock (negative and print) has three model layers:</p>
@@ -785,7 +697,6 @@
 
       <!-- 12 -->
       <section id="io-config" class="reveal" data-screen-label="I/O Config">
-        <span class="sec-num">12</span>
         <h2>Input/Output Config</h2>
         <p>Color-space I/O, workflow mode, and diagnostic views.</p>
         <div class="tbl-wrap">
@@ -811,7 +722,6 @@
 
       <!-- 13 -->
       <section id="lut-export" class="reveal" data-screen-label="LUT Export">
-        <span class="sec-num">13</span>
         <h2>LUT Export</h2>
         <p>Bake the current effective color transform to a <code>.cube</code> 3D LUT. Closed by default (full plugin only, not in Lite).</p>
         <div class="tbl-wrap">
@@ -831,13 +741,13 @@
 
       <!-- 14 -->
       <section id="fse" class="reveal" data-screen-label="Film Stock Editor">
-        <span class="sec-num">14</span>
         <h2>The Film Stock Editor (FSE)</h2>
         <p>An external, non-modal panel (native on Mac, with a Windows/Linux equivalent) launched from the <strong>Film Stock Editor…</strong> button. It draws the spectral model directly as curves, your scalpel for sculpting a stock's character. A user-drawn curve here becomes the <strong>highest-priority override</strong> for that stock.</p>
-        <a class="shot" href="shots/film-stock-editor.png" target="_blank" rel="noopener">
-          <img src="shots/film-stock-editor.png" alt="The Film Stock Editor panel: Neg Sensitivity, Neg Dye, Neg HD Curve, and datasheet reference" loading="lazy" />
-          <span class="cap">The Film Stock Editor, sensitivity, dye, and HD curves with a datasheet reference</span>
-        </a>
+        <figure class="viewer">
+          <img src="shots/film-stock-editor.png" alt="The Film Stock Editor panel: Neg Sensitivity, Neg Dye, Neg HD Curve, and datasheet reference" loading="lazy" data-full="shots/film-stock-editor.png" data-cap="The Film Stock Editor, sensitivity, dye, and HD curves with a datasheet reference" />
+          <figcaption class="slate"><span>The Film Stock Editor, sensitivity, dye, and HD curves with a datasheet reference</span><a href="shots/film-stock-editor.png" target="_blank" rel="noopener" data-full="shots/film-stock-editor.png" data-cap="The Film Stock Editor, sensitivity, dye, and HD curves with a datasheet reference">View full res ↗</a></figcaption>
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        </figure>
         <div class="tbl-wrap">
           <table class="ptable">
             <thead><tr><th>Mode tab</th><th>What it edits</th></tr></thead>
@@ -851,13 +761,13 @@
             </tbody>
           </table>
         </div>
-        <p><strong>Curve editing.</strong> In the sensitivity/dye modes each channel is a draggable spline of 9 control points <code>(wavelength, value)</code> across 360–780 nm; the plugin interpolates them to the 43 internal bands and re-renders live as you drag.</p>
+        <p><strong>Curve editing.</strong> In the sensitivity/dye modes each channel is a draggable spline of 9 control points <code>(wavelength, value)</code> across 360 to 780 nm; the plugin interpolates them to the 43 internal bands and re-renders live as you drag.</p>
         <h4>Sliders alongside the curves (mirror the OFX params)</h4>
         <ul class="bul">
           <li><span><strong>Sensitivity modes</strong>, three Height sliders per stage plus a Master Exposure (stops) slider.</span></li>
           <li><span><strong>Dye modes</strong>, three Amplitude sliders per stage.</span></li>
           <li><span><strong>HD Curve modes</strong>, six scalars per channel (Gamma, H0, Dmin, Dmax, Toe, Shoulder), plotted on the canvas.</span></li>
-          <li><span><strong>Print HD Curve mode</strong>, the print-stage Printer Lights (R/G/B, 0–50, 25 = neutral) and Printer Power anchor are editable live, so you can slide tones along the print curve while you shape it.</span></li>
+          <li><span><strong>Print HD Curve mode</strong>, the print-stage Printer Lights (R/G/B, 0 to 50, 25 = neutral) and Printer Power anchor are editable live, so you can slide tones along the print curve while you shape it.</span></li>
         </ul>
         <p><strong>Stock dropdowns.</strong> Each mode has a stock selector populated with stocks that have measured spectral data; loading one seeds the curves for that mode. <strong>Save to Preset…</strong> runs the standard managed-preset save for the active mode's family, appending the curve control points. Closing the panel just clears the "editor open" flag, the curves were always live.</p>
         <div class="callout tip">
@@ -868,13 +778,13 @@
 
       <!-- 15 -->
       <section id="textures-editor" class="reveal" data-screen-label="Textures Editor">
-        <span class="sec-num">15</span>
         <h2>The Textures Editor</h2>
         <p>An external, non-modal panel (macOS) launched from the <strong>Textures Editor…</strong> button. It is a live front-end for the same Grain / Halation / MTF params documented in the Textures section, not a separate parameter set. It edits the three subsystems three-columns-across, each with a Negative and a Print side.</p>
-        <a class="shot" href="shots/textures-editor.png" target="_blank" rel="noopener">
-          <img src="shots/textures-editor.png" alt="The Textures Editor panel: Grain, Halation, and MTF columns with live loupes" loading="lazy" />
-          <span class="cap">The Textures Editor, Grain, Halation, and MTF columns with live loupes</span>
-        </a>
+        <figure class="viewer">
+          <img src="shots/textures-editor.png" alt="The Textures Editor panel: Grain, Halation, and MTF columns with live loupes" loading="lazy" data-full="shots/textures-editor.png" data-cap="The Textures Editor, Grain, Halation, and MTF columns with live loupes" />
+          <figcaption class="slate"><span>The Textures Editor, Grain, Halation, and MTF columns with live loupes</span><a href="shots/textures-editor.png" target="_blank" rel="noopener" data-full="shots/textures-editor.png" data-cap="The Textures Editor, Grain, Halation, and MTF columns with live loupes">View full res ↗</a></figcaption>
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        </figure>
         <ul class="bul">
           <li><span><strong>Header</strong>, a Neg/Print side toggle; master and per-subsystem <strong>Format</strong> dropdowns (Off / 65mm / 35mm / 16mm). Setting a format seeds grain, halation, and MTF at physically sensible ratios for that gauge. Smaller gauge = grainier, softer, more halation.</span></li>
           <li><span><strong>Per-column enables</strong>, Grain / Halation / MTF, each Neg and Print.</span></li>
@@ -889,7 +799,6 @@
 
       <!-- 16 -->
       <section id="printer-lights" class="reveal" data-screen-label="Printer Lights feeder">
-        <span class="sec-num">16</span>
         <h2>PhotoChemist Printer Lights (feeder factory)</h2>
         <p>A <strong>second factory</strong> in the same bundle, labelled <strong>PhotoChemist Printer Lights</strong>, under the same <strong>Film Look Tools - Dec. 18 Studios</strong> group. It is a companion generator/trim node whose output feeds PhotoChemist's optional <strong>Printer Link</strong> input, letting you make printer-light maps that vary <strong>spatially</strong> across the frame, windows, qualifiers, and masks become local printer-light adjustments.</p>
         <h3>How it wires in</h3>
@@ -904,8 +813,8 @@
             <thead><tr><th>Control</th><th>Range</th><th>Default</th><th>What it does</th></tr></thead>
             <tbody>
               <tr><td>Generate Feed</td><td class="m">on/off</td><td class="m">on</td><td><strong>On:</strong> replace the input with a flat printer-point frame (a generator). <strong>Off:</strong> trim mode, the input passes through multiplied by the per-channel gain; at neutral it is an exact passthrough, and with sliders moved it stacks additively on top of an upstream feeder (node masks limit where the trim lands).</td></tr>
-              <tr><td>Master Printer Points</td><td class="m">0–50</td><td class="m">25</td><td>Base printer points for all three channels (25 = neutral, 1 point = 1/12 stop). Same currency and lab direction as PhotoChemist's Printer Light: more points = darker print.</td></tr>
-              <tr><td>Red / Green / Blue Printer Points</td><td class="m">0–50</td><td class="m">25</td><td>Base per-channel printer points.</td></tr>
+              <tr><td>Master Printer Points</td><td class="m">0 to 50</td><td class="m">25</td><td>Base printer points for all three channels (25 = neutral, 1 point = 1/12 stop). Same currency and lab direction as PhotoChemist's Printer Light: more points = darker print.</td></tr>
+              <tr><td>Red / Green / Blue Printer Points</td><td class="m">0 to 50</td><td class="m">25</td><td>Base per-channel printer points.</td></tr>
             </tbody>
           </table>
         </div>
@@ -914,7 +823,6 @@
 
       <!-- 17 -->
       <section id="diagnostics" class="reveal" data-screen-label="Diagnostic views">
-        <span class="sec-num">17</span>
         <h2>Diagnostic view modes</h2>
         <p>The <strong>View Mode</strong> dropdown (Input/Output Config) shows any stage of the spectral simulation instead of the final image, invaluable for understanding what a control is doing and for troubleshooting.</p>
         <div class="tbl-wrap">
@@ -938,7 +846,6 @@
 
       <!-- 18 -->
       <section id="workflow" class="reveal" data-screen-label="Workflow">
-        <span class="sec-num">18</span>
         <h2>Workflow &amp; best practices</h2>
         <p>A first session, using only the safe controls:</p>
         <ol class="steps-ol">
@@ -972,11 +879,10 @@
 
       <!-- 19 -->
       <section id="faq" class="reveal" data-screen-label="Troubleshooting FAQ">
-        <span class="sec-num">19</span>
         <h2>Troubleshooting &amp; FAQ</h2>
         <details class="faq"><summary>One printer-light tweak won't neutralize across daylight and tungsten</summary><div class="fb"><p>By design, the per-layer print curves cross, so balance depends on tonal position. This is film behaving like film, not a bug. Balance the base with Printer Calibration, then time with printer lights.</p></div></details>
         <details class="faq"><summary>Printer lights feel like the wrong direction</summary><div class="fb"><p>Correct: the lab convention is <em>more light = denser (darker) print</em>. Lower a printer light to print brighter.</p></div></details>
-        <details class="faq"><summary>Grain looks like video noise on top of the image, crawling in the blacks</summary><div class="fb"><p>Grain Amount is too high, bring it back to ≈0.5–1, and prefer the format preset over hand-dialing.</p></div></details>
+        <details class="faq"><summary>Grain looks like video noise on top of the image, crawling in the blacks</summary><div class="fb"><p>Grain Amount is too high, bring it back to ≈0.5 to 1, and prefer the format preset over hand-dialing.</p></div></details>
         <details class="faq"><summary>Halation reads like a red filter over everything bright</summary><div class="fb"><p>Boosts/radius too high, or threshold too low. Lower the boosts, shrink the radius, or raise the threshold so only true highlights bloom.</p></div></details>
         <details class="faq"><summary>Edges look hard and ringing</summary><div class="fb"><p>Over-sharpened MTF. Lower MTF Pressure or acutance, but don't drop acutance below ~0.9 chasing "realism"; below 0.5 it actively softens and the effect appears to do nothing.</p></div></details>
         <details class="faq"><summary>Blacks are milky / lifted</summary><div class="fb"><p>Lower <strong>Theater Screen Sim</strong> (print base density) toward 0.01 for deeper blacks; raise it for a milkier, lifted look.</p></div></details>
@@ -1024,32 +930,43 @@
 <!-- ============ FOOTER ============ -->
 <footer data-screen-label="Footer">
   <div class="wrap">
-    <div class="foot-grid">
+    <div class="foot">
       <div>
-        <div class="big">Dec. 18 Studios</div>
-        <p class="blurb">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
+        <div class="big">Dec. 18<br />Studios</div>
+        <p style="margin-top:10px">Color grading tools for DaVinci Resolve. Based in Remote, serving Southern CA, Los Angeles, and beyond.</p>
       </div>
-      <div class="fcol">
+      <div>
         <div class="fh">Explore</div>
+        <a href="https://dec18studios.com/projects" target="_top">Portfolio</a>
         <a href="../../">Color Grading Tools</a>
         <a href="../">PhotoChemist</a>
         <a href="../quickstart/">Quick Start</a>
         <a href="../Workflows/">Workflow Guide</a>
         <a href="../../technicolordrt/">Technicolor DRT</a>
-        <a href="https://dec18studios.com/hire-us">Book Now</a>
+        <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
       </div>
-      <div class="fcol">
+      <div>
         <div class="fh">Contact</div>
         <a href="mailto:create@dec18studios.com">create@dec18studios.com</a>
         <a href="tel:+17084763598">(708) 476-3598</a>
-        <span class="li">Mon–Fri · 08:00–17:00 PST</span>
+        <span class="li">Mon to Fri · 08:00 to 17:00 PST</span>
         <a href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener">YouTube</a>
         <a href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
+
+    <div class="buttons">
+      <a class="b88 resolve" href="../../#tools" title="Best viewed in DaVinci Resolve"><span>BEST VIEWED IN</span><span class="big8">RESOLVE</span></a>
+      <a class="b88 mgr dl" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" data-slug="plugin-manager" data-name="Tool Box Manager" target="_top" rel="noopener" title="Download the Tool Box Manager"><span>GET THE</span><span class="big8">MANAGER</span></a>
+      <a class="b88 disc dl" href="https://discord.gg/cGsHvs8KAF" data-slug="discord-invite" data-name="Discord Server" target="_top" rel="noopener" title="Join the Discord"><span>JOIN THE</span><span class="big8">DISCORD</span></a>
+      <a class="b88 yt" href="https://www.youtube.com/@dec.18Studios" target="_blank" rel="noopener" title="YouTube"><span>WATCH ON</span><span class="big8">YOUTUBE</span></a>
+      <a class="b88 ig" href="https://www.instagram.com/dec18studios" target="_blank" rel="noopener" title="Instagram"><span>FOLLOW ON</span><span class="big8">INSTAGRAM</span></a>
+      <a class="b88 bars8" href="#top" title="Back to the top"><span class="big8">BARS &amp;</span><span class="big8">TONE</span></a>
+    </div>
+
     <div class="legal">
       <span>© Dec. 18 Studios · Built for DaVinci Resolve</span>
-      <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com →</a>
+      <a href="https://dec18studios.com" target="_top">dec18studios.com →</a>
     </div>
   </div>
 </footer>
@@ -1113,6 +1030,9 @@
     <text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="19" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">PC</text>
   </svg>
 </template>
+
+<script src="../../assets/d18-viewer.js" defer></script>
+<script src="../../assets/dl-gate.js" defer></script>
 
 </body>
 </html>
