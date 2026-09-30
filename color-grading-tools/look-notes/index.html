@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Look Notes &middot; Free OFX for Resolve &middot; Dec. 18 Studios</title>
-<meta name="description" content="Look Notes is a free OFX for DaVinci Resolve that burns a look label and notes into the frame for up to eight looks, and flips your labelled look nodes on and off when you change the Active Look. PowerGrade Mode labels your Gallery stills. Metal on macOS, CUDA on Windows and Linux." />
+<meta name="description" content="Look Notes is a free OFX for DaVinci Resolve that burns a look label and notes into the frame for up to eight looks, and flips your labelled look nodes on and off when you change the Active Look. Reframe mode moves the notes into their own panel with a colour palette pulled from the image. PowerGrade Mode labels your Gallery stills. Metal on macOS, CUDA on Windows and Linux." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
@@ -364,9 +364,18 @@
     </div>
 
     <div class="group reveal">
+      <div class="group-head">Reframe and palette</div>
+      <div class="mode-grid">
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Reframe</b><p>Tick it at the top of the panel, then pick Bottom Strip or Side Panel. The picture shrinks to fit, keeps its shape, and the notes get their own panel instead of sitting on the image.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Panel Size and Background</b><p>How much of the frame the panel takes (10 to 50 percent) and what colour fills it.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Palette</b><p>3 to 12 colour swatches pulled from the image, sorted by hue, dominance or brightness. Skip near blacks, near whites and greys if you want only the real colours.</p></div>
+      </div>
+    </div>
+
+    <div class="group reveal">
       <div class="group-head">Fonts</div>
       <div class="mode-grid">
-        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Garamond</b><p>System Garamond on macOS, Office Garamond on Windows when installed, EB Garamond on Linux when installed. Falls back to Pixel when missing.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Garamond</b><p>System Garamond on macOS, Office Garamond on Windows when installed, and EB Garamond bundled for everything else, so it always has a Garamond.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Pixel</b><p>A built in bitmap font. Always there.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Custom</b><p>Pick your own two font files: one for the label, one for the notes.</p></div>
       </div>
@@ -395,7 +404,7 @@
         </div>
         <div class="step">
           <span class="n"></span>
-          <div class="st"><b>macOS or Linux</b><p>Toggling works on macOS and Linux. On Windows the notes burn in fine, but node toggling is not in yet.</p></div>
+          <div class="st"><b>Have Python 3</b><p>Toggling runs Resolve's Python scripting on macOS, Windows and Linux. Mac and Linux usually have it. On Windows grab the installer from python.org.</p></div>
         </div>
       </div>
 
