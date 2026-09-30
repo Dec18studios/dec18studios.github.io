@@ -84,6 +84,16 @@
     "repo": "Color-Theory-OFX"
   },
   {
+    "name": "Look Notes",
+    "slug": "look-notes",
+    "tier": "free",
+    "color": "green",
+    "desc": "Free look labels and notes burned into the frame, and it flips your look nodes when you change looks.",
+    "type": "OFX",
+    "category": "Workflow",
+    "repo": "Look-Notes-OFX"
+  },
+  {
     "name": "Hue Contrast Compressor",
     "slug": "hue-contrast-compressor",
     "tier": "pro",
