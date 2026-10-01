@@ -267,7 +267,7 @@
       if (!dls.length && href) acts.push('<a href="' + esc(href) + '"' + tgt + '>Get it</a>');
     } else {
       if (href) acts.push('<a href="' + esc(href) + '"' + tgt + '>Details</a>');
-      if (t.demo) acts.push('<a href="photochemist/">Try Lite</a>');
+      if (t.demo && href) acts.push('<a href="' + esc(href + '#demo') + '"' + tgt + '>Try Lite</a>');
       acts.push('<a href="#subscribe">Get it</a>');
     }
 

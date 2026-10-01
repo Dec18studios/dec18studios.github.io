@@ -84,14 +84,19 @@
     "repo": "Color-Theory-OFX"
   },
   {
-    "name": "Look Notes",
+    "name": "Look Notes Pro",
     "slug": "look-notes",
-    "tier": "free",
+    "tier": "pro",
     "color": "green",
-    "desc": "Free look labels and notes burned into the frame, and it flips your look nodes when you change looks.",
+    "desc": "Look labels and notes burned into the frame, node flipping when you change looks, and one click stills of every look. Free Lite edition too.",
     "type": "OFX",
     "category": "Workflow",
-    "repo": "Look-Notes-OFX"
+    "repo": "Look-Notes-OFX",
+    "proxyAsset": {
+      "mac": "LookNotes_macOS_universal.zip",
+      "win": "LookNotes_windows_cuda.zip",
+      "linux": "LookNotes_linux_cuda.zip"
+    }
   },
   {
     "name": "Hue Contrast Compressor",

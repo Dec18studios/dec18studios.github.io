@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Look Notes &middot; Free OFX for Resolve &middot; Dec. 18 Studios</title>
-<meta name="description" content="Look Notes is a free OFX for DaVinci Resolve that burns a look label and notes into the frame for up to eight looks, and flips your labelled look nodes on and off when you change the Active Look. Reframe mode moves the notes into their own panel with a colour palette pulled from the image. PowerGrade Mode labels your Gallery stills. Metal on macOS, CUDA on Windows and Linux." />
+<title>Look Notes &middot; OFX for Resolve &middot; Dec. 18 Studios</title>
+<meta name="description" content="Look Notes is an OFX for DaVinci Resolve that burns a look label and notes into the frame and flips your labelled look nodes when you change the Active Look. Look Notes Pro comes with the Tool Box membership: 8 looks, custom fonts, Reframe with an image sampled palette, PowerGrade Mode, and new in 1.2, Export All Looks with a Look Grid. Look Notes Lite is free: 3 looks, node toggling and JPG export. Metal on macOS, CUDA on Windows and Linux." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
@@ -27,6 +27,7 @@
   .title-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
   .pill { display: inline-flex; align-items: center; gap: 8px; font-family: var(--type); font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 3px 10px; }
   .pill .d { width: 9px; height: 9px; background: var(--green); border: 1px solid var(--ink); }
+  .pill .d.pro { background: var(--red); }
   .pill.node { background: var(--ink); color: var(--paper); }
   .hero-grid h1.title { font-size: clamp(52px, 7.4vw, 104px); margin-top: 16px; }
   .hero-grid h1.title em { font-style: normal; color: var(--red); }
@@ -60,11 +61,15 @@
   .feat .ft h3 { font-family: var(--display); font-stretch: 75%; font-weight: 900; text-transform: uppercase; font-size: 30px; line-height: 0.95; margin-top: 8px; }
   .feat .fb { padding: 16px 20px 20px; color: var(--ink-2); font-size: 15px; }
   .feat .fb strong { color: var(--ink); }
-  .fine { margin-top: 24px; max-width: 80ch; color: var(--ink-2); font-size: 15.5px; }
-  .fine strong { color: var(--ink); }
+  .part .fine-note { margin-top: 24px; max-width: 80ch; color: var(--ink-2); font-size: 15.5px; }
+  .part .fine-note strong { color: var(--ink); }
+
+  /* ---- Pro tag ---- */
+  .pro-tag { display: inline-block; vertical-align: middle; margin-left: 6px; font-family: var(--type); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); border: 1.5px solid var(--red); padding: 0 5px; line-height: 1.5; }
+  .eyebrow .pro-tag { margin-left: 8px; }
 
   /* ---- control lists ---- */
-  #how, #split, #powergrades, #controls, #requirements, #download, #install { scroll-margin-top: 20px; }
+  #how, #split, #export, #powergrades, #controls, #requirements, #subscribe, #demo, #install { scroll-margin-top: 20px; }
   .group { margin-top: clamp(28px, 4vw, 44px); }
   .group-head { font-family: var(--type); font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
   .group-head::after { content: ""; flex: 1; height: 2px; background: var(--ink); }
@@ -78,7 +83,28 @@
   .mode b { font-family: var(--display); font-stretch: 100%; font-weight: 800; text-transform: uppercase; font-size: 16px; line-height: 1.15; }
   .mode p { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
 
-  /* ---- downloads ---- */
+  /* ---- membership ---- */
+  .coupon .note { margin-top: 6px; }
+  .free-note { margin-top: 28px; border: 2px solid var(--ink); padding: 14px 16px; background: var(--paper); max-width: 70ch; }
+  .free-note .k, .note-card .k { font-family: var(--type); font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.12em; }
+  .free-note .k { color: var(--blue); margin-bottom: 4px; }
+  .free-note p { color: var(--ink-2); font-size: 16px; }
+
+  /* ---- Lite vs Pro ---- */
+  .vs-wrap { overflow-x: auto; margin-bottom: clamp(28px, 4vw, 40px); }
+  table.vs { width: 100%; min-width: 520px; border-collapse: collapse; border: 2px solid var(--ink); background: var(--paper); }
+  .vs th, .vs td { padding: 10px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; font-size: 15px; color: var(--ink-2); }
+  .vs thead th { font-family: var(--display); font-stretch: 100%; font-weight: 800; text-transform: uppercase; font-size: 15px; letter-spacing: 0.04em; color: var(--ink); background: var(--paper-2); border-bottom: 2px solid var(--ink); }
+  .vs tbody th { font-weight: 600; color: var(--ink); }
+  .vs td.no { color: var(--ink-3); }
+  .vs td.yes { color: var(--ink); font-weight: 600; }
+  .vs tr:hover td, .vs tr:hover th { background: rgba(227, 178, 60, 0.13); }
+
+  /* ---- Lite downloads ---- */
+  .demo-pill {
+    display: inline-block; justify-self: start; border: 3px solid var(--red); color: var(--red); padding: 4px 10px; transform: rotate(-2deg);
+    font-family: var(--display); font-stretch: 100%; font-weight: 900; text-transform: uppercase; font-size: 15px; letter-spacing: 0.08em;
+  }
   .dl-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
   @media (max-width: 820px) { .dl-grid { grid-template-columns: 1fr; } }
   .dl-card { border: 2px dashed var(--ink); background: var(--paper-2); display: flex; flex-direction: column; min-width: 0; }
@@ -90,10 +116,11 @@
   .dl-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
   .dl-body .send { text-align: center; }
   .dl-path .k { display: block; font-family: var(--type); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
-  .dl-path code, .dl-foot code { display: block; font-family: var(--type); font-size: 13px; font-weight: 700; background: var(--paper); border: 1px solid var(--ink); padding: 8px 10px; color: var(--ink); word-break: break-all; }
-  .dl-foot code { display: inline; padding: 0 6px; }
-  .dl-foot { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); padding: 14px 0; }
-  .dl-foot p { font-size: 15px; color: var(--ink-2); flex: 1; min-width: 0; }
+  .dl-path code { display: block; font-family: var(--type); font-size: 13px; font-weight: 700; background: var(--paper); border: 1px solid var(--ink); padding: 8px 10px; color: var(--ink); word-break: break-all; }
+  .demo-note { margin-top: 28px; border-left: 6px solid var(--ink); padding: 4px 0 4px 16px; max-width: 80ch; }
+  .demo-note p { color: var(--ink-2); }
+  .demo-note p + p { margin-top: 10px; }
+  .demo-note code { font-family: var(--type); font-size: 14px; color: var(--ink); background: var(--paper-2); border: 1px solid var(--rule); padding: 0 4px; overflow-wrap: anywhere; }
   a.inline { color: var(--blue); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
   /* ---- install / requirements ---- */
@@ -114,14 +141,7 @@
   .manager-card p { margin-top: 8px; color: var(--ink-2); font-size: 15px; }
   .manager-card .send { display: block; text-align: center; margin-top: 18px; }
   .note-card { border: 1.5px dashed var(--ink); border-left: 6px solid var(--p-yellow); padding: 16px 18px; background: var(--paper); }
-  .note-card .k { font-family: var(--type); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
   .note-card p { margin-top: 6px; font-size: 15px; line-height: 1.55; }
-
-  /* ---- free coupon ---- */
-  .coupon.free-coupon { grid-template-columns: 1fr auto; align-items: center; }
-  @media (max-width: 720px) { .coupon.free-coupon { grid-template-columns: 1fr; } }
-  .free-coupon h2 { font-family: var(--display); font-stretch: 75%; font-weight: 900; text-transform: uppercase; font-size: clamp(30px, 4vw, 48px); line-height: 0.95; margin-top: 10px; }
-  .free-coupon p.body { margin-top: 12px; color: var(--ink-2); max-width: 60ch; }
 
   /* ---- scroll reveal ---- */
   .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -140,7 +160,7 @@
         <a href="../" class="current">All tools</a>
         <a href="https://dec18studios.com/hire-us" target="_top">Book Now</a>
         <a href="https://dec18studios.com/account/digital-products" target="_top">Account</a>
-        <a href="#download" class="cta">Download &middot; Free</a>
+        <a href="#subscribe" class="cta">Get it &middot; $47.34</a>
       </nav>
     </div>
   </div>
@@ -150,10 +170,12 @@
     <nav class="subnav" aria-label="On this page">
       <a href="#how">How it works</a>
       <a href="#split">Split looks</a>
+      <a href="#export">Export</a>
       <a href="#powergrades">PowerGrades</a>
       <a href="#controls">Controls</a>
       <a href="#requirements">Requirements</a>
-      <a href="#download">Download</a>
+      <a href="#subscribe">Get Pro</a>
+      <a href="#demo">Try Lite</a>
       <a href="#install">Install</a>
     </nav>
 
@@ -164,21 +186,22 @@
       <div>
         <p class="eyebrow">Look labels &middot; OFX &middot; DaVinci Resolve</p>
         <div class="title-pills">
-          <span class="pill"><span class="d"></span>Free, no catch</span>
+          <span class="pill"><span class="d pro"></span>Pro &middot; Tool Box</span>
+          <span class="pill"><span class="d"></span>Lite &middot; Free</span>
           <span class="pill">OFX</span>
-          <span class="pill node">v1.0.0</span>
+          <span class="pill node">v1.2.0</span>
         </div>
         <h1 class="title">Which look<br /><em>is this?</em></h1>
         <p class="hero-sub">The frame tells the client, so you don't have to.</p>
-        <p class="lede">Look Notes burns a label and a couple of lines of notes right into the picture, for up to eight looks. Pitching looks in a client session? Change the Active Look and the frame says which one is up and what it is. On Resolve Studio it also flips your look nodes for you, so one control swaps the grade and the label together.</p>
+        <p class="lede">Look Notes burns a label and a couple of lines of notes right into the picture. Pitching looks in a client session? Change the Active Look and the frame says which one is up and what it is. On Resolve Studio it also flips your look nodes for you, so one control swaps the grade and the label together. New in 1.2: export a still of every look, plus one Look Grid image with all of them side by side, ready to send.</p>
         <div class="btns">
-          <a class="send" href="#download">Download Look Notes &rarr;</a>
-          <a class="send ghost" href="https://github.com/Dec18studios/Look-Notes-OFX/releases" target="_blank" rel="noopener">All releases</a>
+          <a class="send" href="#subscribe">Get Look Notes Pro &rarr;</a>
+          <a class="send ghost" href="#demo">Try Lite for free &rarr;</a>
         </div>
         <div class="meta">
-          <div class="m"><b>8</b><span>looks per node</span></div>
+          <div class="m"><b>8</b><span>looks per node in Pro</span></div>
           <div class="m"><b>1</b><span>control to switch</span></div>
-          <div class="m"><b>$0</b><span>free, always</span></div>
+          <div class="m"><b>3</b><span>looks free in Lite</span></div>
         </div>
       </div>
 
@@ -219,7 +242,7 @@
     <div class="part-head reveal">
       <p class="eyebrow">How it works</p>
       <h2>Three steps, then one control.</h2>
-      <p>Set it up once before the session. After that you only touch Active Look.</p>
+      <p>Set it up once before the session. After that you only touch Active Look. This part works the same in Pro and Lite.</p>
     </div>
 
     <div class="trio-grid">
@@ -230,7 +253,7 @@
 
       <article class="feat reveal" style="--accent: var(--cyan);">
         <div class="ft"><span class="k">Step 02</span><h3>Fill in labels and notes</h3></div>
-        <div class="fb">Drop Look Notes on a node. Each of Look 1 to Look 8 has its own <strong>Label</strong> and <strong>Notes</strong> field. Type what the client should read: the look's name, then a line or two on what it's doing.</div>
+        <div class="fb">Drop Look Notes on a node. Every look has its own <strong>Label</strong> (the title line) and multi line <strong>Notes</strong>, plus there's one shared <strong>Header</strong> line on top. Pro gives you Look 1 to Look 8, Lite gives you Look 1 to Look 3. Type what the client should read: the look's name, then a line or two on what it's doing.</div>
       </article>
 
       <article class="feat reveal" style="--accent: var(--yellow);">
@@ -239,7 +262,7 @@
       </article>
     </div>
 
-    <p class="fine reveal">Toggling only happens when <strong>you</strong> change Active Look by hand. Opening a project, undo, copying grades and switching versions never flip nodes. If you keyframe Active Look, the notes follow the keyframes but the nodes stay put. Stuck? The <strong>How To Set Up...</strong> button in the plugin opens a plain text step by step guide.</p>
+    <p class="fine-note reveal">Toggling only happens when <strong>you</strong> change Active Look by hand. Opening a project, undo, copying grades and switching versions never flip nodes. If you keyframe Active Look, the notes follow the keyframes but the nodes stay put. Stuck? The <strong>How To Set Up...</strong> button in the plugin opens a plain text step by step guide.</p>
   </div>
 </section>
 
@@ -294,6 +317,75 @@
   </div>
 </section>
 
+<!-- ============ EXPORT (new in 1.2) ============ -->
+<section class="part" id="export" data-screen-label="Export">
+  <div class="wrap">
+    <div class="what-grid">
+      <div class="what-copy reveal">
+        <p class="eyebrow">New in 1.2 &middot; Export</p>
+        <h2>Every look, saved for the client.</h2>
+        <p>The session's over and the client wants to sleep on it. Hit <strong>Export All Looks</strong>, pick a folder, and Look Notes switches to each look in turn and saves a still of the current frame for each one, named with the look's Label and today's date. Then it puts your original look back.</p>
+        <p>Turn on <strong>Build Grid</strong> and it also saves a <strong>Look Grid</strong>: every look side by side in one image, up to 3840 wide. One attachment, all the options. The folder pops open when it's done.</p>
+        <ul class="who">
+          <li style="--wc: var(--p-red)"><span class="dot"></span><span><b>Export All Looks and the Look Grid</b> are Pro.</span></li>
+          <li style="--wc: var(--green)"><span class="dot"></span><span><b>Export Current Look</b> is in both. Lite saves JPG, Pro saves PNG, JPG or TIFF.</span></li>
+        </ul>
+      </div>
+
+      <div class="reveal">
+        <figure class="viewer demo">
+          <div class="pane">
+            <svg viewBox="0 0 360 200" role="img" aria-label="A Look Grid: four versions of the same frame side by side, labelled WARM, COOL, BLEACH and NIGHT.">
+              <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" text-anchor="middle" font-size="9" letter-spacing="1">
+                <rect x="12" y="14" width="164" height="82" fill="#b8733f" />
+                <polygon points="12,80 60,62 110,74 176,58 176,96 12,96" fill="#4a2a18" />
+                <rect x="12" y="84" width="164" height="12" fill="#000" opacity="0.6" />
+                <text x="94" y="93" fill="#f2f2f2">WARM</text>
+
+                <rect x="184" y="14" width="164" height="82" fill="#3f6c8f" />
+                <polygon points="184,80 232,62 282,74 348,58 348,96 184,96" fill="#1c2f40" />
+                <rect x="184" y="84" width="164" height="12" fill="#000" opacity="0.6" />
+                <text x="266" y="93" fill="#f2f2f2">COOL</text>
+
+                <rect x="12" y="104" width="164" height="82" fill="#8c8e86" />
+                <polygon points="12,170 60,152 110,164 176,148 176,186 12,186" fill="#3a3b37" />
+                <rect x="12" y="174" width="164" height="12" fill="#000" opacity="0.6" />
+                <text x="94" y="183" fill="#f2f2f2">BLEACH</text>
+
+                <rect x="184" y="104" width="164" height="82" fill="#2b3550" />
+                <polygon points="184,170 232,152 282,164 348,148 348,186 184,186" fill="#11151f" />
+                <rect x="184" y="174" width="164" height="12" fill="#000" opacity="0.6" />
+                <text x="266" y="183" fill="#f2f2f2">NIGHT</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption class="slate"><span>Look Grid</span><span>Every look, one image</span></figcaption>
+        </figure>
+        <p class="demo-cap">Export All Looks with Build Grid on: a still per look, plus this one image to send the client.</p>
+      </div>
+    </div>
+
+    <div class="trio-grid" style="margin-top:clamp(32px,5vw,52px)">
+      <article class="feat reveal" style="--accent: var(--red);">
+        <div class="ft"><span class="k">Pro</span><h3>Export All Looks</h3></div>
+        <div class="fb">One still per look, named with the Label and today's date, then your original look goes back on. With <strong>Build Grid</strong> on you also get the Look Grid, up to 3840 wide. Perfect for sending a client one image with all the options.</div>
+      </article>
+
+      <article class="feat reveal" style="--accent: var(--green);">
+        <div class="ft"><span class="k">Pro and Lite</span><h3>Export Current Look</h3></div>
+        <div class="fb">One click saves a still of the frame exactly as it is now into the last export folder (it only asks the first time), then shows you the file. Tweak the grade or the notes, hit it again, and it saves <strong>_2</strong>, <strong>_3</strong> and so on. Tweak, export, tweak, export.</div>
+      </article>
+
+      <article class="feat reveal" style="--accent: var(--blue);">
+        <div class="ft"><span class="k">Still Format</span><h3>PNG, JPG or TIFF</h3></div>
+        <div class="fb"><strong>PNG</strong> is 8 bit lossless, <strong>JPG</strong> is small and ready to share, <strong>TIFF</strong> is 16 bit. The Look Grid isn't available with JPG. Lite saves JPG, Pro picks any of the three.</div>
+      </article>
+    </div>
+
+    <p class="fine-note reveal">Export runs through Resolve's scripting, same as node toggling, so it needs <strong>Resolve Studio</strong> with External scripting using set to <strong>Local</strong>, plus <strong>Python 3</strong>. See <a class="inline" href="#requirements">Requirements</a>.</p>
+  </div>
+</section>
+
 <!-- ============ POWERGRADES ============ -->
 <section class="part" id="powergrades" data-screen-label="PowerGrades">
   <div class="wrap">
@@ -323,9 +415,9 @@
       </div>
 
       <div class="what-copy reveal">
-        <p class="eyebrow">PowerGrades</p>
+        <p class="eyebrow">PowerGrades<span class="pro-tag">Pro</span></p>
         <h2>Stills that name themselves.</h2>
-        <p>A Gallery full of near identical thumbnails is no fun. <strong>PowerGrade Mode</strong> fixes that: big label, centre of frame, nothing else.</p>
+        <p>A Gallery full of near identical thumbnails is no fun. <strong>PowerGrade Mode</strong> fixes that: just the look's name, big and centred, nothing else. Handy when you're building a PowerGrade library.</p>
         <p>The trick is where you put things. PowerGrades and DRX stills only save <strong>clip node layer 1</strong>. So build your look chain on layer 1, and put Look Notes on the <strong>Timeline graph</strong> or on <strong>clip layer 2</strong> in PowerGrade Mode.</p>
         <p>The still thumbnail shows the label, but the saved grade does not carry the Look Notes node. Clean grade, labelled thumbnail.</p>
       </div>
@@ -339,36 +431,46 @@
     <div class="part-head reveal">
       <p class="eyebrow">Controls reference</p>
       <h2>Everything on the panel.</h2>
-      <p>Short list. Set it once, then forget it's there.</p>
+      <p>Short list. Set it once, then forget it's there. Anything marked <span class="pro-tag" style="margin-left:0">Pro</span> shows greyed out in Lite, so you can see what Pro adds.</p>
     </div>
 
     <div class="group reveal">
       <div class="group-head">Looks</div>
       <div class="mode-grid">
-        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Active Look</b><p>Picks which of the eight looks is showing. Change it by hand and your labelled look nodes flip to match.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Look 1 to Look 8</b><p>Each look has its own Label and Notes text fields.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Active Look</b><p>Picks which look is showing: eight in Pro, three in Lite. Change it by hand and your labelled look nodes flip to match.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Header, Labels and Notes</b><p>One shared Header line, then each look has its own Label and multi line Notes.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>How To Set Up...</b><p>Opens a plain text step by step guide to setting up node toggling.</p></div>
+      </div>
+    </div>
+
+    <div class="group reveal">
+      <div class="group-head">Export</div>
+      <div class="mode-grid">
+        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Export All Looks <span class="pro-tag">Pro</span></b><p>A still of every look into a folder you pick, named with the Label and today's date. Your original look goes back after.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Build Grid <span class="pro-tag">Pro</span></b><p>Also saves a Look Grid image with every look side by side, up to 3840 wide.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Export Current Look</b><p>Saves the frame as it is now into the last export folder. Hit it again for _2, _3 and so on.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Still Format</b><p>PNG (8 bit lossless), JPG or TIFF (16 bit). Lite saves JPG. No Look Grid with JPG.</p></div>
       </div>
     </div>
 
     <div class="group reveal">
       <div class="group-head">Layout</div>
       <div class="mode-grid">
-        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Burn In</b><p>Off passes the image through untouched.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Position</b><p>Bottom, Top or Center. Plus PowerGrade Mode: label only, as large as fits, dead centre.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Burn In Notes</b><p>Off passes the image through untouched.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Position</b><p>Bottom, Top or Center. Pro adds PowerGrade Mode: label only, as large as fits, dead centre.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Show</b><p>Label and Notes, Label Only, or Notes Only.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Align</b><p>Left, centre or right.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Alignment</b><p>Left, centre or right.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Text size, opacity, brightness</b><p>Size the text and set how strong the panel sits on the image.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Label and notes colour</b><p>Separate colours for the label and the notes.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Label and Notes colour <span class="pro-tag">Pro</span></b><p>Separate colours for the label and the notes.</p></div>
       </div>
     </div>
 
     <div class="group reveal">
-      <div class="group-head">Reframe and palette</div>
+      <div class="group-head">Reframe and palette &middot; Pro</div>
       <div class="mode-grid">
-        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Reframe</b><p>Tick it at the top of the panel, then pick Bottom Strip or Side Panel. The picture shrinks to fit, keeps its shape, and the notes get their own panel instead of sitting on the image.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Panel Size and Background</b><p>How much of the frame the panel takes (10 to 50 percent) and what colour fills it.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Palette</b><p>3 to 12 colour swatches pulled from the image, sorted by hue, dominance or brightness. Skip near blacks, near whites and greys if you want only the real colours.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Reframe <span class="pro-tag">Pro</span></b><p>Tick it at the top of the panel, then pick Bottom Strip or Side Panel. The picture shrinks to fit, keeps its shape, and the notes get their own panel so they never cover the shot.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Panel Size and Background <span class="pro-tag">Pro</span></b><p>How much of the frame the panel takes (10 to 50 percent) and what colour fills it.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Palette <span class="pro-tag">Pro</span></b><p>3 to 12 colour swatches pulled from the image, next to the notes, sorted by hue, dominance or brightness. Skip near blacks, near whites and greys if you want only the real colours.</p></div>
       </div>
     </div>
 
@@ -377,7 +479,7 @@
       <div class="mode-grid">
         <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Garamond</b><p>System Garamond on macOS, Office Garamond on Windows when installed, and EB Garamond bundled for everything else, so it always has a Garamond.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Pixel</b><p>A built in bitmap font. Always there.</p></div>
-        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Custom</b><p>Pick your own two font files: one for the label, one for the notes.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Custom <span class="pro-tag">Pro</span></b><p>Pick any TTF or OTF: one for the label, one for the notes.</p></div>
       </div>
     </div>
   </div>
@@ -388,15 +490,15 @@
   <div class="wrap">
     <div class="part-head reveal">
       <p class="eyebrow">Requirements and platforms</p>
-      <h2>What you need for node toggling.</h2>
-      <p>The burn in works anywhere the plugin loads. Flipping nodes needs a little setup.</p>
+      <h2>What you need for node toggling and export.</h2>
+      <p>The burn in works anywhere the plugin loads. Flipping nodes and exporting stills need a little setup.</p>
     </div>
 
     <div class="install-grid">
       <div class="steps reveal">
         <div class="step">
           <span class="n"></span>
-          <div class="st"><b>DaVinci Resolve Studio</b><p>Node toggling needs the Studio version of Resolve.</p></div>
+          <div class="st"><b>DaVinci Resolve Studio</b><p>Node toggling and export need the Studio version of Resolve.</p></div>
         </div>
         <div class="step">
           <span class="n"></span>
@@ -404,7 +506,7 @@
         </div>
         <div class="step">
           <span class="n"></span>
-          <div class="st"><b>Have Python 3</b><p>Toggling runs Resolve's Python scripting on macOS, Windows and Linux. Mac and Linux usually have it. On Windows grab the installer from python.org.</p></div>
+          <div class="st"><b>Have Python 3</b><p>Toggling and export run Resolve's Python scripting on macOS, Windows and Linux. Mac and Linux usually have it. On Windows grab the installer from python.org.</p></div>
         </div>
       </div>
 
@@ -422,13 +524,72 @@
   </div>
 </section>
 
-<!-- ============ DOWNLOADS ============ -->
-<section class="part" id="download" data-screen-label="Downloads">
+<!-- ============ MEMBERSHIP ============ -->
+<section class="part" id="subscribe" data-screen-label="Membership">
   <div class="wrap">
     <div class="part-head reveal">
-      <p class="eyebrow">Download &middot; Look Notes 1.0.0</p>
-      <h2>Grab your platform build.</h2>
-      <p>Three native builds: Metal on macOS, CUDA on Windows and Linux. Download, unzip into your OFX plugins folder, and restart Resolve. The effect shows up under the <strong>Dec. 18 Studios</strong> group as <strong>Look Notes</strong>. It is free, and there is no licence to enter.</p>
+      <p class="eyebrow">Look Notes Pro &middot; the premium tools</p>
+      <h2>Get Look Notes Pro, and everything else.</h2>
+    </div>
+    <p class="pitch">Look Notes Pro comes with the whole Tool Box. It isn't sold on its own. Become a <b>Happy Little Noder</b> and unlock every premium tool on the channel, plus every update and new release. Your price locks in the day you join and stays locked, even if you take a year or two off. We may raise it for new members later, but <em>never</em> for you.</p>
+
+    <div class="coupon reveal">
+      <span class="scissors" aria-hidden="true">&#9986;</span>
+      <div class="stamp">Price locked</div>
+      <div>
+        <div class="plan">Happy Little Noders</div>
+        <p class="note">Everything you see on YouTube, plus every update, for less than a single film stock LUT pack.</p>
+        <ul class="ticks">
+          <li>Look Notes Pro: 8 looks, custom fonts, Reframe and palette, PowerGrade Mode</li>
+          <li>Export All Looks, the Look Grid, and PNG or TIFF stills</li>
+          <li>Every premium DCTL &amp; OFX plugin in the Tool Box, Photo Chemist included</li>
+          <li>All future tools &amp; updates included</li>
+          <li>Locked-in price, even if you take time off</li>
+        </ul>
+      </div>
+      <div style="align-self:center">
+        <div class="amount"><b>$47.34</b><span>/ year</span></div>
+        <a class="send" href="https://dec18studios.com/clients?join=1" target="_top">Get the premium tools &rarr;</a>
+        <p class="fine">One annual payment &middot; price locked</p>
+      </div>
+    </div>
+
+    <div class="free-note reveal">
+      <div class="k">Already on Lite?</div>
+      <p>Your projects move straight across. Install Pro in place of Lite and every label and note you've typed is still there. Not ready yet? <a class="inline" href="#demo">Look Notes Lite</a> is free, forever.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LITE ============ -->
+<section class="part" id="demo" data-screen-label="Try Lite">
+  <div class="wrap">
+    <div class="part-head reveal">
+      <span class="demo-pill">Free Lite edition</span>
+      <h2 style="margin-top:14px">Look Notes Lite. Free, no strings.</h2>
+      <p>Look Notes Lite is the free edition: 3 looks per node with labels, notes and the header, node toggling for looks 1 to 3, Garamond and Pixel fonts, Bottom, Top or Center placement, and burn in. New in 1.2, Lite gets <strong>Export Current Look</strong> too, saving JPG. No watermark, ever. The Pro controls show greyed out on the panel, so you can see what <a class="inline" href="#subscribe">Pro</a> adds. Works on <strong>macOS, Windows and Linux</strong>.</p>
+    </div>
+
+    <div class="vs-wrap reveal">
+      <table class="vs">
+        <thead>
+          <tr><th scope="col">Feature</th><th scope="col">Lite &middot; Free</th><th scope="col">Pro &middot; Tool Box</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Looks per node</th><td class="yes">3</td><td class="yes">8</td></tr>
+          <tr><th scope="row">Labels, notes and header</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Node toggling</th><td class="yes">Looks 1 to 3</td><td class="yes">All 8 looks</td></tr>
+          <tr><th scope="row">Bottom, Top or Center, burn in</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Garamond and Pixel fonts</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Export Current Look</th><td class="yes">JPG</td><td class="yes">PNG, JPG or TIFF</td></tr>
+          <tr><th scope="row">Export All Looks and Look Grid</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Custom fonts (TTF or OTF)</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Reframe with image sampled palette</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">PowerGrade Mode</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Label and Notes colours</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Watermark</th><td class="yes">Never</td><td class="yes">Never</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="dl-grid">
@@ -438,7 +599,7 @@
           <p class="arch">Universal &middot; Metal</p>
         </div>
         <div class="dl-body">
-          <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-OFX/releases/latest/download/LookNotes_macOS_universal.zip" data-slug="look-notes" data-name="Look Notes macOS" target="_blank" rel="noopener">Download for macOS &rarr;</a>
+          <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-Lite/releases/latest/download/LookNotes_Lite_macOS_universal.zip" data-slug="look-notes-lite" data-name="Look Notes Lite (macOS)" target="_blank" rel="noopener">Download Lite for macOS &rarr;</a>
           <div class="dl-path"><span class="k">Install into</span><code>/Library/OFX/Plugins</code></div>
         </div>
       </article>
@@ -449,7 +610,7 @@
           <p class="arch">x86_64 &middot; CUDA</p>
         </div>
         <div class="dl-body">
-          <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-OFX/releases/latest/download/LookNotes_windows_cuda.zip" data-slug="look-notes" data-name="Look Notes Windows" target="_blank" rel="noopener">Download for Windows &rarr;</a>
+          <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-Lite/releases/latest/download/LookNotes_Lite_windows_cuda.zip" data-slug="look-notes-lite" data-name="Look Notes Lite (Windows)" target="_blank" rel="noopener">Download Lite for Windows &rarr;</a>
           <div class="dl-path"><span class="k">Install into</span><code>C:\Program Files\Common Files\OFX\Plugins</code></div>
         </div>
       </article>
@@ -460,15 +621,15 @@
           <p class="arch">x86_64 &middot; CUDA</p>
         </div>
         <div class="dl-body">
-          <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-OFX/releases/latest/download/LookNotes_linux_cuda.zip" data-slug="look-notes" data-name="Look Notes Linux" target="_blank" rel="noopener">Download for Linux &rarr;</a>
+          <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-Lite/releases/latest/download/LookNotes_Lite_linux_cuda.zip" data-slug="look-notes-lite" data-name="Look Notes Lite (Linux)" target="_blank" rel="noopener">Download Lite for Linux &rarr;</a>
           <div class="dl-path"><span class="k">Install into</span><code>/usr/OFX/Plugins</code></div>
         </div>
       </article>
     </div>
 
-    <div class="dl-foot reveal">
-      <p>Want an older build? Everything lives on the <a class="inline" href="https://github.com/Dec18studios/Look-Notes-OFX/releases" target="_blank" rel="noopener">Releases page</a>. After unzip the layout is <code>/Library/OFX/Plugins/LookNotes.ofx.bundle/</code></p>
-      <a class="send ghost" href="https://github.com/Dec18studios/Look-Notes-OFX/releases" target="_blank" rel="noopener">All releases &rarr;</a>
+    <div class="demo-note reveal">
+      <p>Manual install: unzip and drop <code>LookNotes.ofx.bundle</code> into your OFX plugins folder above, then restart DaVinci Resolve. It shows up under the <strong>Dec. 18 Studios</strong> group as <strong>Look Notes</strong>. On macOS, if Apple tells you to delete it, <b>don't</b>: open <b>System Settings &rarr; Privacy &amp; Security</b>, choose <b>Allow Anyway</b>, then reopen Resolve.</p>
+      <p>Lite and Pro install the same bundle in the same place, so you run one or the other, never both. Upgrading later? Swap Lite for Pro and your projects come across with every label and note intact.</p>
     </div>
   </div>
 </section>
@@ -478,23 +639,23 @@
   <div class="wrap">
     <div class="part-head reveal">
       <p class="eyebrow">Getting started</p>
-      <h2>Install in a couple of steps.</h2>
-      <p>Look Notes is a standard OFX bundle. Drop it in your OFX plugins folder and restart. Or let the <strong>Tool Box Manager</strong> install it in one click along with everything else.</p>
+      <h2>Install Pro in a couple of clicks.</h2>
+      <p>Members install Look Notes Pro through the <strong>Tool Box Manager</strong>: it drops the plugin in the right place and updates it for you right alongside the rest of the kit. Lite installs by hand from the <a class="inline" href="#demo">downloads above</a>.</p>
     </div>
 
     <div class="install-grid">
       <div class="steps reveal">
         <div class="step">
           <span class="n"></span>
-          <div class="st"><b>Download your platform build</b><p>Grab the macOS, Windows or Linux build from the <a class="inline" href="#download">Downloads</a> above, then unzip the <code>.zip</code>.</p></div>
+          <div class="st"><b>Download the Tool Box Manager</b><p>Grab the latest release from <a class="inline dl" data-slug="plugin-manager" data-name="Tool Box Manager" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" rel="noopener">GitHub</a> and open it. It's your home base for every Dec. 18 tool.</p></div>
         </div>
         <div class="step">
           <span class="n"></span>
-          <div class="st"><b>Move it into your OFX plugins folder</b><p>macOS: <code>/Library/OFX/Plugins</code> &middot; Windows: <code>C:\Program Files\Common Files\OFX\Plugins</code> &middot; Linux: <code>/usr/OFX/Plugins</code>. The final layout is <code>/OFX/Plugins/LookNotes.ofx.bundle/</code>.</p></div>
+          <div class="st"><b>Find Look Notes in the list</b><p>Browse the catalog inside the Manager and select <b>Look Notes</b>. If you had Lite installed, Pro replaces it in the same spot.</p></div>
         </div>
         <div class="step">
           <span class="n"></span>
-          <div class="st"><b>Restart Resolve</b><p>Relaunch so Resolve picks up the new plugin. If you want node toggling, set External scripting using to Local first, so one restart covers both.</p></div>
+          <div class="st"><b>Click Install, then restart Resolve</b><p>The Manager puts <code>LookNotes.ofx.bundle</code> where Resolve looks for it. Relaunch so Resolve picks it up. If you want node toggling and export, set External scripting using to Local first, so one restart covers both.</p></div>
         </div>
         <div class="step">
           <span class="n"></span>
@@ -503,34 +664,18 @@
       </div>
 
       <aside class="install-aside">
-        <div class="note-card reveal">
-          <div class="k">Heads up &middot; macOS Gatekeeper</div>
-          <p>On macOS, if Apple tells you to delete it, <b>don't</b>. Open <b>System Settings &rarr; Privacy &amp; Security</b>, choose <b>Allow Anyway</b> for Look Notes, then restart Resolve. The plugin is unsigned, not unsafe.</p>
+        <div class="manager-card reveal">
+          <span class="badge">Recommended</span>
+          <h4>The Tool Box Manager</h4>
+          <p>Install, organize and auto update Look Notes Pro and every other Dec. 18 tool from one app. New stuff lands here first.</p>
+          <a class="send dl" data-slug="plugin-manager" data-name="Tool Box Manager" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_top" rel="noopener">Download the Tool Box &rarr;</a>
         </div>
 
-        <div class="manager-card reveal">
-          <span class="badge">Easiest path</span>
-          <h4>The Tool Box Manager</h4>
-          <p>Prefer one click installs and auto updates? The Tool Box Manager installs Look Notes and every other Dec. 18 tool, and keeps them current for you.</p>
-          <a class="send" href="https://github.com/Dec18studios/Dec18-Plugin-Manager/releases/latest" target="_blank" rel="noopener">Download the Tool Box &rarr;</a>
+        <div class="note-card reveal">
+          <div class="k">One or the other</div>
+          <p>Lite and Pro are the same <code>LookNotes.ofx.bundle</code> in the same folder, so never install both. Your projects carry over from Lite to Pro with every label and note kept. Stuck? Ask in the <a class="inline" href="https://discord.gg/kAsjNZru9c" target="_blank" rel="noopener">Dec18 Studios Discord</a>.</p>
         </div>
       </aside>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FREE ============ -->
-<section class="part" data-screen-label="Free">
-  <div class="wrap">
-    <div class="coupon free-coupon reveal">
-      <span class="scissors" aria-hidden="true">&#9986;</span>
-      <div class="stamp">Free</div>
-      <div>
-        <p class="eyebrow">It's free, always</p>
-        <h2>No licence key, no watermark, no sign up.</h2>
-        <p class="body">Look Notes costs nothing. Use it in every client session, on as many machines as you like. If it saves you a round of "wait, which one was that?", tell someone about it. Questions and requests go in the <a class="inline" href="https://discord.gg/kAsjNZru9c" target="_blank" rel="noopener">Dec18 Studios Discord</a>.</p>
-      </div>
-      <div><a class="send" href="#download">Download it &rarr;</a></div>
     </div>
   </div>
 </section>
@@ -573,7 +718,7 @@
     </div>
 
     <div class="legal">
-      <span>&copy; Dec. 18 Studios &middot; Look Notes is free</span>
+      <span>&copy; Dec. 18 Studios &middot; Look Notes Pro comes with the Tool Box &middot; Lite is free</span>
       <a class="link" href="https://dec18studios.com" target="_blank" rel="noopener">dec18studios.com &rarr;</a>
     </div>
   </div>
@@ -598,7 +743,7 @@
 </script>
 
 <script src="../assets/d18-viewer.js" defer></script>
-<!-- shared download email gate, same as the other free tool pages -->
+<!-- shared download email gate, same as Photo Chemist's Lite downloads -->
 <script src="../assets/dl-gate.js" defer></script>
 
 </body>
