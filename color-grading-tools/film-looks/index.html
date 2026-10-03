@@ -218,7 +218,7 @@
     <div class="part-head reveal" style="margin-top:clamp(36px,5vw,56px)">
       <p class="eyebrow">Render speed</p>
       <h3 style="font-family:var(--display);font-size:clamp(22px,2.6vw,30px);font-weight:800">4K render speed with grain and halation on.</h3>
-      <p>Benchmarked at 4K in DaVinci Resolve on a 60 fps timeline, on an M4 Mac with 128 GB of RAM, so nothing is capped at 24. Headroom and spare time are measured against a 24 fps deadline of 41.7 ms per frame.</p>
+      <p>Benchmarked at 4K in DaVinci Resolve on a 60 fps timeline, on a Mac Studio M4 Max with 128 GB of RAM, so nothing is capped at 24. Headroom and spare time are measured against a 24 fps deadline of 41.7 ms per frame.</p>
     </div>
     <div class="fpswrap reveal">
       <table class="fps" id="ghFps">
@@ -254,7 +254,7 @@
           <li><b>Film Look Creator</b>: Rochester preset on most frames.</li>
           <li><b><a href="https://cullenkellycolor.com/genesis" target="_blank" rel="noopener">Genesis</a></b> and <b><a href="https://spektrafilm.114c.de/" target="_blank" rel="noopener">Spektra</a></b> (free): 250D to 2383 defaults.</li>
         </ul>
-        <p style="margin-top:10px">The grain and halation chart uses each tool's 16 mm setting. Render speeds were benchmarked at 4K in Resolve on a 60 fps timeline, on an M4 Mac with 128 GB of RAM, with grain and halation on.</p>
+        <p style="margin-top:10px">The grain and halation chart uses each tool's 16 mm setting. Render speeds were benchmarked at 4K in Resolve on a 60 fps timeline, on a Mac Studio M4 Max with 128 GB of RAM, with grain and halation on.</p>
         <p style="margin-top:10px;font-size:14px;color:var(--ink-3)">Third party product names belong to their owners and are used here only to identify the tools being compared.</p>
       </div>
     </div>
@@ -439,7 +439,7 @@
     setScene(0);
 
     /* ---- grain + halation: one chart, grid + wipe + render speed ---- */
-    // 4K benchmark, 60 fps timeline, M4 Mac 128 GB. Headroom and spare ms are against 24 fps.
+    // 4K benchmark, 60 fps timeline, Mac Studio M4 Max 128 GB. Headroom and spare ms are against 24 fps.
     var BENCH = [
       { k: 'pixeltools', name: 'PixelTools + OpenDRT', fps: 54, ms: 18.5, head: '2.25x', spare: '23.2', hr: '27 min' },
       { k: 'genesis', name: 'Genesis Performance', fps: 48.5, ms: 20.6, head: '2.0x', spare: '21.1', hr: '30 min' },
