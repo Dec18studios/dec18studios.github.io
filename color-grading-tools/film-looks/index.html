@@ -70,6 +70,14 @@
     font-family: var(--type); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
     background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink); padding: 11px 14px; cursor: pointer;
   }
+  /* ---- halation chart download ---- */
+  .chartdl { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(18px, 3vw, 36px); align-items: center; margin-top: clamp(28px, 4vw, 44px); padding: clamp(18px, 2.4vw, 26px); border: 2px solid var(--ink); background: var(--paper-2); }
+  .chartdl img { display: block; width: 100%; height: auto; border: 2px solid var(--ink); background: #000; }
+  .chartdl h3 { font-family: var(--display); font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; line-height: 1; }
+  .chartdl p { color: var(--ink-2); margin-top: 10px; }
+  .chartdl ul { margin: 10px 0 0 18px; color: var(--ink-2); font-size: 15px; }
+  .chartdl .send { margin-top: 18px; }
+  @media (max-width: 760px) { .chartdl { grid-template-columns: 1fr; } }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .ab.two { grid-template-columns: 1fr auto 1fr; }
   @media (max-width: 760px) { .ab, .ab.two { grid-template-columns: 1fr 1fr; } .ab .sc { grid-column: span 2; } .ab button { grid-column: span 2; order: 5; } }
@@ -214,6 +222,21 @@
       </figcaption>
       <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
     </figure>
+
+    <div class="chartdl reveal">
+      <img src="img/grain-halation/chart-preview.jpg" width="960" height="540" loading="lazy" alt="The halation test chart: exposure ladder, coloured sources, hard edges, thin lines and a log ramp" />
+      <div>
+        <p class="eyebrow">Free download</p>
+        <h3>Grab the halation test chart.</h3>
+        <p>The same synthetic chart used above, so you can run your own tools through it. Every source is a known scene linear value over 0.18 grey.</p>
+        <ul>
+          <li>Linear EXRs at 1080p and 4K in Rec.709 and DaVinci Wide Gamut, plus ACES AP0 at 4K</li>
+          <li>A JSON file per chart with the position and value of every patch</li>
+          <li>Rec.709 preview PNGs</li>
+        </ul>
+        <a class="send dl" href="downloads/halation_chart_pack.zip" data-slug="halation-chart" data-name="Halation test chart pack" download>Download the pack, 1 MB →</a>
+      </div>
+    </div>
 
     <div class="part-head reveal" style="margin-top:clamp(36px,5vw,56px)">
       <p class="eyebrow">Render speed</p>
