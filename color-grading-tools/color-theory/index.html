@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Color Theory &middot; Free OFX for Resolve &middot; Dec. 18 Studios</title>
-<meta name="description" content="Color Theory is a free OFX for Resolve that generates colour vision illusions on the timeline, with a burned in commentary overlay, a Reveal wipe, a Simulate Appearance mode, a Perceived Luminance Visualizer and real scene linear test images, with a DaVinci Wide Gamut / Intermediate output, for checking your colour pipeline. Metal on macOS, CUDA on Windows and Linux." />
+<meta name="description" content="Color Theory is a free OFX for Resolve that generates colour vision illusions on the timeline, with a burned in commentary overlay, a Reveal wipe, a Simulate Appearance mode, a Perceived Luminance Visualizer, dye layer and surround demos and real scene linear test images, with a DaVinci Wide Gamut / Intermediate output, for checking your colour pipeline. Metal on macOS, CUDA on Windows and Linux." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
@@ -265,12 +265,12 @@
   <div class="wrap">
     <div class="part-head reveal">
       <p class="eyebrow">Mode list</p>
-      <h2>Twenty three demonstrations in one node.</h2>
+      <h2>Twenty eight demonstrations in one node.</h2>
       <p>Pick a group, pick a mode, then drive the parameters. Every figure exposes its own controls, so you can set up the exact version you want to teach from.</p>
     </div>
 
     <div class="group reveal">
-      <div class="group-head">Generated illusions &middot; 14</div>
+      <div class="group-head">Generated illusions &middot; 17</div>
       <p class="gl">These draw their own image, so you can drop the node on any clip or a solid and it takes over the frame.</p>
       <div class="mode-grid">
         <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Simultaneous Contrast</b><p>Two identical patches read light or dark depending on the surround they sit in.</p></div>
@@ -287,16 +287,21 @@
         <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Shared Texture Discs</b><p>Discs sharing one texture, read as different materials depending on their context.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Overlapping Squares</b><p>Two squares that overlap, where the join tells you which one is in front and what colour it is.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Perceived Luminance Visualizer</b><p>A hue sweep behind grey ramp shutters. Where the border melts away, the colour and the grey share one luminance. Markers, a swatch with the percentage inside it and a live readout show the number. Set Shutter Count to 0 for a plain sweep with just the probes. Keyframe the hue and watch them ride the ramp.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Dye Layer Stack</b><p>Film makes colour by stacking dye layers in front of a light, so a layer can only take light away. Compare a film dye against a veil over the same checks, overlap cyan, magenta and yellow discs, or split a picture into three plates and stack them back up.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Surround A/B</b><p>Two patches with the exact same value on two surrounds, and a readout that proves it. The one on the dark surround still looks lighter. Ride Exposure and the look holds even as the real numbers swing.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Crispening Ladder</b><p>A ladder of grey steps, all the same number of stops apart, that do not look it. The steps near the surround level pull apart and the far ones bunch up. Turn on Pairs, or Grid for a board that climbs up and to the right from a black corner.</p></div>
       </div>
     </div>
 
     <div class="group reveal">
-      <div class="group-head">Passthru illusions &middot; 3</div>
+      <div class="group-head">Passthru illusions &middot; 5</div>
       <p class="gl">These run on the footage already in the node, so you can demonstrate the point on a real shot rather than a diagram.</p>
       <div class="mode-grid">
         <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Histogram Compression</b><p>Squeeze the range of the picture and watch how much of it your eye puts straight back.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Two Colour Method</b><p>Rebuild the shot from two colour records and see how much of a full picture survives.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Palette Reconstruction</b><p>Reduce the image to a small palette and show how few colours a picture really needs. The Sampled From Image preset reads the frame and fills the palette in coverage order, most common colour first.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Dye Layer Separation</b><p>Split the shot into cyan, magenta and yellow dye layers and stack them back up in front of a light, lossless at the defaults. View each layer on its own, grade with per layer gains the way a lab would, and drop Dye Purity to watch the colours go muddy.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Viewing Matte</b><p>Your clip, untouched apart from the size, inside a matte you flip between two values. On a dark matte it looks brighter and punchier, on a bright matte darker and flatter. This is why a grade done in a dark room can look wrong on a bright screen.</p></div>
       </div>
     </div>
 
