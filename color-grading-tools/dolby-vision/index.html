@@ -188,6 +188,22 @@ a.inline { color: var(--blue); font-weight: 600; text-decoration: underline; tex
 .note-card .k { font-family: var(--type); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
 .note-card p { margin-top: 6px; font-size: 15px; color: var(--ink); line-height: 1.55; }
 </style>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '982139567185549');
+fbq('track', 'PageView');
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[href*="clients?join=1"]');
+  if (a) fbq('track', 'InitiateCheckout', { value: 47.34, currency: 'USD', content_name: 'Tool Box' });
+});
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=982139567185549&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 </head>
 <body>
 
