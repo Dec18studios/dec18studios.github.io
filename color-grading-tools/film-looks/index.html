@@ -513,6 +513,9 @@ document.addEventListener('click', function (e) {
       abA.add(new Option(t.name, t.k)); abB.add(new Option(t.name, t.k));
       return { t: t, img: img, fc: fc };
     });
+    // The DWG / Intermediate frame every look was fed. Wipe only: not in the grid, no full res copy.
+    var SOURCE = { k: 'source', name: 'Source (DWG / Intermediate)', wipeOnly: true };
+    abA.add(new Option(SOURCE.name, SOURCE.k)); abB.add(new Option(SOURCE.name, SOURCE.k));
     abA.value = 'photochemist'; abB.value = 'opendrt';
 
     // ---- scene + wipe state ----
@@ -532,7 +535,13 @@ document.addEventListener('click', function (e) {
       });
       setWipe();
     }
-    function tool(k) { for (var i = 0; i < TOOLS.length; i++) if (TOOLS[i].k === k) return TOOLS[i]; }
+    function tool(k) { if (k === SOURCE.k) return SOURCE; for (var i = 0; i < TOOLS.length; i++) if (TOOLS[i].k === k) return TOOLS[i]; }
+    function setFull(el, s, t) {
+      el.hidden = !!t.wipeOnly;
+      if (t.wipeOnly) { el.removeAttribute('data-full'); el.removeAttribute('href'); return; }
+      el.setAttribute('data-full', src(s, t, true)); el.setAttribute('data-cap', cap(s, t)); el.href = src(s, t, true);
+      el.textContent = t.name + ' at full res ↗';
+    }
     function setWipe() {
       var s = SCENES[cur], a = tool(abA.value), b = tool(abB.value);
       var iA = document.getElementById('cmpA'), iB = document.getElementById('cmpB');
@@ -541,9 +550,7 @@ document.addEventListener('click', function (e) {
       document.getElementById('tagA').textContent = 'A · ' + a.name;
       document.getElementById('tagB').textContent = 'B · ' + b.name;
       var fA = document.getElementById('fullA'), fB = document.getElementById('fullB');
-      fA.setAttribute('data-full', src(s, a, true)); fA.setAttribute('data-cap', cap(s, a)); fA.href = src(s, a, true);
-      fB.setAttribute('data-full', src(s, b, true)); fB.setAttribute('data-cap', cap(s, b)); fB.href = src(s, b, true);
-      fA.textContent = a.name + ' at full res ↗'; fB.textContent = b.name + ' at full res ↗';
+      setFull(fA, s, a); setFull(fB, s, b);
     }
     abScene.addEventListener('change', function () { setScene(+abScene.value); });
     abA.addEventListener('change', setWipe);
