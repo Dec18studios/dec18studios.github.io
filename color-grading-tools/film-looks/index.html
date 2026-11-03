@@ -100,11 +100,21 @@
   .notes p, .notes li { color: var(--ink-2); }
   .notes ul { padding-left: 18px; }
   /* ---- viewer-adjustable surround (hero sliders) ---- */
+  /* inks are registered colours so the black/white text flip fades instead of snapping;
+     paper is left unanimated so the background tracks the slider with no lag */
+  @property --ink   { syntax: "<color>"; inherits: true; initial-value: #0e0c0a; }
+  @property --ink-2 { syntax: "<color>"; inherits: true; initial-value: #1d1915; }
+  @property --ink-3 { syntax: "<color>"; inherits: true; initial-value: #35302a; }
+  @property --rule  { syntax: "<color>"; inherits: true; initial-value: #5c564c; }
+  :root.surround-live { transition: --ink .6s ease, --ink-2 .6s ease, --ink-3 .6s ease, --rule .6s ease; }
+  @media (prefers-reduced-motion: reduce) { :root.surround-live { transition: none; } }
   .surround { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 18px; font-family: var(--type); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
   .surround label { display: flex; align-items: center; gap: 10px; }
   .surround input[type=range] { width: clamp(120px, 18vw, 200px); accent-color: var(--ink); cursor: pointer; }
   .surround output { min-width: 4ch; color: var(--ink-2); }
   .surround button { font: inherit; letter-spacing: inherit; text-transform: inherit; background: transparent; color: var(--ink); border: 1.5px solid var(--ink); padding: 4px 9px; cursor: pointer; }
+  .surround-note { margin-top: 10px; max-width: 68ch; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .surround-note b { color: var(--ink); }
   @media (max-width: 520px) { .surround label { width: 100%; } .surround input[type=range] { flex: 1; } }
 
   .notes li { margin: 4px 0; }
@@ -161,10 +171,11 @@ document.addEventListener('click', function (e) {
     <h1 class="title" style="margin-top:8px;font-size:clamp(40px,6vw,76px);max-width:none">You be the judge.</h1>
     <p class="lede" style="max-width:68ch;margin-top:12px">Film emulation tools on the same frames, each set to 250D printed to 2383 where the tool has it. No grading on top. Pick a scene, wipe any two, open any frame at full res.</p>
     <div class="surround" role="group" aria-label="Page surround">
-      <label>Surround <input type="range" id="sBright" min="15" max="90" step="1" value="52" aria-label="Background brightness" /><output id="sBrightV">52%</output></label>
+      <label>Surround <input type="range" id="sBright" min="0" max="90" step="1" value="52" aria-label="Background brightness" /><output id="sBrightV">52%</output></label>
       <label>Tint <input type="range" id="sTint" min="-100" max="100" step="1" value="50" aria-label="Background tint, cool to warm" /><output id="sTintV">warm 50</output></label>
       <button type="button" id="sReset">Reset</button>
     </div>
+    <p class="surround-note"><b>Why change the surround?</b> Your eye judges every frame against whatever is around it. A bright, warm page makes the same image read darker, cooler and flatter than it really is, and a dark page does the opposite. Set this close to what you grade on, mid grey for most suites or near black for a theater, so you are comparing the looks and not the page. Want to see it happen? The free <a href="../color-theory/">Color Theory OFX</a> has a Surround A/B mode that puts the exact same patch on two surrounds and proves they match.</p>
     <script>
     (function () {
       var root = document.documentElement, b = document.getElementById('sBright'), t = document.getElementById('sTint');
@@ -175,12 +186,14 @@ document.addEventListener('click', function (e) {
       function mix(a, z, k) { return [0, 1, 2].map(function (i) { return a[i] + (z[i] - a[i]) * k; }); }
       function apply(save) {
         var L = +b.value, T = +t.value / 100, g = L / 100 * 255;
-        var p = [g + 12 * T, g, g - 22 * T];
+        var k = g / 133;   /* tint scales with level, so 0% is true black and the default stays where it was */
+        var p = [g + 12 * T * k, g, g - 22 * T * k];
         var Y = 0.2126 * lin(c(p[0])) + 0.7152 * lin(c(p[1])) + 0.0722 * lin(c(p[2]));
         var dark = Y >= 0.17;   /* light surround: dark inks; dark surround: flip to light inks */
         var ink = dark ? [14, 12, 10] : [243, 237, 226], ink2 = dark ? [29, 25, 21] : [221, 213, 198], ink3 = dark ? [53, 48, 42] : [190, 181, 166];
         var p2 = p.map(function (v) { return v + (dark ? -10 : 8); });
         root.style.setProperty('--paper', hex.apply(null, p));
+        document.body.style.backgroundImage = L <= 3 ? 'none' : '';   /* drop the paper grain at full black */
         root.style.setProperty('--paper-2', hex.apply(null, p2));
         root.style.setProperty('--ink', hex.apply(null, ink));
         root.style.setProperty('--ink-2', hex.apply(null, ink2));
@@ -197,6 +210,8 @@ document.addEventListener('click', function (e) {
         b.value = 52; t.value = 50; apply(false); try { localStorage.removeItem(KEY); } catch (e) {}
       });
       apply(false);
+      /* turn the fade on only after the first paint, so a saved dark setting does not animate in on load */
+      requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add('surround-live'); }); });
     })();
     </script>
   </div>
