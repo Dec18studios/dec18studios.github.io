@@ -10,6 +10,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../assets/d18-print.css" />
 <style>
+  /* ---- this page only: paper pulled down to a warm mid grey (~L*53) so look
+     comparisons are not judged against a bright surround; inks darkened to hold contrast ---- */
+  :root {
+    --paper:   #847e73;
+    --paper-2: #7a7469;
+    --ink:     #0e0c0a;
+    --ink-2:   #1d1915;
+    --ink-3:   #35302a;
+    --rule:    #5c564c;
+  }
   /* ---- on-page section buttons (site .send style, compact) ---- */
   .subnav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 4px 6px 6px 0; }
   .subnav .k { font-family: var(--type); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); margin-right: 4px; }
@@ -89,6 +99,14 @@
   .notes h3 { font-family: var(--display); font-size: 19px; font-weight: 800; margin-bottom: 6px; }
   .notes p, .notes li { color: var(--ink-2); }
   .notes ul { padding-left: 18px; }
+  /* ---- viewer-adjustable surround (hero sliders) ---- */
+  .surround { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 18px; font-family: var(--type); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  .surround label { display: flex; align-items: center; gap: 10px; }
+  .surround input[type=range] { width: clamp(120px, 18vw, 200px); accent-color: var(--ink); cursor: pointer; }
+  .surround output { min-width: 4ch; color: var(--ink-2); }
+  .surround button { font: inherit; letter-spacing: inherit; text-transform: inherit; background: transparent; color: var(--ink); border: 1.5px solid var(--ink); padding: 4px 9px; cursor: pointer; }
+  @media (max-width: 520px) { .surround label { width: 100%; } .surround input[type=range] { flex: 1; } }
+
   .notes li { margin: 4px 0; }
   @media (max-width: 760px) { .notes { grid-template-columns: 1fr; } }
 </style>
@@ -142,6 +160,45 @@ document.addEventListener('click', function (e) {
     <div class="eyebrow" style="margin-top:clamp(18px,2.6vw,28px)">Film look comparison · 250D to 2383</div>
     <h1 class="title" style="margin-top:8px;font-size:clamp(40px,6vw,76px);max-width:none">You be the judge.</h1>
     <p class="lede" style="max-width:68ch;margin-top:12px">Film emulation tools on the same frames, each set to 250D printed to 2383 where the tool has it. No grading on top. Pick a scene, wipe any two, open any frame at full res.</p>
+    <div class="surround" role="group" aria-label="Page surround">
+      <label>Surround <input type="range" id="sBright" min="15" max="90" step="1" value="52" aria-label="Background brightness" /><output id="sBrightV">52%</output></label>
+      <label>Tint <input type="range" id="sTint" min="-100" max="100" step="1" value="50" aria-label="Background tint, cool to warm" /><output id="sTintV">warm 50</output></label>
+      <button type="button" id="sReset">Reset</button>
+    </div>
+    <script>
+    (function () {
+      var root = document.documentElement, b = document.getElementById('sBright'), t = document.getElementById('sTint');
+      var bv = document.getElementById('sBrightV'), tv = document.getElementById('sTintV'), KEY = 'd18_fl_surround';
+      function c(v) { return Math.max(0, Math.min(255, Math.round(v))); }
+      function hex(r, g, bl) { return '#' + [r, g, bl].map(function (v) { return c(v).toString(16).padStart(2, '0'); }).join(''); }
+      function lin(v) { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+      function mix(a, z, k) { return [0, 1, 2].map(function (i) { return a[i] + (z[i] - a[i]) * k; }); }
+      function apply(save) {
+        var L = +b.value, T = +t.value / 100, g = L / 100 * 255;
+        var p = [g + 12 * T, g, g - 22 * T];
+        var Y = 0.2126 * lin(c(p[0])) + 0.7152 * lin(c(p[1])) + 0.0722 * lin(c(p[2]));
+        var dark = Y >= 0.17;   /* light surround: dark inks; dark surround: flip to light inks */
+        var ink = dark ? [14, 12, 10] : [243, 237, 226], ink2 = dark ? [29, 25, 21] : [221, 213, 198], ink3 = dark ? [53, 48, 42] : [190, 181, 166];
+        var p2 = p.map(function (v) { return v + (dark ? -10 : 8); });
+        root.style.setProperty('--paper', hex.apply(null, p));
+        root.style.setProperty('--paper-2', hex.apply(null, p2));
+        root.style.setProperty('--ink', hex.apply(null, ink));
+        root.style.setProperty('--ink-2', hex.apply(null, ink2));
+        root.style.setProperty('--ink-3', hex.apply(null, ink3));
+        root.style.setProperty('--rule', hex.apply(null, mix(p, ink, 0.35)));
+        bv.textContent = L + '%';
+        tv.textContent = T === 0 ? 'neutral' : (T > 0 ? 'warm ' : 'cool ') + Math.abs(+t.value);
+        if (save) { try { localStorage.setItem(KEY, JSON.stringify([b.value, t.value])); } catch (e) {} }
+      }
+      try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) { b.value = s[0]; t.value = s[1]; } } catch (e) {}
+      b.addEventListener('input', function () { apply(true); });
+      t.addEventListener('input', function () { apply(true); });
+      document.getElementById('sReset').addEventListener('click', function () {
+        b.value = 52; t.value = 50; apply(false); try { localStorage.removeItem(KEY); } catch (e) {}
+      });
+      apply(false);
+    })();
+    </script>
   </div>
   <div class="bars" aria-hidden="true" style="margin-top:clamp(20px,3vw,32px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 </header>
