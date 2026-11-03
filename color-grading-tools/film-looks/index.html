@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Film Look Comparison | Dec. 18 Studios</title>
-<meta name="description" content="Film looks side by side on the same frames, plus a 16 mm grain and halation test with 4K render speeds: PhotoChemist, Genesis, Spektra, GD DRT Pro, OpenDRT, Dehancer, Film Look Creator and PixelTools. Pick a scene, see every look, wipe any two side by side, open any frame at full res." />
+<meta name="description" content="Film looks side by side on the same frames, plus a 16 mm grain and halation test with 4K render speeds: PhotoChemist, Genesis, Spektra, GD DRT Pro, OpenDRT, Dehancer, Film Look Creator, PixelTools, Technicolor DRT, FilmBox, ColorBoy and FotuFilm. Pick a scene, see every look, wipe any two side by side, open any frame at full res." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
@@ -50,7 +50,6 @@
     .grid.looks figure { padding: 5px; }
     .grid.looks figcaption { font-size: 11px; }
   }
-  @media (min-width: 861px) { .grid.looks figure:nth-child(7) { grid-column: 2 / span 2; } }
 
   /* ---- render speed table ---- */
   .fpswrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -351,19 +350,17 @@ document.addEventListener('click', function (e) {
     <div class="notes reveal">
       <div>
         <h3>The setup</h3>
-        <p>Every look in a scene starts from the same source frame in DaVinci Resolve. Each tool is set to 250D negative printed to 2383 where it offers that pairing, and otherwise left on its defaults. Nothing is graded on top, so what you see is the tool.</p>
+        <p>Every look in a scene starts from the same source frame in DaVinci Resolve. Each tool is set to 250D negative printed to 2383 where it offers that pairing, and otherwise left on its defaults. Nothing is graded on top, so what you see is the tool. Every tool exports from the exact same frame, so the stills line up one to one.</p>
         <p style="margin-top:10px">Stills are 4K PNG grabs from Resolve. The page shows a light preview and the viewer loads a high quality JPEG of each grab, 2560 wide for the scenes and full 4K for the grain chart.</p>
       </div>
       <div>
         <h3>Per tool notes</h3>
         <ul>
-          <li><b><a href="../photochemist/">PhotoChemist</a></b> (Lite is free): projector light noted on each frame: Neutral (the default), Xenon or Carbon Arc White Flame.</li>
-          <li><b><a href="../gradient-domain/">GD DRT Pro</a></b>: needs its Styled preset to sit closer to 250D to 2383, so it's styled on most frames.</li>
+          <li><b><a href="../photochemist/">PhotoChemist</a></b> (Lite is free) and <b><a href="../technicolordrt/">Technicolor DRT</a></b>: our tools, on their defaults like everything else.</li>
           <li><b><a href="../opendrt/#download">OpenDRT</a></b>: free and open source, our OFX release, the base line for reference, no film look.</li>
-          <li><b><a href="https://www.dehancer.com/" target="_blank" rel="noopener">Dehancer</a></b>: fed by OpenDRT.</li>
-          <li><b><a href="https://pixeltoolspost.com/products/film-emulsion" target="_blank" rel="noopener">PixelTools</a></b>: OpenDRT tail.</li>
-          <li><b>Film Look Creator</b>: Rochester preset on most frames.</li>
-          <li><b><a href="https://cullenkellycolor.com/genesis" target="_blank" rel="noopener">Genesis</a></b> and <b><a href="https://spektrafilm.114c.de/" target="_blank" rel="noopener">Spektra</a></b> (free): 250D to 2383 defaults.</li>
+          <li><b><a href="https://www.dehancer.com/" target="_blank" rel="noopener">Dehancer</a></b> and <b><a href="https://pixeltoolspost.com/products/film-emulsion" target="_blank" rel="noopener">PixelTools</a></b>: run with OpenDRT for the display transform.</li>
+          <li><b>ColorBoy</b>: has no grain, so its chart frame is halation only.</li>
+          <li><b><a href="https://cullenkellycolor.com/genesis" target="_blank" rel="noopener">Genesis</a></b>: Precision mode on the chart. Its Performance mode speed is in the table too.</li>
         </ul>
         <p style="margin-top:10px">The grain and halation chart uses each tool's 16 mm setting. Render speeds were benchmarked at 4K in Resolve on a 60 fps timeline, on a Mac Studio M4 Max with 128 GB of RAM, with grain and halation on.</p>
         <p style="margin-top:10px;font-size:14px;color:var(--ink-3)">Third party product names belong to their owners and are used here only to identify the tools being compared.</p>
@@ -464,27 +461,35 @@ document.addEventListener('click', function (e) {
       { k: 'photochemist', name: 'PhotoChemist', link: '../photochemist/' },
       { k: 'genesis', name: 'Genesis', link: 'https://cullenkellycolor.com/genesis' },
       { k: 'spektra', name: 'Spektra', link: 'https://spektrafilm.114c.de/' },
-      { k: 'gd-drt-pro', name: 'GD DRT Pro', link: '../gradient-domain/', note: 'Styled' },
+      { k: 'gd-drt-pro', name: 'GD DRT Pro', link: '../gradient-domain/' },
       { k: 'opendrt', name: 'OpenDRT', link: '../opendrt/#download', note: 'Base line' },
-      { k: 'dehancer', name: 'Dehancer', link: 'https://www.dehancer.com/', note: 'Fed by OpenDRT' },
-      { k: 'flc', name: 'Film Look Creator', note: 'Rochester' },
-      { k: 'pixeltools', name: 'PixelTools', link: 'https://pixeltoolspost.com/products/film-emulsion', note: 'OpenDRT tail' }
+      { k: 'dehancer', name: 'Dehancer', link: 'https://www.dehancer.com/' },
+      { k: 'flc', name: 'Film Look Creator' },
+      { k: 'pixeltools', name: 'PixelTools', link: 'https://pixeltoolspost.com/products/film-emulsion' },
+      { k: 'technicolor', name: 'Technicolor DRT', link: '../technicolordrt/' },
+      { k: 'filmbox', name: 'FilmBox', link: 'https://videovillage.com/filmbox/' },
+      { k: 'colorboy', name: 'ColorBoy' },
+      { k: 'fotufilm', name: 'FotuFilm' }
     ];
-    var XE = 'Xenon projector', CA = 'Carbon Arc White Flame projector';
     var SCENES = [
-      { k: 'red-car', name: 'Red Car', notes: { photochemist: 'Neutral projector' } },
-      { k: 'maeve', name: 'The Maeve', notes: { photochemist: XE } },
-      { k: 'cow', name: 'Cow', notes: { photochemist: XE } },
-      { k: 'sheep', name: 'Sheep', notes: { photochemist: CA } },
-      { k: 'gun-scene', name: 'Gun Scene', notes: { photochemist: CA } },
-      { k: 'blue-bar', name: 'Blue Bar', notes: { photochemist: XE } },
-      { k: 'diver', name: 'The Diver', notes: { photochemist: XE } },
-      { k: 'bathtub', name: 'Bath Tub', notes: { photochemist: CA, 'gd-drt-pro': '' } },
-      { k: 'rgb-chips', name: 'RGB Chips', notes: { photochemist: XE } }
+      { k: 'red-car', name: 'Red Car' },
+      { k: 'maeve', name: 'The Maeve' },
+      { k: 'gangsta', name: 'Gangsta' },
+      { k: 'cow', name: 'Highland Cow' },
+      { k: 'red-hair', name: 'Red Hair' },
+      { k: 'gun-scene', name: 'Gun Girl' },
+      { k: 'boat', name: 'Boat' },
+      { k: 'blue-bar', name: 'Blue Bar' },
+      { k: 'coffee-time', name: 'Coffee Time' },
+      { k: 'delay-car', name: 'Delay Car' },
+      { k: 'diver', name: 'Red Diver' },
+      { k: 'helen-and-troy', name: 'Helen and Troy' },
+      { k: 'bathtub', name: 'Bath Tub' },
+      { k: 'rgb-chips', name: 'RGB Chips' }
     ];
     var cur = 0;
 
-    function note(s, t) { return (t.k in s.notes) ? s.notes[t.k] : (t.note || ''); }
+    function note(s, t) { return t.note || ''; }
     function src(s, t, full) { return 'img/' + s.k + '/' + t.k + (full ? '-full' : '') + '.jpg'; }
     function cap(s, t) { var n = note(s, t); return s.name + ' · ' + t.name + (n ? ' · ' + n : '') + ' · 250D to 2383'; }
 
@@ -552,17 +557,21 @@ document.addEventListener('click', function (e) {
     /* ---- grain + halation: one chart, grid + wipe + render speed ---- */
     // 4K benchmark, 60 fps timeline, Mac Studio M4 Max 128 GB. Headroom and spare ms are against 24 fps.
     var BENCH = [
-      { k: 'pixeltools', name: 'PixelTools + OpenDRT', fps: 54, ms: 18.5, head: '2.25x', spare: '23.2', hr: '27 min' },
-      { k: 'genesis', name: 'Genesis Performance', fps: 48.5, ms: 20.6, head: '2.0x', spare: '21.1', hr: '30 min' },
-      { k: 'flc', name: 'Film Look Creator', fps: 42.5, ms: 23.5, head: '1.8x', spare: '18.2', hr: '34 min' },
-      { k: 'photochemist', name: 'PhotoChemist', fps: 34, ms: 29.4, head: '1.4x', spare: '12.3', hr: '42 min' },
+      { k: 'pixeltools', name: 'PixelTools + OpenDRT', fps: 56, ms: 17.9, head: '2.33x', spare: '23.8', hr: '26 min' },
+      { k: 'filmbox', name: 'FilmBox', fps: 50.5, ms: 19.8, head: '2.1x', spare: '21.9', hr: '29 min' },
+      { k: 'flc', name: 'Film Look Creator', fps: 43, ms: 23.3, head: '1.79x', spare: '18.4', hr: '33 min' },
+      { k: 'genesis', name: 'Genesis Performance', fps: 41, ms: 24.4, head: '1.71x', spare: '17.3', hr: '35 min' },
+      { k: 'photochemist', name: 'PhotoChemist', fps: 30.5, ms: 32.8, head: '1.27x', spare: '8.9', hr: '47 min' },
       { k: 'dehancer', name: 'Dehancer + OpenDRT', fps: 28, ms: 35.7, head: '1.17x', spare: '6.0', hr: '51 min' },
-      { k: 'gd-drt-pro', name: 'GD DRT', fps: 24, ms: 41.7, head: '1.0x', spare: '0', hr: '1 hr' },
-      { k: 'spektra', name: 'Spektra', fps: 10.5, ms: 95, head: '0.44x', spare: 'none', hr: '2.3 hr' },
-      { k: 'genesis', name: 'Genesis Precision', fps: 4, ms: 250, head: '0.17x', spare: 'none', hr: '6 hr' }
+      { k: 'technicolor', name: 'Technicolor DRT', fps: 24, ms: 41.7, head: '1x', spare: '0', hr: '1 hr' },
+      { k: 'gd-drt-pro', name: 'GD DRT', fps: 22, ms: 45.5, head: '0.92x', spare: 'none', hr: '1.1 hr' },
+      { k: 'colorboy', name: 'ColorBoy (halation only)', fps: 13, ms: 76.9, head: '0.54x', spare: 'none', hr: '1.8 hr' },
+      { k: 'spektra', name: 'Spektra', fps: 10, ms: 100.0, head: '0.42x', spare: 'none', hr: '2.4 hr' },
+      { k: 'fotufilm', name: 'FotuFilm', fps: 7, ms: 142.9, head: '0.29x', spare: 'none', hr: '3.4 hr' },
+      { k: 'genesis', name: 'Genesis Precision', fps: 4, ms: 250.0, head: '0.17x', spare: 'none', hr: '6 hr' }
     ];
     // what the chart frames show; Genesis was grabbed in Precision mode
-    var GH = { photochemist: '34 fps', genesis: 'Precision · 4 fps', spektra: '10.5 fps', 'gd-drt-pro': '24 fps', opendrt: 'Base line', dehancer: '28 fps', flc: '42.5 fps', pixeltools: '54 fps' };
+    var GH = { photochemist: '30.5 fps', genesis: 'Precision · 4 fps', spektra: '10 fps', 'gd-drt-pro': '22 fps', opendrt: 'Base line', dehancer: '28 fps', flc: '43 fps', pixeltools: '56 fps', technicolor: '24 fps', filmbox: '50.5 fps', colorboy: 'Halation only · 13 fps', fotufilm: '7 fps' };
     function ghSrc(t, v) { return 'img/grain-halation/' + t.k + (v ? '-' + v : '') + '.jpg'; }
     function ghFpsTxt(t) { return t.k === 'opendrt' ? 'Base line, no grain or halation' : GH[t.k] + ' at 4K'; }
     function ghCapTxt(t) { return 'Grain and halation · ' + t.name + ' · ' + ghFpsTxt(t); }
