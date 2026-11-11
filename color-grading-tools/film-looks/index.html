@@ -51,6 +51,15 @@
     .grid.looks figcaption { font-size: 11px; }
   }
 
+  /* ---- tungsten test ---- */
+  .tung-row { font-family: var(--type); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin: clamp(18px, 2.4vw, 26px) 0 8px; }
+  .tung-row:first-of-type { margin-top: 0; }
+  .yt-lite { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0; border: 2px solid var(--ink); background: #000 center / cover no-repeat; cursor: pointer; }
+  .yt-lite::after { content: "▶"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72px; height: 50px; line-height: 50px; text-align: center; font-size: 22px; color: #fff; background: var(--red); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); }
+  .yt-lite:hover::after { transform: translate(-50%, -50%) scale(1.06); }
+  .yt-lite:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .yt-lite iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
   /* ---- render speed table ---- */
   .fpswrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .fps { width: 100%; border-collapse: collapse; font-family: var(--sans); }
@@ -267,6 +276,48 @@ document.addEventListener('click', function (e) {
       <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
     </figure>
     <p class="hint">Drag, or tab to the frame and use the arrow keys.</p>
+  </div>
+</section>
+
+<!-- ============ TUNGSTEN ============ -->
+<section class="part" id="tungsten" data-screen-label="Tungsten test">
+  <div class="wrap">
+    <div class="part-head reveal">
+      <p class="eyebrow">Tungsten field test</p>
+      <h2>Does your tungsten preset act like tungsten?</h2>
+      <p>Tungsten stock is balanced for 3200K light. Real film doesn't have a white balance knob, so under tungsten bulbs it comes out close to neutral, and take it outside into daylight and it goes blue. That's the whole point of the stock, and it's why the 85 filter exists.</p>
+      <p>So I shot the same setup twice, once inside under tungsten bulbs and once outside in full sun, and ran each tool's 200T to 2383 simulation on both. PhotoChemist does what the stock does: neutral indoors, blue outside. The other two stay warm in both, which reads more like a warm look than a stock balanced for 3200K. Click any frame for the full 4K grab.</p>
+    </div>
+
+    <div class="viewer reveal">
+      <p class="tung-row">Indoors, under tungsten bulbs</p>
+      <div class="grid looks">
+        <figure><img src="img/tungsten/photochemist-interior.jpg" data-full="img/tungsten/photochemist-interior-full.jpg" data-cap="Tungsten test · PhotoChemist · 200T to 2383 · tungsten interior" width="1280" height="720" loading="lazy" decoding="async" alt="PhotoChemist 200T to 2383, indoors under tungsten light" /></figure>
+        <figure><img src="img/tungsten/genesis-interior.jpg" data-full="img/tungsten/genesis-interior-full.jpg" data-cap="Tungsten test · Genesis · 200T to 2383 · tungsten interior" width="1280" height="720" loading="lazy" decoding="async" alt="Genesis 200T to 2383, indoors under tungsten light" /></figure>
+        <figure><img src="img/tungsten/spektra-interior.jpg" data-full="img/tungsten/spektra-interior-full.jpg" data-cap="Tungsten test · Spektra · 200T to 2383 · tungsten interior" width="1280" height="720" loading="lazy" decoding="async" alt="Spektra 200T to 2383, indoors under tungsten light" /></figure>
+      </div>
+      <p class="tung-row">Outside, in full sun</p>
+      <div class="grid looks">
+        <figure><img src="img/tungsten/photochemist-daylight.jpg" data-full="img/tungsten/photochemist-daylight-full.jpg" data-cap="Tungsten test · PhotoChemist · 200T to 2383 · daylight exterior" width="1280" height="720" loading="lazy" decoding="async" alt="PhotoChemist 200T to 2383, outside in daylight" /></figure>
+        <figure><img src="img/tungsten/genesis-daylight.jpg" data-full="img/tungsten/genesis-daylight-full.jpg" data-cap="Tungsten test · Genesis · 200T to 2383 · daylight exterior" width="1280" height="720" loading="lazy" decoding="async" alt="Genesis 200T to 2383, outside in daylight" /></figure>
+        <figure><img src="img/tungsten/spektra-daylight.jpg" data-full="img/tungsten/spektra-daylight-full.jpg" data-cap="Tungsten test · Spektra · 200T to 2383 · daylight exterior" width="1280" height="720" loading="lazy" decoding="async" alt="Spektra 200T to 2383, outside in daylight" /></figure>
+      </div>
+      <div class="slate">
+        <span>Tungsten field test · 3 tools</span>
+        <span>200T to 2383 · 4K grabs</span>
+      </div>
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    </div>
+
+    <div class="chartdl reveal">
+      <button type="button" class="yt-lite" id="tungVid" data-id="cCWwm5hAdYI" style="background-image:url('https://i.ytimg.com/vi/cCWwm5hAdYI/hqdefault.jpg')" aria-label="Play the video: Your Tungsten Film Preset Isn't Acting Like Tungsten"></button>
+      <div>
+        <p class="eyebrow">Watch the breakdown</p>
+        <h3>Your tungsten film preset isn't acting like tungsten.</h3>
+        <p>The full walkthrough on Happy Little Node Trees: why tungsten stock looks the way it does, what to look for in a preset, and how these three handle it side by side.</p>
+        <a class="send" href="https://youtu.be/cCWwm5hAdYI" target="_blank" rel="noopener">Watch on YouTube →</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -662,5 +713,21 @@ document.addEventListener('click', function (e) {
 
 <script src="../assets/d18-viewer.js" defer></script>
 <script src="../assets/dl-gate.js" defer></script>
+<script>
+  /* Click-to-load YouTube embed, so nothing from YouTube loads until play. */
+  (function () {
+    var b = document.getElementById('tungVid');
+    if (!b) return;
+    b.addEventListener('click', function () {
+      var w = document.createElement('div'), f = document.createElement('iframe');
+      w.className = 'yt-lite'; w.style.cursor = 'auto';
+      f.src = 'https://www.youtube-nocookie.com/embed/' + b.getAttribute('data-id') + '?autoplay=1&rel=0';
+      f.title = 'Your Tungsten Film Preset Isn\'t Acting Like Tungsten';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      w.appendChild(f); b.replaceWith(w);
+    });
+  })();
+</script>
 </body>
 </html>
