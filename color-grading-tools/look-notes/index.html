@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Look Notes &middot; OFX for Resolve &middot; Dec. 18 Studios</title>
-<meta name="description" content="Look Notes is an OFX for DaVinci Resolve that burns a look label and notes into the frame and flips your labelled look nodes when you change the Active Look. Look Notes Pro comes with the Tool Box membership: 8 looks, custom fonts, Reframe with an image sampled palette, PowerGrade Mode, and new in 1.2, Export All Looks with a Look Grid. Look Notes Lite is free: 3 looks, node toggling and JPG export. Metal on macOS, CUDA on Windows and Linux." />
+<meta name="description" content="Look Notes is an OFX for DaVinci Resolve that burns a look label and notes into the frame and flips your labelled look nodes when you change the Active Look. Look Notes Pro comes with the Tool Box membership: up to 20 looks, Compare wipes and side by sides, Skin Tone Selector and Perfect Exposure, the Look Board, Look Scopes, Stream Deck control, custom fonts, Reframe with an image sampled palette, PowerGrade Mode and Export All Looks with a Look Grid. Look Notes Lite is free: 3 looks, node toggling and JPG export. Metal on macOS, CUDA and OpenCL on Windows and Linux." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet" />
@@ -69,7 +69,7 @@
   .eyebrow .pro-tag { margin-left: 8px; }
 
   /* ---- control lists ---- */
-  #how, #split, #export, #powergrades, #controls, #requirements, #subscribe, #demo, #install { scroll-margin-top: 20px; }
+  #how, #split, #export, #check, #board, #powergrades, #controls, #requirements, #subscribe, #demo, #install { scroll-margin-top: 20px; }
   .group { margin-top: clamp(28px, 4vw, 44px); }
   .group-head { font-family: var(--type); font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
   .group-head::after { content: ""; flex: 1; height: 2px; background: var(--ink); }
@@ -187,6 +187,8 @@ document.addEventListener('click', function (e) {
       <a href="#how">How it works</a>
       <a href="#split">Split looks</a>
       <a href="#export">Export</a>
+      <a href="#check">Compare and skin</a>
+      <a href="#board">Look Board</a>
       <a href="#powergrades">PowerGrades</a>
       <a href="#controls">Controls</a>
       <a href="#requirements">Requirements</a>
@@ -205,17 +207,17 @@ document.addEventListener('click', function (e) {
           <span class="pill"><span class="d pro"></span>Pro &middot; Tool Box</span>
           <span class="pill"><span class="d"></span>Lite &middot; Free</span>
           <span class="pill">OFX</span>
-          <span class="pill node">v1.2.0</span>
+          <span class="pill node">v1.5.1</span>
         </div>
         <h1 class="title">Which look<br /><em>is this?</em></h1>
         <p class="hero-sub">The frame tells the client, so you don't have to.</p>
-        <p class="lede">Look Notes burns a label and a couple of lines of notes right into the picture. Pitching looks in a client session? Change the Active Look and the frame says which one is up and what it is. On Resolve Studio it also flips your look nodes for you, so one control swaps the grade and the label together. New in 1.2: export a still of every look, plus one Look Grid image with all of them side by side, ready to send.</p>
+        <p class="lede">Look Notes burns a label and a couple of lines of notes right into the picture. Pitching looks in a client session? Change the Active Look and the frame says which one is up and what it is. On Resolve Studio it also flips your look nodes for you, so one control swaps the grade and the label together. Pro goes further: wipe one look against another, check skin and exposure, run your looks from the Look Board or a Stream Deck, and export a still of every look plus one Look Grid image, ready to send.</p>
         <div class="btns">
           <a class="send" href="#subscribe">Get Look Notes Pro &rarr;</a>
           <a class="send ghost" href="#demo">Try Lite for free &rarr;</a>
         </div>
         <div class="meta">
-          <div class="m"><b>8</b><span>looks per node in Pro</span></div>
+          <div class="m"><b>20</b><span>looks per node in Pro</span></div>
           <div class="m"><b>1</b><span>control to switch</span></div>
           <div class="m"><b>3</b><span>looks free in Lite</span></div>
         </div>
@@ -269,7 +271,7 @@ document.addEventListener('click', function (e) {
 
       <article class="feat reveal" style="--accent: var(--cyan);">
         <div class="ft"><span class="k">Step 02</span><h3>Fill in labels and notes</h3></div>
-        <div class="fb">Drop Look Notes on a node. Every look has its own <strong>Label</strong> (the title line) and multi line <strong>Notes</strong>, plus there's one shared <strong>Header</strong> line on top. Pro gives you Look 1 to Look 8, Lite gives you Look 1 to Look 3. Type what the client should read: the look's name, then a line or two on what it's doing.</div>
+        <div class="fb">Drop Look Notes on a node. Every look has its own <strong>Label</strong> (the title line) and multi line <strong>Notes</strong>, plus there's one shared <strong>Header</strong> line on top. Pro gives you up to Look 20 (pick 8, 12, 16 or 20), Lite gives you Look 1 to Look 3. Type what the client should read: the look's name, then a line or two on what it's doing.</div>
       </article>
 
       <article class="feat reveal" style="--accent: var(--yellow);">
@@ -333,12 +335,12 @@ document.addEventListener('click', function (e) {
   </div>
 </section>
 
-<!-- ============ EXPORT (new in 1.2) ============ -->
+<!-- ============ EXPORT ============ -->
 <section class="part" id="export" data-screen-label="Export">
   <div class="wrap">
     <div class="what-grid">
       <div class="what-copy reveal">
-        <p class="eyebrow">New in 1.2 &middot; Export</p>
+        <p class="eyebrow">Export</p>
         <h2>Every look, saved for the client.</h2>
         <p>The session's over and the client wants to sleep on it. Hit <strong>Export All Looks</strong>, pick a folder, and Look Notes switches to each look in turn and saves a still of the current frame for each one, named with the look's Label and today's date. Then it puts your original look back.</p>
         <p>Turn on <strong>Build Grid</strong> and it also saves a <strong>Look Grid</strong>: every look side by side in one image, up to 3840 wide. One attachment, all the options. The folder pops open when it's done.</p>
@@ -402,6 +404,97 @@ document.addEventListener('click', function (e) {
   </div>
 </section>
 
+<!-- ============ COMPARE, SKIN AND EXPOSURE ============ -->
+<section class="part" id="check" data-screen-label="Compare and skin">
+  <div class="wrap">
+    <div class="what-grid">
+      <div class="what-copy reveal">
+        <p class="eyebrow">Compare and check<span class="pro-tag">Pro</span></p>
+        <h2>Look A against look B.</h2>
+        <p>Turn on <strong>Compare</strong> and the frame splits: a <strong>Wipe</strong> you can slide and angle, or <strong>Side by Side</strong>, left and right or top and bottom. Each side gets its own label and notes, so the client always knows which is which.</p>
+        <p>No second branch needed. Pick a look, hit <strong>Hold as Compare</strong>, and that look's picture becomes the compare side. Switch looks and the live grade wipes against the held one. Hold a look on one shot and check it on the next. Prefer it live? Wire a second input instead.</p>
+        <ul class="who">
+          <li style="--wc: var(--p-red)"><span class="dot"></span><span><b>Held Frame</b> is a still, one per node, and works on every clip the node is on.</span></li>
+          <li style="--wc: var(--blue)"><span class="dot"></span><span><b>Compare Input</b> grades both branches live, frame by frame.</span></li>
+        </ul>
+      </div>
+
+      <div class="reveal">
+        <figure class="viewer demo">
+          <div class="pane">
+            <svg viewBox="0 0 360 200" role="img" aria-label="A wipe: the left half of the frame is the warm look labelled LOOK 2 / WARM, the right half is the cool look labelled LOOK 3 / COOL, split by a thin white line.">
+              <rect x="0" y="0" width="180" height="200" fill="#b8733f" />
+              <polygon points="0,150 60,112 120,138 180,108 180,200 0,200" fill="#4a2a18" />
+              <rect x="180" y="0" width="180" height="200" fill="#3f6c8f" />
+              <polygon points="180,108 260,132 360,104 360,200 180,200" fill="#1c2f40" />
+              <rect x="0" y="160" width="180" height="40" fill="#000000" opacity="0.6" />
+              <rect x="180" y="160" width="180" height="40" fill="#000000" opacity="0.6" />
+              <line x1="180" y1="0" x2="180" y2="200" stroke="#ffffff" stroke-width="2" opacity="0.6" />
+              <g font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
+                <text x="90" y="178" fill="#f2f2f2" font-size="12" font-weight="700" letter-spacing="1.2">LOOK 2 / WARM</text>
+                <text x="90" y="192" fill="#c9c9c9" font-size="8.5">Golden highlights, soft roll off.</text>
+                <text x="270" y="178" fill="#f2f2f2" font-size="12" font-weight="700" letter-spacing="1.2">LOOK 3 / COOL</text>
+                <text x="270" y="192" fill="#c9c9c9" font-size="8.5">Steel blue shadows, clean whites.</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption class="slate"><span>Compare: Wipe</span><span>Held Frame</span></figcaption>
+        </figure>
+        <p class="demo-cap">Live look on the left, held look on the right. Drag the wipe, tilt it, or flip to Side by Side.</p>
+      </div>
+    </div>
+
+    <div class="trio-grid" style="margin-top:clamp(32px,5vw,52px)">
+      <article class="feat reveal" style="--accent: var(--magenta);">
+        <div class="ft"><span class="k">Pro</span><h3>Skin Tone Selector</h3></div>
+        <div class="fb">Swaps the picture for a skin check: hue, saturation and exposure indicator views, or <strong>All Four</strong> at once. Turn on <strong>Faces</strong> and it finds the faces in the shot and lays them out as a sheet, each with a hue, sat and exposure readout, so a wide shot's skin is big enough to judge. Solo one face or mask down to just skin.</div>
+      </article>
+
+      <article class="feat reveal" style="--accent: var(--cyan);">
+        <div class="ft"><span class="k">Pro</span><h3>Built in vectorscope</h3></div>
+        <div class="fb">A real vectorscope drawn right on the frame, in a corner or full picture, so the skin view and a true scope sit together. It can read only the skin you kept, with a target wedge for the hue you're after and a marker for each face.</div>
+      </article>
+
+      <article class="feat reveal" style="--accent: var(--yellow);">
+        <div class="ft"><span class="k">Pro</span><h3>Perfect Exposure</h3></div>
+        <div class="fb">False colour in half stop zones around mid grey. Pick your image pipeline (DaVinci Wide Intermediate, DaVinci Wide Linear, Rec.709 Gamma 2.4 or 2.2) and see what's safe, what's heading for the shadows or highlights, and what's crushed or hot.</div>
+      </article>
+    </div>
+
+    <p class="fine-note reveal">Face finding works on <strong>macOS, Windows and Linux</strong>, nothing extra to install. Compare, Skin Tone Selector, Perfect Exposure and the vectorscope all render into deliveries, so <strong>turn them off before a master</strong>. Lite shows the switches greyed out.</p>
+  </div>
+</section>
+
+<!-- ============ LOOK BOARD, SCOPES, STREAM DECK ============ -->
+<section class="part" id="board" data-screen-label="Look Board">
+  <div class="wrap">
+    <div class="part-head reveal">
+      <p class="eyebrow">Beyond the node<span class="pro-tag">Pro</span></p>
+      <h2>Run the session from outside the Inspector.</h2>
+      <p>Three ways to drive Look Notes without digging through the panel. Park them on a second monitor, or keep your hands on a Stream Deck.</p>
+    </div>
+
+    <div class="trio-grid">
+      <article class="feat reveal" style="--accent: var(--magenta);">
+        <div class="ft"><span class="k">Pro &middot; Open Look Board</span><h3>Look Board</h3></div>
+        <div class="fb">A window with every look as a card. Type labels and notes outside Resolve, they land on the node about a second after you stop typing. Each look keeps a <strong>version history</strong> with Revert. Switch looks, Compare, skin and exposure views from one panel. The <strong>Stills</strong> tab grabs and exports stills, holds one as the compare frame, previews its grade, and can apply it to all your clips in one go.</div>
+      </article>
+
+      <article class="feat reveal" style="--accent: var(--cyan);">
+        <div class="ft"><span class="k">Pro &middot; Open Scopes</span><h3>Look Scopes</h3></div>
+        <div class="fb">A full scopes page in its own window, fed straight from the node: 3D RGB cube, CIE chart with a faint Planckian locus for neutral white, vectorscopes, waveform, histogram and a blacks parade. The vectorscope zooms toward the centre under a fixed hue ring, so you always know where you are. Drag panes around and save your layouts.</div>
+      </article>
+
+      <article class="feat reveal" style="--accent: var(--yellow);">
+        <div class="ft"><span class="k">Mac and Windows</span><h3>Stream Deck</h3></div>
+        <div class="fb">Switch looks, flip Compare, step skin views and faces, nudge the wipe and grab stills from the deck. Keys light up to match what the node is doing. Hit <strong>Install Stream Deck Plugin</strong> at the bottom of the panel and Stream Deck asks to install it. Most keys go through the Look Board, so they need Pro. In Lite the keys still show state, the Pro actions say <strong>PRO</strong>.</div>
+      </article>
+    </div>
+
+    <p class="fine-note reveal">On macOS the Look Board and Look Scopes are their own little apps that reopen right where you left them. On Windows and Linux they open in an Edge or Chrome app window. Both need <strong>Python 3</strong>. Grabbing stills and All Clips go through Resolve's scripting, same as export. The Stream Deck plugin needs <strong>Stream Deck 6.5 or newer</strong>. Stream Deck has no Linux app, so no Linux plugin.</p>
+  </div>
+</section>
+
 <!-- ============ POWERGRADES ============ -->
 <section class="part" id="powergrades" data-screen-label="PowerGrades">
   <div class="wrap">
@@ -453,9 +546,33 @@ document.addEventListener('click', function (e) {
     <div class="group reveal">
       <div class="group-head">Looks</div>
       <div class="mode-grid">
-        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Active Look</b><p>Picks which look is showing: eight in Pro, three in Lite. Change it by hand and your labelled look nodes flip to match.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Looks <span class="pro-tag">Pro</span></b><p>How many looks the node offers: 8, 12, 16 or 20. Lite has three.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Active Look</b><p>Picks which look is showing: up to twenty in Pro, three in Lite. Change it by hand and your labelled look nodes flip to match.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Header, Labels and Notes</b><p>One shared Header line, then each look has its own Label and multi line Notes.</p></div>
         <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>How To Set Up...</b><p>Opens a plain text step by step guide to setting up node toggling.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Open Look Board, Open Scopes <span class="pro-tag">Pro</span></b><p>Open the Look Board and Look Scopes windows for this node.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Install Stream Deck Plugin</b><p>Hands the bundled plugin to the Stream Deck app, which asks you to confirm. Lite and Pro, Mac and Windows.</p></div>
+      </div>
+    </div>
+
+    <div class="group reveal">
+      <div class="group-head">Compare &middot; Pro</div>
+      <div class="mode-grid">
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Mode <span class="pro-tag">Pro</span></b><p>Wipe, with Wipe Position and Angle, or Side by Side, left and right or top and bottom. Optional divider line.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Compare Source <span class="pro-tag">Pro</span></b><p>Held Frame (grab it with Hold as Compare on the Look Board) or a second Compare input.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Compare Look <span class="pro-tag">Pro</span></b><p>Which look's label and notes go on the compare side.</p></div>
+      </div>
+    </div>
+
+    <div class="group reveal">
+      <div class="group-head">Skin, exposure and more &middot; Pro</div>
+      <div class="mode-grid">
+        <div class="mode"><span class="ico" style="--cm:var(--magenta)"></span><b>Skin Tone Selector <span class="pro-tag">Pro</span></b><p>Primary View: All Four, Hue, Saturation, Exposure or the plain Picture. Hue Vector picks skin or any primary or secondary.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--cyan)"></span><b>Faces <span class="pro-tag">Pro</span></b><p>Finds up to nine faces and shows them as a sheet with readouts. Solo Face and Scope Mask keep one face, or only skin.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--green)"></span><b>Vectorscope <span class="pro-tag">Pro</span></b><p>Off, Corner or Full Picture. Reads kept skin or the whole picture, with a target overlay.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--yellow)"></span><b>Perfect Exposure <span class="pro-tag">Pro</span></b><p>Half stop false colour around mid grey for your image pipeline, with safe zones you can widen.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--red)"></span><b>Feed Scopes <span class="pro-tag">Pro</span></b><p>Sends the picture to Look Scopes, only while the scopes window is open.</p></div>
+        <div class="mode"><span class="ico" style="--cm:var(--blue)"></span><b>Starting Point <span class="pro-tag">Pro</span></b><p>Save this node's settings as your default, and every new Look Notes node opens with them. Reset to factory any time.</p></div>
       </div>
     </div>
 
@@ -507,7 +624,7 @@ document.addEventListener('click', function (e) {
     <div class="part-head reveal">
       <p class="eyebrow">Requirements and platforms</p>
       <h2>What you need for node toggling and export.</h2>
-      <p>The burn in works anywhere the plugin loads. Flipping nodes and exporting stills need a little setup.</p>
+      <p>The burn in works anywhere the plugin loads. Flipping nodes, exporting stills, the Look Board and Stream Deck need a little setup.</p>
     </div>
 
     <div class="install-grid">
@@ -522,18 +639,22 @@ document.addEventListener('click', function (e) {
         </div>
         <div class="step">
           <span class="n"></span>
-          <div class="st"><b>Have Python 3</b><p>Toggling and export run Resolve's Python scripting on macOS, Windows and Linux. Mac and Linux usually have it. On Windows grab the installer from python.org.</p></div>
+          <div class="st"><b>Have Python 3</b><p>Toggling and export run Resolve's Python scripting on macOS, Windows and Linux, and the Look Board and Look Scopes run on it too. Mac and Linux usually have it. On Windows grab the installer from python.org.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"></span>
+          <div class="st"><b>Stream Deck 6.5 or newer</b><p>Only for the Stream Deck plugin, on Mac or Windows. Press <b>Install Stream Deck Plugin</b> on the panel and say yes when Stream Deck asks.</p></div>
         </div>
       </div>
 
       <aside class="install-aside">
         <div class="note-card reveal">
           <div class="k">Runs on the GPU</div>
-          <p>Metal on macOS (universal, Intel and Apple silicon), CUDA on Windows and Linux, with a CPU fallback. The text panel is drawn once and cached, so it costs next to nothing per frame.</p>
+          <p>Metal on macOS (universal, Intel and Apple silicon), CUDA and OpenCL on Windows and Linux, so AMD and Intel cards work too, with a CPU fallback. The text panel is drawn once and cached, so it costs next to nothing per frame.</p>
         </div>
         <div class="note-card reveal">
           <div class="k">Safe by design</div>
-          <p>Nodes with no look label are never touched. If no node matches the chosen look, nothing gets turned off. Project loads, undo, grade copies and version switches never flip anything.</p>
+          <p>Nodes with no look label are never touched. If no node matches the chosen look, nothing gets turned off. Project loads, undo, grade copies and version switches never flip anything. Everything lives on the node, so saved projects keep their looks, notes and settings.</p>
         </div>
       </aside>
     </div>
@@ -556,7 +677,8 @@ document.addEventListener('click', function (e) {
         <div class="plan">Happy Little Noders</div>
         <p class="note">Everything you see on YouTube, plus every update, for less than a single film stock LUT pack.</p>
         <ul class="ticks">
-          <li>Look Notes Pro: 8 looks, custom fonts, Reframe and palette, PowerGrade Mode</li>
+          <li>Look Notes Pro: up to 20 looks, custom fonts, Reframe and palette, PowerGrade Mode</li>
+          <li>Compare, Skin Tone Selector, Perfect Exposure, the Look Board, Look Scopes and Stream Deck control</li>
           <li>Export All Looks, the Look Grid, and PNG or TIFF stills</li>
           <li>Every premium DCTL &amp; OFX plugin in the Tool Box, Photo Chemist included</li>
           <li>All future tools &amp; updates included</li>
@@ -583,7 +705,7 @@ document.addEventListener('click', function (e) {
     <div class="part-head reveal">
       <span class="demo-pill">Free Lite edition</span>
       <h2 style="margin-top:14px">Look Notes Lite. Free, no strings.</h2>
-      <p>Look Notes Lite is the free edition: 3 looks per node with labels, notes and the header, node toggling for looks 1 to 3, Garamond and Pixel fonts, Bottom, Top or Center placement, and burn in. New in 1.2, Lite gets <strong>Export Current Look</strong> too, saving JPG. No watermark, ever. The Pro controls show greyed out on the panel, so you can see what <a class="inline" href="#subscribe">Pro</a> adds. Works on <strong>macOS, Windows and Linux</strong>.</p>
+      <p>Look Notes Lite is the free edition: 3 looks per node with labels, notes and the header, node toggling for looks 1 to 3, Garamond and Pixel fonts, Bottom, Top or Center placement, and burn in. Lite gets <strong>Export Current Look</strong> too, saving JPG, and the <strong>Stream Deck plugin</strong> installs and shows which look is on. No watermark, ever. The Pro controls show greyed out on the panel, so you can see what <a class="inline" href="#subscribe">Pro</a> adds. Works on <strong>macOS, Windows and Linux</strong>.</p>
     </div>
 
     <div class="vs-wrap reveal">
@@ -592,9 +714,9 @@ document.addEventListener('click', function (e) {
           <tr><th scope="col">Feature</th><th scope="col">Lite &middot; Free</th><th scope="col">Pro &middot; Tool Box</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Looks per node</th><td class="yes">3</td><td class="yes">8</td></tr>
+          <tr><th scope="row">Looks per node</th><td class="yes">3</td><td class="yes">Up to 20</td></tr>
           <tr><th scope="row">Labels, notes and header</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-          <tr><th scope="row">Node toggling</th><td class="yes">Looks 1 to 3</td><td class="yes">All 8 looks</td></tr>
+          <tr><th scope="row">Node toggling</th><td class="yes">Looks 1 to 3</td><td class="yes">Every look</td></tr>
           <tr><th scope="row">Bottom, Top or Center, burn in</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
           <tr><th scope="row">Garamond and Pixel fonts</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
           <tr><th scope="row">Export Current Look</th><td class="yes">JPG</td><td class="yes">PNG, JPG or TIFF</td></tr>
@@ -603,6 +725,14 @@ document.addEventListener('click', function (e) {
           <tr><th scope="row">Reframe with image sampled palette</th><td class="no">No</td><td class="yes">Yes</td></tr>
           <tr><th scope="row">PowerGrade Mode</th><td class="no">No</td><td class="yes">Yes</td></tr>
           <tr><th scope="row">Label and Notes colours</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Compare (wipe or side by side)</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Hold as Compare (held frame)</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Skin Tone Selector and Perfect Exposure</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Look Board</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Look Board Stills</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Look Scopes</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Starting Point (your own defaults)</th><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><th scope="row">Stream Deck plugin (Mac and Windows)</th><td class="yes">Installs, shows look state</td><td class="yes">Yes</td></tr>
           <tr><th scope="row">Watermark</th><td class="yes">Never</td><td class="yes">Never</td></tr>
         </tbody>
       </table>
@@ -623,7 +753,7 @@ document.addEventListener('click', function (e) {
       <article class="dl-card reveal">
         <div class="dl-top">
           <div class="dl-os"><span class="os-dot"></span><h3>Windows</h3></div>
-          <p class="arch">x86_64 &middot; CUDA</p>
+          <p class="arch">x86_64 &middot; CUDA and OpenCL</p>
         </div>
         <div class="dl-body">
           <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-Lite/releases/latest/download/LookNotes_Lite_windows_cuda.zip" data-slug="look-notes-lite" data-name="Look Notes Lite (Windows)" target="_blank" rel="noopener">Download Lite for Windows &rarr;</a>
@@ -634,7 +764,7 @@ document.addEventListener('click', function (e) {
       <article class="dl-card reveal">
         <div class="dl-top">
           <div class="dl-os"><span class="os-dot"></span><h3>Linux</h3></div>
-          <p class="arch">x86_64 &middot; CUDA</p>
+          <p class="arch">x86_64 &middot; CUDA and OpenCL</p>
         </div>
         <div class="dl-body">
           <a class="send dl" href="https://github.com/Dec18studios/Look-Notes-Lite/releases/latest/download/LookNotes_Lite_linux_cuda.zip" data-slug="look-notes-lite" data-name="Look Notes Lite (Linux)" target="_blank" rel="noopener">Download Lite for Linux &rarr;</a>
